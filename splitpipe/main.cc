@@ -159,9 +159,12 @@ try
   parameters.chunkSize=getSize("DVD-5");
   ParseCommandline(argc, argv);
 
+  cerr.setf(ios::fixed);
+  cerr.precision(2);
+
   if(parameters.verbose) {
-    cerr<<"Buffer size: " << parameters.bufferSize/1000000 <<" MB\n";
-    cerr<<"Chunk size: " << parameters.chunkSize/1000000 <<" MB\n";
+    cerr<<"Buffer size: " << parameters.bufferSize/1000000.0 <<" MB\n";
+    cerr<<"Chunk size: " << parameters.chunkSize/1000000.0 <<" MB\n";
     //    cerr<<"Output command: "<<parameters.outputCommand<<endl;
   }
 
@@ -290,6 +293,15 @@ try
     if(inputEof && !rb.available())
       break;
   }
+
+  if(outputOnline) {
+    cerr<<"Done with input, waiting for output script to exit..";
+    close(outputfd);
+    int status;
+    waitpid(g_pid, &status, 0);
+    cerr<<" done!"<<endl;
+  }
+
 }
 catch(exception &e)
 {

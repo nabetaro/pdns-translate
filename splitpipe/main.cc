@@ -6,6 +6,7 @@
 #include <sys/time.h>
 #include <sys/wait.h>
 #include <stdint.h>
+#include <signal.h>
 
 #include "ringbuffer.hh"
 
@@ -25,6 +26,9 @@ uint64_t getSize(const char* desc)
     uint64_t kb;
   } predefinedSizes[]= { 
     {"floppy", 1440000 }, 
+    {"CD", 650000000ULL }, 
+    {"CD-80", 700000000ULL }, 
+    {"CDR-80", 700000000ULL }, 
     {"DVD", 4700000000ULL }, 
     {"DVD-5", 4700000000ULL }, 
     {0, 0} 
@@ -35,6 +39,14 @@ uint64_t getSize(const char* desc)
       return p->kb;
   }
   return atoi(desc)*1024;
+}
+
+bool g_havebreak;
+
+void breakHandler(int t)
+{
+  cerr<<"\nsplitpipe: Received interrupt request, terminating output"<<endl;
+  g_havebreak=true;
 }
 
 void unixDie(const string& during)
@@ -62,7 +74,7 @@ void usage()
 {
   cerr<<"splitpipe syntax:\n\n";
   cerr<<" --buffer-size, -b\tSize of buffer before output, in megabytes"<<endl;
-  cerr<<" --chunk-size, -c\tSize of output chunks, in kilobytes, or use 'DVD', 'CDR' or 'CDR80'"<<endl;
+  cerr<<" --chunk-size, -c\tSize of output chunks, in kilobytes, or use 'DVD', 'CDR' or 'CDR-80'"<<endl;
   cerr<<" --help, -h\t\tGive this helpful message"<<endl;
   cerr<<" --verbose, -v\t\tGive verbose output\n\n";
   
@@ -159,6 +171,8 @@ try
   parameters.chunkSize=getSize("DVD-5");
   ParseCommandline(argc, argv);
 
+  signal(SIGPIPE, SIG_IGN);
+  signal(SIGINT, breakHandler);
   cerr.setf(ios::fixed);
   cerr.precision(2);
 
@@ -169,7 +183,11 @@ try
   }
 
   if(parameters.outputCommand.empty()) {
-    cerr<<"No output command specified - unable to write data"<<endl;
+    cerr<<"No output command specified - unable to write data\n\n";
+    cerr<<"Suggested command for cd: \n";
+    cerr<<"cdrecord dev=/dev/cdrom speed=24 -eject -dummy -tao\n";
+    cerr<<"\nSuggested command for dvd: \n";
+    cerr<<"growisofs -Z/dev/dvd=/dev/stdin -dry-run\n";
     exit(1);
   }
 
@@ -194,10 +212,31 @@ try
   uint64_t amountOutput=0;
 
   char *buffer = new char[parameters.bufferSize];
+
+  if(parameters.verbose) 
+    cerr<<"Prebuffering before starting output script..";
+
+  bool d_firstchunk=true;
+
   while(1) {
 
     if(!outputOnline && (inputEof || (1.0 * rb.available() / parameters.bufferSize > 0.5))) {
-      cerr<<"bringing output script online - buffer " << 100.0*rb.available() / parameters.bufferSize <<"% full"<<endl;
+      if(d_firstchunk) {
+	cerr<<" done"<<endl;;
+	d_firstchunk=false;
+      }
+      else {
+	cerr<<"\nsplitpipe: reload media, if necessary, and press enter to continue"<<endl;
+	FILE *fp=fopen("/dev/tty", "r");
+	if(!fp) 
+	  unixDie("opening of /dev/tty for user input");
+
+	char line[80];
+	fgets(line, sizeof(line) - 1, fp);
+	fclose(fp);
+      }
+
+      cerr<<"splitpipe: bringing output script online - buffer " << 100.0*rb.available() / parameters.bufferSize <<"% full"<<endl;
       outputfd=spawnOutputThread();
       outputOnline=true;
       amountOutput=0;
@@ -251,11 +290,21 @@ try
 	len=min((uint64_t)len, parameters.chunkSize - amountOutput);
 	
 	if(!len) {
-	  cerr<<"Output a full chunk, closing pipe, waiting for output command to exit..";
+	  cerr<<"\nsplitpipe: output a full chunk, closing pipe, waiting for output command to exit..\n";
 	  close(outputfd);
 	  int status;
-	  waitpid(g_pid, &status, 0);
-	  cerr<<" done!"<<endl;
+	  if(waitpid(g_pid, &status, 0) < 0)
+	    unixDie("wait on child process");
+
+	  if(WIFEXITED(status))
+	    cerr<<"\nsplitpipe: output command exited with status "<<WEXITSTATUS(status)<<endl;
+	  else {
+	    cerr<<"\nsplitpipe: output command exited abnormally";
+	    if(WIFSIGNALED(status))
+	      cerr<<", by signal "<<WTERMSIG(status);
+	    cerr<<endl;
+	  }
+	  
 	  outputOnline=false;
 	  outputfd=-1;
 	  amountOutput=0;
@@ -287,7 +336,7 @@ try
 	  cerr<<"There are now "<<rb.available()<<" bytes left in the rb"<<endl;
 	//	else
 	//	  cerr<<getTime()-startTime<<"\t"<<rb.available()<<"\n";
-      }while(totalBytes < bytesRead && rb.available());
+      } while(totalBytes < bytesRead && rb.available());
     }
 
     if(inputEof && !rb.available())
@@ -295,11 +344,17 @@ try
   }
 
   if(outputOnline) {
-    cerr<<"Done with input, waiting for output script to exit..";
+    cerr<<"\nsplitpipe: done with input, waiting for output script to exit..\n";
     close(outputfd);
     int status;
     waitpid(g_pid, &status, 0);
-    cerr<<" done!"<<endl;
+    if(WIFEXITED(status))
+      cerr<<"\nsplitpipe: output command exited with status "<<WEXITSTATUS(status)<<endl;
+    else {
+      cerr<<"\nsplitpipe: output command exited abnormally";
+      if(WIFSIGNALED(status))
+	cerr<<", by signal "<<WTERMSIG(status)<<endl;
+    }
   }
 
 }

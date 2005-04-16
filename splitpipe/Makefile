@@ -7,7 +7,7 @@ all: splitpipe joinpipe
 clean:
 	rm -rf *~ *.o splitpipe 
 
-common_OBJECTS=misc.o
+common_OBJECTS=misc.o md5.o
 splitpipe_OBJECTS=splitpipe.o $(common_OBJECTS)
 joinpipe_OBJECTS=joinpipe.o $(common_OBJECTS)
 

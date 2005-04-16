@@ -19,7 +19,7 @@ void waitForUser()
   FILE *fp=fopen("/dev/tty", "r");
   if(!fp) 
     unixDie("opening of /dev/tty for user input");
-  
+  fflush(fp);
   char line[80];
   fgets(line, sizeof(line) - 1, fp);
   fclose(fp);

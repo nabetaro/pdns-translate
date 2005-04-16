@@ -28,7 +28,9 @@
 #include <iostream>
 #include <netinet/in.h>
 #include <stdexcept>
+#include <vector>
 #include "misc.hh"
+#include "md5.hh"
 
 using namespace std;
 
@@ -42,7 +44,7 @@ struct params
   bool verbose;
   bool debug;
   bool verify;
-  string inputDevice;
+  vector<string> inputDevice;
 }parameters;
 
 void usage()
@@ -91,7 +93,7 @@ void ParseCommandline(int argc, char** argv)
   }
   if (optind < argc) {
     while (optind < argc) {
-      parameters.inputDevice=argv[optind++];
+      parameters.inputDevice.push_back(argv[optind++]);
     }
   }
 
@@ -107,9 +109,30 @@ try
   string uuid;
   unsigned int numChunks=0;
 
-  int infd=open(parameters.inputDevice.c_str(), O_RDONLY);
+  if(parameters.inputDevice.empty())
+    parameters.inputDevice.push_back("/dev/stdin");
+
+  vector<string>::const_iterator inputIter=parameters.inputDevice.begin();
+  cerr<<"size: "<<parameters.inputDevice.size()<<endl;
+
+  int infd=open(inputIter->c_str(), O_RDONLY);
   if(infd < 0)
-    unixDie("opening of "+parameters.inputDevice+" for input");
+    unixDie("opening of "+*parameters.inputDevice.begin()+" for input");
+
+
+  MD5Summer md5;
+#if 0
+  md5.feed("abc");
+  md5.feed("def");
+
+  cerr<<makeHexDump(md5.get())<<endl;
+
+  MD5Summer md5a;
+  md5a.feed("abcdef");
+
+  cerr<<makeHexDump(md5a.get())<<endl;
+#endif
+
 
   for(;;) {
     if(!readn(infd, &stretch, sizeof(struct stretchHeader), "read of stretch header"))
@@ -149,24 +172,37 @@ try
     else if(stretch.type==stretchHeader::Data) {    
       if(!writen(1, buffer, stretch.size, "write of a stretch of input"))
 	throw runtime_error("unexpected end of file on standard output");
+      md5.feed(buffer, stretch.size);
     }
     else if(stretch.type==stretchHeader::ChunkEOF) {    
-
       close(infd);
       cerr<<"joinpipe: end of chunk, change media and press enter"<<endl;
 
       waitForUser();
 
-      infd=open(parameters.inputDevice.c_str(), O_RDONLY);
+      if(inputIter + 1 != parameters.inputDevice.end())
+	inputIter++;
+
+      infd=open(inputIter->c_str(), O_RDONLY);
       if(infd < 0)
-	unixDie("opening of "+parameters.inputDevice+" for input");
+	unixDie("opening of "+ *inputIter+" for input");
     }
     else if(stretch.type==stretchHeader::SessionEOF) {    
       cerr<<"joinpipe: end of session"<<endl;
       break;
     }
+    else if(stretch.type==stretchHeader::MD5Checksum) {    
+      string md5sum=md5.get();
+      if(md5sum==string(buffer, buffer + stretch.size))
+	cerr<<"joinpipe: running checksum correct"<<endl;
+      else {
+	cerr<<"joinpipe: checksum incorrect, actual '"<<makeHexDump(md5sum)<<"', should be '"<<makeHexDump(string(buffer,buffer+stretch.size))<<"'" <<endl;
+	exit(EXIT_FAILURE);
+      }
+    }
     else {
-      cerr<<"joinpipe: unknown stretch type "<<(int)stretch.type<<endl;
+      cerr<<"joinpipe: unknown stretch type "<<(int)stretch.type<<" of length "<< stretch.size <<endl;
+      cerr<<makeHexDump(string(buffer, buffer+stretch.size))<<endl;
     }
   }
 }

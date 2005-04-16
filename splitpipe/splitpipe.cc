@@ -28,6 +28,7 @@
 #include <signal.h>
 #include "misc.hh"
 #include "ringbuffer.hh"
+#include "md5.hh"
 
 struct {
   size_t bufferSize;
@@ -196,7 +197,23 @@ int spawnOutputThread()
   return d_fds[1];
 }
 
-
+void outputChecksum(int outputfd, const MD5Summer& md5)
+{
+  struct stretchHeader stretch;
+  string md5sum=md5.get();
+  stretch.size=htons(md5sum.length());
+  stretch.type=stretchHeader::MD5Checksum;
+  
+  int ret=writen(outputfd, &stretch, sizeof(stretch),"write of meta-data to output command");
+  
+  if(!ret)
+    outputGaveEof(outputfd);
+  
+  ret=writen(outputfd, md5sum.c_str(), md5sum.length(), "write of meta-data to output command");
+  
+  if(!ret)
+    outputGaveEof(outputfd);
+}
 
 string g_uuid;
 
@@ -281,6 +298,8 @@ try
   uint16_t leftInStretch=0;
   int numStretches=0;
   int chunkNumber=0;
+
+  MD5Summer md5;
 
   char *buffer = new char[parameters.bufferSize];
 
@@ -383,6 +402,9 @@ try
 	if(!len) {
 	  cerr<<"\nsplitpipe: output a full chunk, waiting for output command to exit..\n";
 	  struct stretchHeader stretch;
+
+	  outputChecksum(outputfd, md5);
+
 	  stretch.size=0;
 	  stretch.type=stretchHeader::ChunkEOF;
 
@@ -390,6 +412,7 @@ try
 
 	  if(!ret)
 	    outputGaveEof(outputfd);
+
 
 	  close(outputfd);
 
@@ -414,6 +437,7 @@ try
 	}
 	if(parameters.debug) 
 	  cerr<<"Wrote out "<<ret<<" out of "<<len<<" bytes"<<endl;
+	md5.feed(rbuffer, ret);
 	rb.advance(ret);
 
 	amountOutput += ret;
@@ -432,6 +456,9 @@ try
 
   if(outputOnline) {
     cerr<<"\nsplitpipe: done with input, waiting for output script to exit..\n";
+
+    outputChecksum(outputfd, md5);
+
     struct stretchHeader stretch;
     stretch.size=0;
     stretch.type=stretchHeader::SessionEOF;

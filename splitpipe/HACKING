@@ -1,0 +1,7 @@
+To work on this code, check out the subversion repository:
+
+$ svn co svn://svn.powerdns.com/trunk/splitpipe
+
+After working on the code, please run make check
+
+To submit patches, send the output of svn diff to bert hubert <ahu@ds9a.nl>

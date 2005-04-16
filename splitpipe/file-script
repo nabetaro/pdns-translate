@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo file-script starts, writing to output.$$
+cat > output.$$
+echo file-script done

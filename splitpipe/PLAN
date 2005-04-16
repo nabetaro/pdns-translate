@@ -94,3 +94,15 @@ QUESTIONS:
 should the join program only accept a filename to read from? or also a
 full script?
 
+
+FORMAT
+------
+
+The chunk consists of stretches, each stretch has a 32 bit length. If we see a zero length
+stretch, the chunk is done.
+
+The first ever stretch contains meta-data of this chunk in a simple ASCII format:
+
+
+If we have room in the ringbuffer, and we aren't yet in a 'stretch', output the size of the 
+data available in the ringbuffer, 

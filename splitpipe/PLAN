@@ -98,11 +98,13 @@ full script?
 FORMAT
 ------
 
-The chunk consists of stretches, each stretch has a 32 bit length. If we see a zero length
-stretch, the chunk is done.
+Each run of splitpipe
+	generates a session,
+	that consists of chunks 
+	that consist of stretches,
+	that consist of a header of 3, followed by 0 or more payload bytes
 
-The first ever stretch contains meta-data of this chunk in a simple ASCII format:
 
 
-If we have room in the ringbuffer, and we aren't yet in a 'stretch', output the size of the 
-data available in the ringbuffer, 
+
+

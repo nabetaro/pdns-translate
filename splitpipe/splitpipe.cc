@@ -20,12 +20,13 @@
 #include <getopt.h>
 #include <fcntl.h>
 #include <sys/select.h>
+#include <netinet/in.h>
 #include <time.h>
 #include <sys/time.h>
 #include <sys/wait.h>
 #include <stdint.h>
 #include <signal.h>
-
+#include "misc.hh"
 #include "ringbuffer.hh"
 
 struct {
@@ -52,7 +53,6 @@ static struct predef {
 
 uint64_t getSize(const char* desc) 
 {
-
   for(struct predef* p=predefinedSizes; p->name; ++p) {
     if(!strcasecmp(p->name, desc))
       return p->size;
@@ -68,26 +68,32 @@ void breakHandler(int t)
   g_havebreak=true;
 }
 
-void unixDie(const string& during)
+pid_t g_pid;
+void waitForOutputCommandToDie()
 {
-  throw runtime_error("during "+string(during)+": "+strerror(errno));
+  int status;
+  if(waitpid(g_pid, &status, 0) < 0)
+    unixDie("wait on child process");
+  
+  if(WIFEXITED(status))
+    cerr<<"\nsplitpipe: output command exited with status "<<WEXITSTATUS(status)<<endl;
+  else {
+    cerr<<"\nsplitpipe: output command exited abnormally";
+    if(WIFSIGNALED(status))
+      cerr<<", by signal "<<WTERMSIG(status);
+    cerr<<endl;
+  }
 }
 
 
-void setNonBlocking(int fd)
+void outputGaveEof(int outputfd)
 {
-  int flags=fcntl(fd,F_GETFL,0);
-  if(flags<0 || fcntl(fd, F_SETFL,flags|O_NONBLOCK) <0)
-    unixDie("Setting filedescriptor to nonblocking failed");
+  cerr<<"\nsplitpipe: output command gave EOF, waiting for it to exit"<<endl;
+  close(outputfd);
+  waitForOutputCommandToDie();
+  cerr<<"\nsplitpipe: future versions of splitpipe may allow you to continue, but for now.. exit\n";
+  exit(EXIT_FAILURE);
 }
-
-double getTime()
-{
-  struct timeval tv;
-  gettimeofday(&tv, 0);
-  return tv.tv_sec + tv.tv_usec/1000000.0;
-}
-
 
 void usage()
 {
@@ -149,7 +155,7 @@ void ParseCommandline(int argc, char** argv)
   }
 }
 
-pid_t g_pid;
+
 
 int spawnOutputThread()
 {
@@ -195,21 +201,6 @@ void waitForUser()
   fclose(fp);
 }
 
-void waitForOutputCommandToDie()
-{
-  int status;
-  if(waitpid(g_pid, &status, 0) < 0)
-    unixDie("wait on child process");
-  
-  if(WIFEXITED(status))
-    cerr<<"\nsplitpipe: output command exited with status "<<WEXITSTATUS(status)<<endl;
-  else {
-    cerr<<"\nsplitpipe: output command exited abnormally";
-    if(WIFSIGNALED(status))
-      cerr<<", by signal "<<WTERMSIG(status);
-    cerr<<endl;
-  }
-}
 
 int main(int argc, char** argv)
 try
@@ -259,13 +250,15 @@ try
   bool outputOnline=false;
   int outputfd;
   uint64_t amountOutput=0;
+  uint16_t leftInStretch=0;
+  int numStretches=0;
 
   char *buffer = new char[parameters.bufferSize];
 
   if(parameters.verbose) 
     cerr<<"Prebuffering before starting output script..";
 
-  bool d_firstchunk=true;
+  bool d_firstchunk=true; // first chunk does not get the 'press enter' stuff
 
   while(1) {
 
@@ -277,7 +270,6 @@ try
       else {
 	cerr<<"splitpipe: reload media, if necessary, and press enter to continue"<<endl;
 	waitForUser();
-
       }
 
       cerr<<"splitpipe: bringing output script online - buffer " << 100.0*rb.available() / parameters.bufferSize <<"% full"<<endl;
@@ -331,10 +323,26 @@ try
 	size_t lenAvailable;
 	rb.get(&rbuffer, &lenAvailable);
 
+	if(!leftInStretch) {
+	  leftInStretch=min((size_t)0xffff, lenAvailable);
+
+	  if(parameters.debug) 
+	    cerr<<"splitpipe: starting a stretch of "<<leftInStretch<<" bytes"<<endl;
+	  uint16_t amount=htons(leftInStretch);
+	  ret=writen(outputfd, &amount, sizeof(amount),"write of meta-data to output command");
+	  if(!ret)
+	    outputGaveEof(outputfd);
+	  
+	  numStretches++;
+	  break; // go past select again, not sure if this is needed
+	}
+
 	uint64_t leftInChunk=parameters.chunkSize - amountOutput;
 
 	size_t len=min((uint64_t)lenAvailable, leftInChunk);
 	
+	len=min(len, (size_t)leftInStretch);
+
 	if(!len) {
 	  cerr<<"\nsplitpipe: output a full chunk, waiting for output command to exit..\n";
 	  close(outputfd);
@@ -356,19 +364,15 @@ try
 	}
 
 	if(!ret) {
-	  cerr<<"\nsplitpipe: output command gave EOF, waiting for it to exit"<<endl;
-	  close(outputfd);
-	  waitForOutputCommandToDie();
-	  cerr<<"\nsplitpipe: future versions of splitpipe may allow you to continue, but for now.. exit\n";
-	  exit(EXIT_FAILURE);
+	  outputGaveEof(outputfd);
 	}
 	if(parameters.debug) 
 	  cerr<<"Wrote out "<<ret<<" out of "<<len<<" bytes"<<endl;
 	rb.advance(ret);
 
-	amountOutput+=ret;
-
-	totalBytesOutput+=ret;
+	amountOutput += ret;
+	leftInStretch -= ret;
+	totalBytesOutput += ret;
 
 	if(parameters.debug) 
 	  cerr<<"There are now "<<rb.available()<<" bytes left in the rb"<<endl;
@@ -385,6 +389,7 @@ try
     close(outputfd);
     waitForOutputCommandToDie();
   }
+  cerr<<"splitpipe: output "<<numStretches<<" stretches\n";
 }
 catch(exception &e)
 {

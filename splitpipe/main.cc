@@ -1,3 +1,21 @@
+/*
+    splitpipe allows the output of programs to span volumes
+    Copyright (C) 2005  Netherlabs Computer Consulting BV
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation;
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
 #include <unistd.h>
 #include <getopt.h>
 #include <fcntl.h>
@@ -27,8 +45,8 @@ uint64_t getSize(const char* desc)
   } predefinedSizes[]= { 
     {"floppy", 1440000 }, 
     {"CD", 650000000ULL }, 
-    {"CD-80", 700000000ULL }, 
-    {"CDR-80", 700000000ULL }, 
+    {"CD-80", 700000256ULL }, 
+    {"CDR-80", 700000256ULL }, 
     {"DVD", 4700000000ULL }, 
     {"DVD-5", 4700000000ULL }, 
     {0, 0} 

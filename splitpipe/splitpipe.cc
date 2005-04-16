@@ -37,24 +37,25 @@ struct {
 } parameters;
 
 
+static struct predef {
+  const char* name;
+  uint64_t size;
+} predefinedSizes[]= { 
+  {"floppy", 1440000 }, 
+  {"CD", 650000384ULL }, 
+  {"CD-80", 700000256ULL }, 
+  {"CDR-80", 700000256ULL }, 
+  {"DVD", 4700000256ULL }, 
+  {"DVD-5", 4700000256ULL }, 
+  {0, 0} 
+};
+
 uint64_t getSize(const char* desc) 
 {
-  static struct predef {
-    const char* name;
-    uint64_t kb;
-  } predefinedSizes[]= { 
-    {"floppy", 1440000 }, 
-    {"CD", 650000000ULL }, 
-    {"CD-80", 700000256ULL }, 
-    {"CDR-80", 700000256ULL }, 
-    {"DVD", 4700000000ULL }, 
-    {"DVD-5", 4700000000ULL }, 
-    {0, 0} 
-  };
 
   for(struct predef* p=predefinedSizes; p->name; ++p) {
     if(!strcasecmp(p->name, desc))
-      return p->kb;
+      return p->size;
   }
   return atoi(desc)*1024;
 }
@@ -95,7 +96,10 @@ void usage()
   cerr<<" --chunk-size, -c\tSize of output chunks, in kilobytes, or use 'DVD', 'CDR' or 'CDR-80'"<<endl;
   cerr<<" --help, -h\t\tGive this helpful message"<<endl;
   cerr<<" --verbose, -v\t\tGive verbose output\n\n";
-  
+
+  cerr<<"predefined chunk sizes: \n";
+  for(struct predef* p=predefinedSizes; p->name; ++p) 
+    cerr<<"\t"<<p->name<<"\t"<<p->size<<" bytes\n";
   exit(1);
   
 }
@@ -180,6 +184,32 @@ int spawnOutputThread()
   return d_fds[1];
 }
 
+void waitForUser()
+{	
+  FILE *fp=fopen("/dev/tty", "r");
+  if(!fp) 
+    unixDie("opening of /dev/tty for user input");
+  
+  char line[80];
+  fgets(line, sizeof(line) - 1, fp);
+  fclose(fp);
+}
+
+void waitForOutputCommandToDie()
+{
+  int status;
+  if(waitpid(g_pid, &status, 0) < 0)
+    unixDie("wait on child process");
+  
+  if(WIFEXITED(status))
+    cerr<<"\nsplitpipe: output command exited with status "<<WEXITSTATUS(status)<<endl;
+  else {
+    cerr<<"\nsplitpipe: output command exited abnormally";
+    if(WIFSIGNALED(status))
+      cerr<<", by signal "<<WTERMSIG(status);
+    cerr<<endl;
+  }
+}
 
 int main(int argc, char** argv)
 try
@@ -190,7 +220,9 @@ try
   ParseCommandline(argc, argv);
 
   signal(SIGPIPE, SIG_IGN);
-  signal(SIGINT, breakHandler);
+
+  //  signal(SIGINT, breakHandler);
+
   cerr.setf(ios::fixed);
   cerr.precision(2);
 
@@ -218,13 +250,12 @@ try
     cerr<<"Chunk size set to zero, which is unsupported. Try --chunk-size DVD for DVD-size chunks"<<endl;
     exit(1);
   }
-  
 
   RingBuffer rb(parameters.bufferSize);
   setNonBlocking(0);
   setNonBlocking(1);
 
-  bool inputEof=false, outputEof=false;
+  bool inputEof=false;
   bool outputOnline=false;
   int outputfd;
   uint64_t amountOutput=0;
@@ -244,14 +275,9 @@ try
 	d_firstchunk=false;
       }
       else {
-	cerr<<"\nsplitpipe: reload media, if necessary, and press enter to continue"<<endl;
-	FILE *fp=fopen("/dev/tty", "r");
-	if(!fp) 
-	  unixDie("opening of /dev/tty for user input");
+	cerr<<"splitpipe: reload media, if necessary, and press enter to continue"<<endl;
+	waitForUser();
 
-	char line[80];
-	fgets(line, sizeof(line) - 1, fp);
-	fclose(fp);
       }
 
       cerr<<"splitpipe: bringing output script online - buffer " << 100.0*rb.available() / parameters.bufferSize <<"% full"<<endl;
@@ -280,8 +306,8 @@ try
     if(!ret)  // odd
       continue;
     
-
     size_t bytesRead=0;
+
     if(!inputEof && FD_ISSET(0, &inputs)) {
       ret=read(0, buffer, min((size_t)1000000, rb.room()));
       if(ret < 0)
@@ -298,30 +324,22 @@ try
       }
     }
 
-    if(!outputEof && outputOnline && rb.available() &&  FD_ISSET(outputfd, &outputs)) {
-      size_t totalBytes=0;
+    if(outputOnline && rb.available() &&  FD_ISSET(outputfd, &outputs)) {
+      uint64_t totalBytesOutput=0;
       do {
 	const char *rbuffer;
-	size_t len;
-	rb.get(&rbuffer, &len);
+	size_t lenAvailable;
+	rb.get(&rbuffer, &lenAvailable);
 
-	len=min((uint64_t)len, parameters.chunkSize - amountOutput);
+	uint64_t leftInChunk=parameters.chunkSize - amountOutput;
+
+	size_t len=min((uint64_t)lenAvailable, leftInChunk);
 	
 	if(!len) {
-	  cerr<<"\nsplitpipe: output a full chunk, closing pipe, waiting for output command to exit..\n";
+	  cerr<<"\nsplitpipe: output a full chunk, waiting for output command to exit..\n";
 	  close(outputfd);
-	  int status;
-	  if(waitpid(g_pid, &status, 0) < 0)
-	    unixDie("wait on child process");
 
-	  if(WIFEXITED(status))
-	    cerr<<"\nsplitpipe: output command exited with status "<<WEXITSTATUS(status)<<endl;
-	  else {
-	    cerr<<"\nsplitpipe: output command exited abnormally";
-	    if(WIFSIGNALED(status))
-	      cerr<<", by signal "<<WTERMSIG(status);
-	    cerr<<endl;
-	  }
+	  waitForOutputCommandToDie();
 	  
 	  outputOnline=false;
 	  outputfd=-1;
@@ -334,13 +352,15 @@ try
 	  if(errno==EAGAIN)
 	    break;
 	  else
-	    unixDie("Writing to standard output");
+	    unixDie("write to standard output");
 	}
 
 	if(!ret) {
-	  if(parameters.debug) 
-	    cerr<<"Had EOF on *OUTPUT*"<<endl;
-	  outputEof=true;
+	  cerr<<"\nsplitpipe: output command gave EOF, waiting for it to exit"<<endl;
+	  close(outputfd);
+	  waitForOutputCommandToDie();
+	  cerr<<"\nsplitpipe: future versions of splitpipe may allow you to continue, but for now.. exit\n";
+	  exit(EXIT_FAILURE);
 	}
 	if(parameters.debug) 
 	  cerr<<"Wrote out "<<ret<<" out of "<<len<<" bytes"<<endl;
@@ -348,13 +368,12 @@ try
 
 	amountOutput+=ret;
 
-	totalBytes+=ret;
+	totalBytesOutput+=ret;
 
 	if(parameters.debug) 
 	  cerr<<"There are now "<<rb.available()<<" bytes left in the rb"<<endl;
-	//	else
-	//	  cerr<<getTime()-startTime<<"\t"<<rb.available()<<"\n";
-      } while(totalBytes < bytesRead && rb.available());
+      } while(totalBytesOutput < bytesRead && rb.available());
+
     }
 
     if(inputEof && !rb.available())
@@ -364,17 +383,8 @@ try
   if(outputOnline) {
     cerr<<"\nsplitpipe: done with input, waiting for output script to exit..\n";
     close(outputfd);
-    int status;
-    waitpid(g_pid, &status, 0);
-    if(WIFEXITED(status))
-      cerr<<"\nsplitpipe: output command exited with status "<<WEXITSTATUS(status)<<endl;
-    else {
-      cerr<<"\nsplitpipe: output command exited abnormally";
-      if(WIFSIGNALED(status))
-	cerr<<", by signal "<<WTERMSIG(status)<<endl;
-    }
+    waitForOutputCommandToDie();
   }
-
 }
 catch(exception &e)
 {

@@ -1,0 +1,19 @@
+splitpipe allows piped output to span multiple volumes, which might be
+floppies, cd-recordables, dvd's or whatnot.
+
+(C) 2005 Netherlabs Computer Consulting BV - bert hubert <ahu@ds9a.nl>
+
+This is the very first release, so it will eat data and in fact destroy your
+orginal files. Count on it.
+
+Sample:
+
+# tar czf - /home | splitpipe -b 100000 -c cdr-80 -v ./cdrecord-script
+
+This makes 700mbyte cd-recordables of your /home, using a 100 megabyte
+buffer. In our experience, the following works better:
+
+# tar cf - /home | gzip --fast | splitpipe -b 100000 -c cdr-80 -v ./cdrecord-script
+
+This loses some compression but saves heaps of cpu time. 
+

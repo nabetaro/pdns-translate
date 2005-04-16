@@ -26,6 +26,7 @@
 #include <sys/wait.h>
 #include <stdint.h>
 #include <signal.h>
+#include <errno.h>
 #include "misc.hh"
 #include "ringbuffer.hh"
 #include "md5.hh"

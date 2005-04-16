@@ -2,6 +2,7 @@
 #define _MD5_H
 
 #include <string>
+#include <stdint.h>
 
 namespace {
   struct md5_context

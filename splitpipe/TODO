@@ -1,0 +1,19 @@
+- implement chunking
+	first restore from cd failed because cd's have atomic sector sizes,
+	so concat of second cd fails
+
+- related, implement md5sum - perhaps before next chunk?
+
+- specification of program to run is weak, ideal is what "strace" does
+	simple alternative is --command "blah blah blah", and then feed all
+	that to /bin/sh -c
+
+- output of cdrecord is fugly, perhaps add --cdrecord for prettifying
+
+- implement retreat
+	so we can recover from broken disks etc
+
+- write dvdrecord-script
+
+- define environment variables
+	

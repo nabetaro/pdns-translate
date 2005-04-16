@@ -34,7 +34,7 @@ struct {
   uint64_t chunkSize;
   bool verbose;
   bool debug;
-  vector<string> outputCommand;
+  string outputCommand;
 } parameters;
 
 
@@ -101,6 +101,7 @@ void usage()
   cerr<<" --buffer-size, -b\tSize of buffer before output, in megabytes"<<endl;
   cerr<<" --chunk-size, -c\tSize of output chunks, in kilobytes, or use 'DVD', 'CDR' or 'CDR-80'"<<endl;
   cerr<<" --help, -h\t\tGive this helpful message"<<endl;
+  cerr<<" --output\tThe output script that will be spawned for each chunk"<<endl;
   cerr<<" --verbose, -v\t\tGive verbose output\n\n";
 
   cerr<<"predefined chunk sizes: \n";
@@ -119,13 +120,14 @@ void ParseCommandline(int argc, char** argv)
     static struct option long_options[] = {
       {"buffer-size", 1, 0, 'b'},
       {"chunk-size", 1, 0, 'c'},
+      {"output", 1, 0, 'o'},
       {"debug", 0, 0, 'd'},
       {"verbose", 0, 0, 'v'},
       {"help", 0, 0, 'h'},
       {0, 0, 0, 0}
     };
     
-    c = getopt_long (argc, argv, "b:c:dhv",
+    c = getopt_long (argc, argv, "b:c:dho:v",
 		     long_options, &option_index);
     if (c == -1)
       break;
@@ -143,6 +145,9 @@ void ParseCommandline(int argc, char** argv)
     case 'h':
       usage();
       break;
+    case 'o':
+      parameters.outputCommand=optarg;
+      break;
     case 'v':
       parameters.verbose=true;
       break;
@@ -150,7 +155,7 @@ void ParseCommandline(int argc, char** argv)
   }
   if (optind < argc) {
     while (optind < argc) {
-      parameters.outputCommand.push_back(argv[optind++]);
+
     }
   }
 }
@@ -175,12 +180,11 @@ int spawnOutputThread()
     close(d_fds[1]);
     dup2(d_fds[0], 0); // connect to stdin
     
-    char* argvp[parameters.outputCommand.size() + 1];
-    argvp[0]=const_cast<char*>(parameters.outputCommand[0].c_str()); // FOAD 1
-    unsigned int n=0;
-    for(; n < parameters.outputCommand.size() ; ++n)
-      argvp[n]=const_cast<char*>(parameters.outputCommand[n].c_str());
-    argvp[n]=0;
+    char* argvp[4];
+    argvp[0]="/bin/sh";
+    argvp[1]="-c";
+    argvp[2]=(char*)parameters.outputCommand.c_str();
+    argvp[3]=0;
 
     if(execvp(argvp[0], argvp))
       unixDie("launch of output script");
@@ -241,6 +245,8 @@ try
     cerr<<"Chunk size set to zero, which is unsupported. Try --chunk-size DVD for DVD-size chunks"<<endl;
     exit(1);
   }
+
+  parameters.chunkSize -= 2048; // leave room for last stretch
 
   RingBuffer rb(parameters.bufferSize);
   setNonBlocking(0);
@@ -323,21 +329,30 @@ try
 	size_t lenAvailable;
 	rb.get(&rbuffer, &lenAvailable);
 
-	if(!leftInStretch) {
-	  leftInStretch=min((size_t)0xffff, lenAvailable);
+	uint64_t leftInChunk=parameters.chunkSize - amountOutput;
 
+	if(leftInChunk >= 3 && !leftInStretch) {   // only start a new stretch if there is room for at least 1 byte
+	  leftInStretch=min((size_t)0xffff, lenAvailable);
+	  leftInStretch=min((uint64_t)leftInStretch, leftInChunk - 3);
 	  if(parameters.debug) 
 	    cerr<<"splitpipe: starting a stretch of "<<leftInStretch<<" bytes"<<endl;
-	  uint16_t amount=htons(leftInStretch);
-	  ret=writen(outputfd, &amount, sizeof(amount),"write of meta-data to output command");
+
+	  struct stretchHeader stretch;
+
+	  stretch.size=htons(leftInStretch);
+	  stretch.type=stretchHeader::Data;
+
+	  ret=writen(outputfd, &stretch, sizeof(stretch),"write of meta-data to output command");
+
 	  if(!ret)
 	    outputGaveEof(outputfd);
 	  
+	  amountOutput += sizeof(stretch);
 	  numStretches++;
 	  break; // go past select again, not sure if this is needed
 	}
 
-	uint64_t leftInChunk=parameters.chunkSize - amountOutput;
+
 
 	size_t len=min((uint64_t)lenAvailable, leftInChunk);
 	
@@ -345,6 +360,15 @@ try
 
 	if(!len) {
 	  cerr<<"\nsplitpipe: output a full chunk, waiting for output command to exit..\n";
+	  struct stretchHeader stretch;
+	  stretch.size=0;
+	  stretch.type=stretchHeader::ChunkEOF;
+
+	  ret=writen(outputfd, &stretch, sizeof(stretch),"write of meta-data to output command");
+
+	  if(!ret)
+	    outputGaveEof(outputfd);
+
 	  close(outputfd);
 
 	  waitForOutputCommandToDie();
@@ -386,6 +410,15 @@ try
 
   if(outputOnline) {
     cerr<<"\nsplitpipe: done with input, waiting for output script to exit..\n";
+    struct stretchHeader stretch;
+    stretch.size=0;
+    stretch.type=stretchHeader::SessionEOF;
+    
+    int ret=writen(outputfd, &stretch, sizeof(stretch),"write of meta-data to output command");
+    
+    if(!ret)
+      outputGaveEof(outputfd);
+
     close(outputfd);
     waitForOutputCommandToDie();
   }

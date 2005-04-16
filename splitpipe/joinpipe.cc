@@ -27,6 +27,7 @@
 #include <signal.h>
 #include <iostream>
 #include <netinet/in.h>
+#include <stdexcept>
 #include "misc.hh"
 
 using namespace std;
@@ -97,30 +98,39 @@ void ParseCommandline(int argc, char** argv)
   */
 }
 
-
-
 int main(int argc, char** argv)
 try
 {
   ParseCommandline(argc, argv);
 
-
-  uint16_t stretchLeft;
-
   char* buffer=new char[65536];
+  struct stretchHeader stretch;
   for(;;) {
-    if(!readn(0, &stretchLeft, 2, "read of length of stretch"))
-      break;
-    
-    stretchLeft=ntohs(stretchLeft);
+    if(!readn(0, &stretch, sizeof(struct stretchHeader), "read of stretch header"))
+      throw runtime_error("EOF before end of session");
 
-    if(!stretchLeft)
-      break;
+    stretch.size=ntohs(stretch.size);
 
-    readn(0, buffer, stretchLeft, "read of a stretch of input");
-    writen(1, buffer, stretchLeft, "write of a stretch of input");
+    if(stretch.size && !readn(0, buffer, stretch.size, "read of a stretch of input")) {
+      cerr<<stretch.size<<endl;
+      throw runtime_error("unexpected end of file during read of a stretch");
+    }
+
+    if(stretch.type==stretchHeader::Data) {    
+      if(!writen(1, buffer, stretch.size, "write of a stretch of input"))
+	throw runtime_error("unexpected end of file on standard output");
+    }
+    else if(stretch.type==stretchHeader::ChunkEOF) {    
+      cerr<<"joinpipe: end of chunk"<<endl;
+    }
+    else if(stretch.type==stretchHeader::SessionEOF) {    
+      cerr<<"joinpipe: end of session"<<endl;
+      break;
+    }
+    else {
+      cerr<<"joinpipe: unknown stretch type "<<(int)stretch.type<<endl;
+    }
   }
-
 }
 catch(exception &e)
 {

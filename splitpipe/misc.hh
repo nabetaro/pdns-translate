@@ -8,4 +8,12 @@ double getTime();
 void setNonBlocking(int fd);
 void unixDie(const std::string& during);
 
+struct stretchHeader
+{
+  uint16_t size;
+  uint8_t type;
+
+  enum Types { SessionName=0, SessionUUID, ChunkDescriptor, ChunkEOF, Data, MD5Checksum, SHA1Checksum, SessionEOF };
+} __attribute__((packed));
+
 #endif

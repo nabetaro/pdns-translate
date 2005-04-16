@@ -42,7 +42,7 @@ struct params
   bool verbose;
   bool debug;
   bool verify;
-
+  string inputDevice;
 }parameters;
 
 void usage()
@@ -89,13 +89,12 @@ void ParseCommandline(int argc, char** argv)
       break;
     }
   }
-  /*
   if (optind < argc) {
     while (optind < argc) {
-      parameters.outputCommand.push_back(argv[optind++]);
+      parameters.inputDevice=argv[optind++];
     }
   }
-  */
+
 }
 
 int main(int argc, char** argv)
@@ -105,23 +104,62 @@ try
 
   char* buffer=new char[65536];
   struct stretchHeader stretch;
+  string uuid;
+  unsigned int numChunks=0;
+
+  int infd=open(parameters.inputDevice.c_str(), O_RDONLY);
+  if(infd < 0)
+    unixDie("opening of "+parameters.inputDevice+" for input");
+
   for(;;) {
-    if(!readn(0, &stretch, sizeof(struct stretchHeader), "read of stretch header"))
+    if(!readn(infd, &stretch, sizeof(struct stretchHeader), "read of stretch header"))
       throw runtime_error("EOF before end of session");
 
     stretch.size=ntohs(stretch.size);
 
-    if(stretch.size && !readn(0, buffer, stretch.size, "read of a stretch of input")) {
+    if(stretch.size && !readn(infd, buffer, stretch.size, "read of a stretch of input")) {
       cerr<<stretch.size<<endl;
       throw runtime_error("unexpected end of file during read of a stretch");
     }
 
-    if(stretch.type==stretchHeader::Data) {    
+    if(stretch.type==stretchHeader::SessionUUID) {    
+      if(uuid.empty()) {
+	uuid=string(buffer,buffer+stretch.size);
+	cerr<<"UUID of this session is '"<<makeHexDump(uuid)<<"'"<<endl;
+      } else {
+	if(uuid != string(buffer,buffer+stretch.size)) {
+	  cerr<<"This chunk does not belong to the correct session, ";
+	  cerr<<"uuid should be '"<<makeHexDump(uuid)<<"', is '"<<makeHexDump(string(buffer,buffer+stretch.size))<<"'"<<endl;
+	  exit(EXIT_FAILURE); // deal with this
+	}
+      }
+    }
+    else if(stretch.type==stretchHeader::ChunkNumber) {    
+      uint16_t newChunkNumber;
+      memcpy(&newChunkNumber, buffer, 2);
+      newChunkNumber = ntohs(newChunkNumber);
+      if(newChunkNumber != numChunks) {
+	cerr<<"This is chunk number "<<newChunkNumber<<", were expecting "<<numChunks<<", please retry"<<endl;
+	exit(EXIT_FAILURE);
+      }
+      else if(parameters.verbose)
+	cerr<<"Found chunk "<<newChunkNumber<<", as expected"<<endl;
+      numChunks++;
+    }
+    else if(stretch.type==stretchHeader::Data) {    
       if(!writen(1, buffer, stretch.size, "write of a stretch of input"))
 	throw runtime_error("unexpected end of file on standard output");
     }
     else if(stretch.type==stretchHeader::ChunkEOF) {    
-      cerr<<"joinpipe: end of chunk"<<endl;
+
+      close(infd);
+      cerr<<"joinpipe: end of chunk, change media and press enter"<<endl;
+
+      waitForUser();
+
+      infd=open(parameters.inputDevice.c_str(), O_RDONLY);
+      if(infd < 0)
+	unixDie("opening of "+parameters.inputDevice+" for input");
     }
     else if(stretch.type==stretchHeader::SessionEOF) {    
       cerr<<"joinpipe: end of session"<<endl;

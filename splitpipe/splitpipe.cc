@@ -191,18 +191,39 @@ int spawnOutputThread()
 
     cerr<<"We should Never Ever end up here"<<endl;
   }
+  setNonBlocking(d_fds[1]);
+
   return d_fds[1];
 }
 
-void waitForUser()
-{	
-  FILE *fp=fopen("/dev/tty", "r");
-  if(!fp) 
-    unixDie("opening of /dev/tty for user input");
+
+
+string g_uuid;
+
+int outputPerChunkStretches(int fd, uint16_t chunkNumber)
+{
+  struct stretchHeader stretch;
+  stretch.type=stretchHeader::SessionUUID;
+  stretch.size=htons(g_uuid.length());
+
+  if(!writen(fd, &stretch, sizeof(stretch), "write of Session UUID"))
+    outputGaveEof(fd);
+
+  if(!writen(fd, g_uuid.c_str(), g_uuid.length(), "write of Session UUID"))
+    outputGaveEof(fd);
+
+  stretch.type=stretchHeader::ChunkNumber;
+  stretch.size=htons(2);
   
-  char line[80];
-  fgets(line, sizeof(line) - 1, fp);
-  fclose(fp);
+  chunkNumber = htons(chunkNumber);
+  if(!writen(fd, &stretch, sizeof(stretch), "write of chunk number"))
+    outputGaveEof(fd);
+
+  if(!writen(fd, &chunkNumber, 2, "write of chunk number"))
+    outputGaveEof(fd);
+
+
+  return 2 * sizeof(stretch) + g_uuid.length() + 2;
 }
 
 
@@ -246,11 +267,12 @@ try
     exit(1);
   }
 
+  g_uuid=generateUUID();
+
   parameters.chunkSize -= 2048; // leave room for last stretch
 
   RingBuffer rb(parameters.bufferSize);
   setNonBlocking(0);
-  setNonBlocking(1);
 
   bool inputEof=false;
   bool outputOnline=false;
@@ -258,6 +280,7 @@ try
   uint64_t amountOutput=0;
   uint16_t leftInStretch=0;
   int numStretches=0;
+  int chunkNumber=0;
 
   char *buffer = new char[parameters.bufferSize];
 
@@ -267,7 +290,6 @@ try
   bool d_firstchunk=true; // first chunk does not get the 'press enter' stuff
 
   while(1) {
-
     if(!outputOnline && (inputEof || (1.0 * rb.available() / parameters.bufferSize > 0.5))) {
       if(d_firstchunk) {
 	cerr<<" done"<<endl;;
@@ -280,8 +302,8 @@ try
 
       cerr<<"splitpipe: bringing output script online - buffer " << 100.0*rb.available() / parameters.bufferSize <<"% full"<<endl;
       outputfd=spawnOutputThread();
+      amountOutput = outputPerChunkStretches(outputfd, chunkNumber++);      
       outputOnline=true;
-      amountOutput=0;
     }
 
     fd_set inputs;

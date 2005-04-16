@@ -14,6 +14,44 @@ void unixDie(const string& during)
   throw runtime_error("during "+string(during)+": "+strerror(errno));
 }
 
+void waitForUser()
+{	
+  FILE *fp=fopen("/dev/tty", "r");
+  if(!fp) 
+    unixDie("opening of /dev/tty for user input");
+  
+  char line[80];
+  fgets(line, sizeof(line) - 1, fp);
+  fclose(fp);
+}
+
+
+string makeHexDump(const string& str)
+{
+  char tmp[5];
+  string ret;
+  for(string::size_type n=0;n<str.size();++n) {
+    if(n && !(n%8))
+      ret+=" ";
+    sprintf(tmp,"%02x", (unsigned char)str[n]);
+    ret+=tmp;
+  }
+  return ret;
+}
+
+
+string generateUUID()
+{
+  int fd=open("/dev/urandom",O_RDONLY);
+  if(fd < 0)
+    unixDie("opening the random device");
+  char buffer[16];
+  if(read(fd, buffer, 16)!=16)
+    throw runtime_error("partial read from random device");
+  
+  return string(buffer, buffer+16);
+}
+
 
 void setNonBlocking(int fd)
 {

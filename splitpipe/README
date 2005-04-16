@@ -8,12 +8,17 @@ orginal files. Count on it.
 
 Sample:
 
-# tar czf - /home | splitpipe -b 100000 -c cdr-80 -v ./cdrecord-script
+# tar czf - /home | splitpipe -b 100000 -c cdr-80 -v -o ./cdrecord-script
 
 This makes 700mbyte cd-recordables of your /home, using a 100 megabyte
 buffer. In our experience, the following works better:
 
-# tar cf - /home | gzip --fast | splitpipe -b 100000 -c cdr-80 -v ./cdrecord-script
+# tar cf - /home | gzip --fast | splitpipe -b 100000 -c cdr-80 -v -o ./cdrecord-script
 
 This loses some compression but saves heaps of cpu time. 
+
+To test to regular files, try:
+
+# tar czf - /home | splitpipe -b 100000 -c cdr-80 -v -o 'cat > output.$$'
+
 

@@ -7,6 +7,7 @@ int readn(int fd, void* ptr, size_t size, const char* description);
 int writen(int fd, const void* ptr, size_t size, const char* description);
 double getTime();
 void setNonBlocking(int fd);
+void setBlocking(int fd);
 void unixDie(const std::string& during);
 std::string generateUUID();
 std::string makeHexDump(const std::string& str);

@@ -98,12 +98,14 @@ void outputGaveEof(int outputfd)
 
 void usage()
 {
-  cerr<<"splitpipe syntax:\n\n";
+  cerr<<"splitpipe divides its input over several chunks (volumes).\n";
+  cerr<<"\nsyntax: ... | joinpipe [options] \n\n";
   cerr<<" --buffer-size, -b\tSize of buffer before output, in megabytes"<<endl;
-  cerr<<" --chunk-size, -c\tSize of output chunks, in kilobytes, or use 'DVD', 'CDR' or 'CDR-80'"<<endl;
+  cerr<<" --chunk-size, -c\tSize of output chunks, in kilobytes. See below"<<endl;
   cerr<<" --help, -h\t\tGive this helpful message"<<endl;
-  cerr<<" --output\tThe output script that will be spawned for each chunk"<<endl;
-  cerr<<" --verbose, -v\t\tGive verbose output\n\n";
+  cerr<<" --output, -o\t\tThe output script that will be spawned for each chunk"<<endl;
+  cerr<<" --verbose, -v\t\tGive verbose output\n";
+  cerr<<" --version\t\tReport version\n\n";
 
   cerr<<"predefined chunk sizes: \n";
   for(struct predef* p=predefinedSizes; p->name; ++p) 
@@ -124,11 +126,12 @@ void ParseCommandline(int argc, char** argv)
       {"output", 1, 0, 'o'},
       {"debug", 0, 0, 'd'},
       {"verbose", 0, 0, 'v'},
+      {"version", 0, 0, 'e'},
       {"help", 0, 0, 'h'},
       {0, 0, 0, 0}
     };
     
-    c = getopt_long (argc, argv, "b:c:dho:v",
+    c = getopt_long (argc, argv, "b:c:deho:v",
 		     long_options, &option_index);
     if (c == -1)
       break;
@@ -143,6 +146,9 @@ void ParseCommandline(int argc, char** argv)
     case 'd':
       parameters.debug=1;
       break;
+    case 'e':
+      cerr<<"splitpipe "VERSION" (C) 2005 Netherlabs Computer Consulting BV"<<endl;
+      exit(EXIT_SUCCESS);
     case 'h':
       usage();
       break;
@@ -268,9 +274,9 @@ try
   if(parameters.outputCommand.empty()) {
     cerr<<"No output command specified - unable to write data\n\n";
     cerr<<"Suggested command for cd: \n";
-    cerr<<"cdrecord dev=/dev/cdrom speed=24 -eject -dummy -tao\n";
+    cerr<<".. -o 'cdrecord dev=/dev/cdrom speed=24 -eject -dummy -tao'\n";
     cerr<<"\nSuggested command for dvd: \n";
-    cerr<<"growisofs -Z/dev/dvd=/dev/stdin -dry-run\n";
+    cerr<<".. -o 'growisofs -Z/dev/dvd=/dev/stdin -dry-run'\n";
     exit(1);
   }
 
@@ -293,7 +299,7 @@ try
 
   bool inputEof=false;
   bool outputOnline=false;
-  int outputfd;
+  int outputfd=-1;
   uint64_t amountOutput=0;
   uint16_t leftInStretch=0;
   int numStretches=0;
@@ -471,7 +477,8 @@ try
     close(outputfd);
     waitForOutputCommandToDie();
   }
-  cerr<<"splitpipe: output "<<numStretches<<" stretches\n";
+  if(parameters.verbose)
+    cerr<<"splitpipe: output "<<numStretches<<" stretches\n";
 }
 catch(exception &e)
 {

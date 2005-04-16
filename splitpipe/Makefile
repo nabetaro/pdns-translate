@@ -1,13 +1,21 @@
-CXXFLAGS=-Wall -g -O2
 VERSION=0.1
 OUTPUTDIR=splitpipe-$(VERSION)
+CXXFLAGS=-Wall -g -O2 -DVERSION=\"$(VERSION)\"
 
 all: splitpipe joinpipe
+
+# output of g++ -MM *.cc
+joinpipe.o: joinpipe.cc misc.hh md5.hh
+md5.o: md5.cc md5.hh
+misc.o: misc.cc misc.hh
+splitpipe.o: splitpipe.cc misc.hh ringbuffer.hh md5.hh
+
+
 
 clean:
 	rm -rf *~ *.o splitpipe 
 	cd tests; make clean
-	
+
 common_OBJECTS=misc.o md5.o
 splitpipe_OBJECTS=splitpipe.o $(common_OBJECTS)
 joinpipe_OBJECTS=joinpipe.o $(common_OBJECTS)
@@ -29,3 +37,7 @@ dist:
 	cp tests/{*.cc,Makefile} $(OUTPUTDIR)/tests
 	tar cvzf $(OUTPUTDIR).tar.gz $(OUTPUTDIR)/
 	rm -rf $(OUTPUTDIR)
+
+install:
+	install -s splitpipe $(DESTDIR)/usr/local/bin
+	install -s joinpipe $(DESTDIR)/usr/local/bin

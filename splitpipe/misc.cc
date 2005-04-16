@@ -60,6 +60,14 @@ void setNonBlocking(int fd)
     unixDie("Setting filedescriptor to nonblocking failed");
 }
 
+void setBlocking(int fd)
+{
+  int flags=fcntl(fd,F_GETFL,0);
+  if(flags<0 || fcntl(fd, F_SETFL,flags & (~O_NONBLOCK) ) <0)
+    unixDie("Setting filedescriptor to blocking failed");
+}
+
+
 double getTime()
 {
   struct timeval tv;
@@ -84,15 +92,20 @@ int readn(int fd, void* ptr, size_t size, const char* description)
 
 int writen(int fd, const void* ptr, size_t size, const char* description)
 {
+  setBlocking(fd);
+
   size_t done=0;
   int ret;
   while(size!=done) {
     ret=write(fd,(const char*)ptr+done,size-done);
-    if(ret==0)
+    if(ret==0) {
+      setNonBlocking(fd);
       return 0;
+    }
     if(ret<0)
       unixDie(description);
     done+=ret;
   }
+  setNonBlocking(fd);
   return size;
 }

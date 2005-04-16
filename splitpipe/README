@@ -1,24 +1,101 @@
-splitpipe allows piped output to span multiple volumes, which might be
-floppies, cd-recordables, dvd's or whatnot.
-
 (C) 2005 Netherlabs Computer Consulting BV - bert hubert <ahu@ds9a.nl>
+
+splitpipe allows streaming piped output to span multiple volumes, which
+might be floppies, cd-recordables, dvd's or whatnot.
+
+joinpipe performs the reverse process.
+
+No temporary files are used.
+
+WARNING
+-------
 
 This is the very first release, so it will eat data and in fact destroy your
 orginal files. Count on it.
 
-Sample:
+BUGS
+----
 
-# tar czf - /home | splitpipe -b 100000 -c cdr-80 -v -o ./cdrecord-script
+Report to ahu@ds9a.nl - be verbose, ie, tell me what you expect the program
+to do, what it did instead, and what is said during the process.
 
-This makes 700mbyte cd-recordables of your /home, using a 100 megabyte
-buffer. In our experience, the following works better:
+LICENSE
+-------
 
-# tar cf - /home | gzip --fast | splitpipe -b 100000 -c cdr-80 -v -o ./cdrecord-script
+GNU General Public License version 2, and no other
+
+MODE OF OPERATION
+-----------------
+
+Splitpipe accepts the output of, say, tar on standard input and distributes
+it over multiple chunks. These chunks contain labels that guarantee
+integrity, verify that the entire chunk is read, and that they are read in
+the proper order.
+
+This allows for the backup of full filesystems, at high speed.
+
+FEATURES
+--------
+
+ * Running MD5 checksum
+ * Detects truncated chunks
+ * Impervious to trailing garbage (which you get when piping raw data
+   to cdrecord or growisofs)
+ * Detects improper order of chunks on restore
+ * Each session has a UUID, so chunks from other backups are rejected
+ * Large and efficient ringbuffer
+ * Works with cdrecord, growisofs, bare files and floppies
+
+COMPILING
+---------
+
+Needs g++, there are no other dependencies.
+
+$ make
+# make install
+
+CDRECORD SAMPLES
+----------------
+
+# tar czf - /home | splitpipe -c cdr-80 -o ./cdrecord-script
+
+This makes 700mbyte cd-recordables of your /home, using the default 10
+megabyte buffer. Once a disk is full, you'll be prompted to insert a
+new volume, and press enter.
+
+In our experience, the following works better:
+
+# tar cf - /home | gzip --fast | splitpipe -b 100000 -c cdr-80 -v \ 
+  -o ./cdrecord-script
 
 This loses some compression but saves heaps of cpu time. 
+
+To restore, insert the first cd and run:
+
+# joinpipe /dev/cdrom | tar xzf -
+
+When prompted, insert a new disk and press enter.
+
+GROWISOFS SAMPLES
+-----------------
+
+Very similar:
+
+# tar cf - /home | gzip --fast | splitpipe -c dvd \
+  -o 'growisofs -Z /dev/dvd=/dev/stdin'
+
+To restore:
+
+# joinpipe /dev/dvd | tar xzf -
+
+TESTING WITH REGULAR FILES
+--------------------------
 
 To test to regular files, try:
 
 # tar czf - /home | splitpipe -b 100000 -c cdr-80 -v -o 'cat > output.$$'
 
+To test, ise:
+
+# joinpipe -v output.* /dev/null
 

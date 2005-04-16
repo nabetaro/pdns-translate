@@ -49,11 +49,13 @@ struct params
 
 void usage()
 {
-  cerr<<"joinpipe syntax:\n";
+  cerr<<"joinpipe joins multiple chunks (volumes) into one pipe.\n";
+  cerr<<"\nsyntax: joinpipe [options] device1 [device2] | ...\n\n";
   cerr<<" --debug, -d\t\tGive debugging output\n";
   cerr<<" --help, -h\t\tGive this helpful message\n";
   cerr<<" --verbose, -v\t\tGive verbose output\n";
-  cerr<<" --verify, -t\t\tOnly verify an archive\n\n";
+  cerr<<" --verify, -t\t\tOnly verify an archive\n";
+  cerr<<" --version\t\tReport version\n\n";
   
   exit(1);
 }
@@ -69,6 +71,7 @@ void ParseCommandline(int argc, char** argv)
       {"help", 0, 0, 'h'},
       {"verbose", 0, 0, 'v'},
       {"verify", 0, 0, 't'},
+      {"version", 0, 0, 'e'},
       {0, 0, 0, 0}
     };
     
@@ -81,6 +84,9 @@ void ParseCommandline(int argc, char** argv)
     case 'd':
       parameters.debug=1;
       break;
+    case 'e':
+      cerr<<"joinpipe "VERSION" (C) 2005 Netherlabs Computer Consulting BV"<<endl;
+      exit(EXIT_SUCCESS);
     case 'h':
       usage();
       break;
@@ -113,7 +119,6 @@ try
     parameters.inputDevice.push_back("/dev/stdin");
 
   vector<string>::const_iterator inputIter=parameters.inputDevice.begin();
-  cerr<<"size: "<<parameters.inputDevice.size()<<endl;
 
   int infd=open(inputIter->c_str(), O_RDONLY);
   if(infd < 0)
@@ -121,17 +126,6 @@ try
 
 
   MD5Summer md5;
-#if 0
-  md5.feed("abc");
-  md5.feed("def");
-
-  cerr<<makeHexDump(md5.get())<<endl;
-
-  MD5Summer md5a;
-  md5a.feed("abcdef");
-
-  cerr<<makeHexDump(md5a.get())<<endl;
-#endif
 
 
   for(;;) {

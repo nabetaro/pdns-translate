@@ -81,8 +81,15 @@ try
     rb.advance(1);
 
   cerr<<"There are now "<<rb.available()<<" bytes available"<<endl;
+  
+  if(rb.available()==0) {
+    cerr<<"*** Everything went well!"<<endl;
+    exit(EXIT_SUCCESS);
+  }
+  exit(EXIT_FAILURE);
 }
 catch(exception &e)
 {
   cerr<<"error: "<<e.what()<<endl;
+  exit(EXIT_FAILURE);
 }

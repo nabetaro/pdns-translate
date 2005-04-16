@@ -6,4 +6,7 @@ splitpipe_OBJECTS=main.o
 
 splitpipe: $(splitpipe_OBJECTS)
 	g++ $(splitpipe_OBJECTS) -o $@
-	
+
+
+check: 
+	cd tests; make

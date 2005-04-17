@@ -56,15 +56,15 @@ string generateUUID()
 void setNonBlocking(int fd)
 {
   int flags=fcntl(fd,F_GETFL,0);
-  if(flags<0 || fcntl(fd, F_SETFL,flags|O_NONBLOCK) <0)
-    unixDie("Setting filedescriptor to nonblocking failed");
+  if(flags<0 || fcntl(fd, F_SETFL,flags|O_NONBLOCK) < 0 && errno!=ENOTTY)
+    unixDie("setting filedescriptor to nonblocking failed");
 }
 
 void setBlocking(int fd)
 {
   int flags=fcntl(fd,F_GETFL,0);
-  if(flags<0 || fcntl(fd, F_SETFL,flags & (~O_NONBLOCK) ) <0)
-    unixDie("Setting filedescriptor to blocking failed");
+  if(flags<0 || fcntl(fd, F_SETFL,flags & (~O_NONBLOCK) ) <0 && errno!=ENOTTY)
+    unixDie("setting filedescriptor to blocking failed");
 }
 
 

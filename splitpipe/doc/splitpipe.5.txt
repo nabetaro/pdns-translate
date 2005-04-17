@@ -1,0 +1,101 @@
+SPLITPIPE(5)
+===========
+bert hubert <ahu@ds9a.nl>
+v0.2, 17 April 2005
+
+NAME
+----
+splitpipe - data format used by splitpipe(1) and joinpipe(1)
+
+SYNOPSIS
+--------
+The splitpipe data format is used by splitpipe(1) and joinpipe(1)
+to allow piped data to span volumes.
+
+DEFINITIONS
+-----------
+session::
+	All data sent to splitpipe. In other words, the full pipe.
+
+volume::
+	Sessions are split into volumes, each volume might be a CD, DVD,
+	disk or file.
+
+stretch::
+	Each volume consists of stretches. Each stretch includes its own
+	length, excluding its own three byte header. A stretch also has a
+	type, each of which has its own meaning. One of these types is
+	'data'.
+
+STRETCHES
+---------
+Currently, the following stretch types have been allocated, followed by
+their assigned type number:
+
+Session Name (0)::
+	Optional name given to this session. Intended for human consumption.
+
+Session UUID (1)::
+	Used to verify that a volume belongs to a session
+
+Volume Number (2)::
+	Incremented by 1 for each volume, starting at zero, to verify
+	the proper order of volumes within a session.
+
+Volume EOF (3)::
+	Designates the end of a volume. Not to be used on the last volume!
+
+Data (4)::
+	Actual content of the pipe
+
+MD5 Checksum (5)::
+	Running MD5 checksum of all Data stretch contents up to this
+	stretch. 
+
+SHA1 Checksum (6)::
+	Running SHA1 checksum of all Data stretch contents up to this
+	stretch. 
+
+Session EOF (7)::
+	Designates end of a session. Implies a Volume EOF.
+
+FORMAT
+------
+Each stretch starts with 16 bits in which its size is stored, in network
+byte order. This is followed by 8 bits which describe the type.
+
+SEMANTICS
+---------
+The reader of a splitpipe stream is free to ignore optional stretch types,
+but the following behaviour is mandatory.
+
+Each volume has, before the first Data stretch, at least a UUID and Volume
+stretch. A volume shall end with a Volume EOF stretch, except when it is the
+last volume in a session, in which case it shall end on a Session EOF.
+
+MD5 or SHA1 checksums may be interleaved at any point during the stream, but
+shall at least be included at the end of each volume.
+
+BUGS
+----
+Does not yet allow retrying failed output, even when the failed data is 
+still available in the ringbuffer.
+
+AUTHOR
+------
+Written by Netherlabs Computer Consulting BV, bert hubert, <ahu@ds9a.nl>
+
+RESOURCES
+---------
+Website: http://ds9a.nl/splitpipe
+
+SEE ALSO
+--------
+joinpipe(1)
+
+COPYING
+-------
+Copyright (C) 2005 Netherlabs Computer Consulting. Free use of this software
+is granted under the terms of the GNU General Public License (GPL) version
+2.
+

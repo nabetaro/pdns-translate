@@ -1,0 +1,84 @@
+SPLITPIPE(1)
+===========
+bert hubert <ahu@ds9a.nl>
+v0.2, 17 April 2005
+
+NAME
+----
+splitpipe - spread piped input over a number of volumes
+
+SYNOPSIS
+--------
+'splitpipe' -o output [--buffer-size, -b] [--volume-size, -s] [--help, -h]
+		      [--no-prompt, -n] [--output, -o] [--verbose, -v]
+		      [--debug, -d] [--version]
+
+
+DESCRIPTION
+-----------
+splitpipe(1) accepts input, either from files, pipes or sockets and, using a
+large buffer for performance reasons, outputs it over one or more volumes.
+Volumes can be DVD's, CD's, floppies, hard disks or files.
+
+Volumes contain makers to signify which backup session they belong to, and
+their order in the set. Furthermore, a running checksum is kept to guarantee
+data integrity.
+
+Volumes created by splitpipe(1) can be read by joinpipe(1)
+
+OPTIONS
+-------
+--help, -h::
+	Print a helpful message
+
+--version::
+	Print version information
+
+--ouput program, -o::
+	This specifies a script, either shell, or a program that is called
+	for each volume.
+
+--buffer-size, -b::
+	Configures the size of the buffer between input and output. In
+	megabytes. Defaults to 10.
+
+--volume-size, -s::
+	Sets the maximum size of volume output to this number of kilobytes.
+	Alternatively, a preset size may be specified. Currently defined
+	volume sizes are: 'floppy', 'cd', 'cd-80', 'cdr-80', 'dvd' and 
+	'dvd-5'. Run 'splitpipe --help' for the most up to date list.
+
+--no-prompt, -n::
+	Do not prompt the user to change volumes. Mostly useful when writing
+	to files, but might also come in handy with automated disk changers.
+
+--verbose, -v::
+	Be verbose, but not overly so. 
+
+--debug, -d::
+	Give large amounts of debugging output, possibly damaging
+	performance
+
+BUGS
+----
+Does not yet allow retrying failed output, even when the failed data is 
+still available in the ringbuffer.
+
+AUTHOR
+------
+Written by Netherlabs Computer Consulting BV, bert hubert, <ahu@ds9a.nl>
+
+RESOURCES
+---------
+Website: http://ds9a.nl/splitpipe
+
+SEE ALSO
+--------
+joinpipe(1)
+
+COPYING
+-------
+Copyright (C) 2005 Netherlabs Computer Consulting. Free use of this software
+is granted under the terms of the GNU General Public License (GPL) version
+2.
+

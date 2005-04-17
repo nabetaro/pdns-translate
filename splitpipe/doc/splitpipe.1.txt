@@ -5,7 +5,7 @@ v0.2, 17 April 2005
 
 NAME
 ----
-splitpipe - spread piped input over a number of volumes
+splitpipe - spread piped input over a number of volumes (DVD's, CD's etc)
 
 SYNOPSIS
 --------
@@ -20,11 +20,25 @@ splitpipe(1) accepts input, either from files, pipes or sockets and, using a
 large buffer for performance reasons, outputs it over one or more volumes.
 Volumes can be DVD's, CD's, floppies, hard disks or files.
 
-Volumes contain makers to signify which backup session they belong to, and
+This allows the operator to make, for example, tar(1) archives larger than a
+single DVD.
+
+Volumes contain markers to signify which backup session they belong to, and
 their order in the set. Furthermore, a running checksum is kept to guarantee
 data integrity.
 
 Volumes created by splitpipe(1) can be read by joinpipe(1)
+
+EXAMPLES
+--------
+
+To backup /home to one or more DVDs:
+
+ # tar czf - /home | splitpipe -c dvd  -o 'growisofs -Z /dev/dvd=/dev/stdin'
+
+To restore:
+
+ # joinpipe /dev/dvd | tar xzf -
 
 OPTIONS
 -------
@@ -74,7 +88,7 @@ Website: http://ds9a.nl/splitpipe
 
 SEE ALSO
 --------
-joinpipe(1)
+joinpipe(1), splitpipe(5)
 
 COPYING
 -------

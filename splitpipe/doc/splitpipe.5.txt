@@ -73,13 +73,8 @@ Each volume has, before the first Data stretch, at least a UUID and Volume
 stretch. A volume shall end with a Volume EOF stretch, except when it is the
 last volume in a session, in which case it shall end on a Session EOF.
 
-MD5 or SHA1 checksums may be interleaved at any point during the stream, but
-shall at least be included at the end of each volume.
-
-BUGS
-----
-Does not yet allow retrying failed output, even when the failed data is 
-still available in the ringbuffer.
+MD5 or SHA1 checksum stretches may be interleaved at any point during the
+stream, but shall at least be included at the end of each volume.
 
 AUTHOR
 ------
@@ -91,7 +86,7 @@ Website: http://ds9a.nl/splitpipe
 
 SEE ALSO
 --------
-joinpipe(1)
+joinpipe(1), splitpipe(1)
 
 COPYING
 -------

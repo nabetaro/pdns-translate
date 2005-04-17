@@ -60,12 +60,6 @@ void setNonBlocking(int fd)
     unixDie("setting filedescriptor to nonblocking failed");
 }
 
-void setBlocking(int fd)
-{
-  int flags=fcntl(fd,F_GETFL,0);
-  if(flags<0 || fcntl(fd, F_SETFL,flags & (~O_NONBLOCK) ) <0 && errno!=ENOTTY)
-    unixDie("setting filedescriptor to blocking failed");
-}
 
 
 double getTime()
@@ -75,6 +69,25 @@ double getTime()
   return tv.tv_sec + tv.tv_usec/1000000.0;
 }
 
+static void waitForBlockedRW(int fd, bool forWrite)
+{
+  fd_set inputs;
+  fd_set outputs;
+  
+  FD_ZERO(&inputs);
+  FD_ZERO(&outputs);
+
+  if(forWrite)
+    FD_SET(fd, &outputs);
+  else
+    FD_SET(fd, &inputs);
+
+  int ret=select( fd + 1, &inputs, &outputs, 0, 0);
+  if(ret < 0)
+    unixDie("running select waiting for output");
+}
+
+/** write out size bytes, deal with partial writes and non-blocking fd's */
 int readn(int fd, void* ptr, size_t size, const char* description)
 {
   size_t done=0;
@@ -83,29 +96,31 @@ int readn(int fd, void* ptr, size_t size, const char* description)
     ret=read(fd,(char*)ptr+done,size-done);
     if(ret==0)
       return 0;
-    if(ret<0)
+    else if(ret<0 && errno==EAGAIN)
+      waitForBlockedRW(fd, 0);
+    else if(ret < 0)
       unixDie(description);
-    done+=ret;
+    else 
+      done+=ret;
   }
   return size;
 }
 
+/** read in size bytes, deal with partial read and non-blocking fd's */
 int writen(int fd, const void* ptr, size_t size, const char* description)
 {
-  setBlocking(fd);
-
   size_t done=0;
   int ret;
   while(size!=done) {
     ret=write(fd,(const char*)ptr+done,size-done);
-    if(ret==0) {
-      setNonBlocking(fd);
+    if(ret==0) 
       return 0;
-    }
-    if(ret<0)
+    else if(ret<0 && errno==EAGAIN)
+      waitForBlockedRW(fd, 1);
+    else if(ret<0)
       unixDie(description);
-    done+=ret;
+    else
+      done+=ret;
   }
-  setNonBlocking(fd);
   return size;
 }

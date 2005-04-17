@@ -1,13 +1,24 @@
-- output of cdrecord is fugly, perhaps add --cdrecord for prettifying
+	- output of cdrecord is fugly, perhaps add --cdrecord for prettifying
 
-- implement retreat
-	so we can recover from broken disks etc
+	- implement retreat
+		so we can recover from broken disks etc
 
-- implement retry in joinpipe
+	- implement retry in joinpipe
 
-- write dvdrecord-script
+	- write dvdrecord-script
 
-- define environment variables
+	- define environment variables
 	
-- take out getopt_long stuff, it is somewhat ugly
+	- take out getopt_long stuff, it is somewhat ugly
 
+	- make buildStretch, which appends stretches to a string
+
+DONE!	- teach writen about EAGAIN
+
+	- open /dev/tty and poll it in the loop
+
+	- allow single key commands during the process
+
+	- add date/time session stretch
+
+	- add "name" chunk stretch

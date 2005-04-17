@@ -1,0 +1,27 @@
+#!/bin/sh
+
+echo This test makes an archive consisting of many volumes, and then joins it,
+echo checking that the output is identical to the input.
+
+
+if test \! -x /usr/bin/cmp
+then
+	echo "Can't run this test, cmp not available"
+	exit
+fi
+
+rm -f test-output.*
+cat ../COPYING | ../splitpipe -n -o 'cat > test-output.$$' -s 10
+../joinpipe -n test-output.* > test-compare
+rm -f test-output.*
+
+if cmp test-compare ../COPYING
+then
+	echo "*** SUCCESS ***"
+	exit 0
+else
+	echo "*** FAILURE ***"
+	exit 1
+fi	
+
+rm test-compare

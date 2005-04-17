@@ -8,8 +8,8 @@ clean:
 	rm -f *.o *~ $(CHECK_PROGRAMS)
 
 run:
-	./ringbuffer
-	./md5test
+	./ringbuffer && ./md5test && ./fullRun && echo "All tests successful"
+	
 
 programs: $(CHECK_PROGRAMS)
 

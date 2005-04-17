@@ -33,7 +33,7 @@
 
 struct {
   size_t bufferSize;
-  uint64_t chunkSize;
+  uint64_t volumeSize;
   bool verbose;
   bool debug;
   string outputCommand;
@@ -99,16 +99,16 @@ void outputGaveEof(int outputfd)
 
 void usage()
 {
-  cerr<<"splitpipe divides its input over several chunks (volumes).\n";
+  cerr<<"splitpipe divides its input over several volumes.\n";
   cerr<<"\nsyntax: ... | joinpipe [options] \n\n";
   cerr<<" --buffer-size, -b\tSize of buffer before output, in megabytes"<<endl;
-  cerr<<" --chunk-size, -c\tSize of output chunks, in kilobytes. See below"<<endl;
+  cerr<<" --volume-size, -s\tSize of output volumes, in kilobytes. See below"<<endl;
   cerr<<" --help, -h\t\tGive this helpful message"<<endl;
-  cerr<<" --output, -o\t\tThe output script that will be spawned for each chunk"<<endl;
+  cerr<<" --output, -o\t\tThe output script that will be spawned for each volume"<<endl;
   cerr<<" --verbose, -v\t\tGive verbose output\n";
   cerr<<" --version\t\tReport version\n\n";
 
-  cerr<<"predefined chunk sizes: \n";
+  cerr<<"predefined volume sizes: \n";
   for(struct predef* p=predefinedSizes; p->name; ++p) 
     cerr<<"\t"<<p->name<<"\t"<<p->size<<" bytes\n";
   exit(1);
@@ -123,7 +123,7 @@ void ParseCommandline(int argc, char** argv)
     int option_index = 0;
     static struct option long_options[] = {
       {"buffer-size", 1, 0, 'b'},
-      {"chunk-size", 1, 0, 'c'},
+      {"volume-size", 1, 0, 's'},
       {"output", 1, 0, 'o'},
       {"debug", 0, 0, 'd'},
       {"verbose", 0, 0, 'v'},
@@ -132,7 +132,7 @@ void ParseCommandline(int argc, char** argv)
       {0, 0, 0, 0}
     };
     
-    c = getopt_long (argc, argv, "b:c:deho:v",
+    c = getopt_long (argc, argv, "b:s:deho:v",
 		     long_options, &option_index);
     if (c == -1)
       break;
@@ -141,8 +141,8 @@ void ParseCommandline(int argc, char** argv)
     case 'b':
       parameters.bufferSize=1024*atoi(optarg);
       break;
-    case 'c':
-      parameters.chunkSize=getSize(optarg);
+    case 's':
+      parameters.volumeSize=getSize(optarg);
       break;
     case 'd':
       parameters.debug=1;
@@ -224,7 +224,7 @@ void outputChecksum(int outputfd, const MD5Summer& md5)
 
 string g_uuid;
 
-int outputPerChunkStretches(int fd, uint16_t chunkNumber)
+int outputPerVolumeStretches(int fd, uint16_t volumeNumber)
 {
   struct stretchHeader stretch;
   stretch.type=stretchHeader::SessionUUID;
@@ -236,14 +236,14 @@ int outputPerChunkStretches(int fd, uint16_t chunkNumber)
   if(!writen(fd, g_uuid.c_str(), g_uuid.length(), "write of Session UUID"))
     outputGaveEof(fd);
 
-  stretch.type=stretchHeader::ChunkNumber;
+  stretch.type=stretchHeader::VolumeNumber;
   stretch.size=htons(2);
   
-  chunkNumber = htons(chunkNumber);
-  if(!writen(fd, &stretch, sizeof(stretch), "write of chunk number"))
+  volumeNumber = htons(volumeNumber);
+  if(!writen(fd, &stretch, sizeof(stretch), "write of volume number"))
     outputGaveEof(fd);
 
-  if(!writen(fd, &chunkNumber, 2, "write of chunk number"))
+  if(!writen(fd, &volumeNumber, 2, "write of volume number"))
     outputGaveEof(fd);
 
 
@@ -256,7 +256,7 @@ try
 {
   parameters.debug=parameters.verbose=false;
   parameters.bufferSize=1000000;
-  parameters.chunkSize=getSize("DVD-5");
+  parameters.volumeSize=getSize("DVD-5");
   ParseCommandline(argc, argv);
 
   signal(SIGPIPE, SIG_IGN);
@@ -268,7 +268,7 @@ try
 
   if(parameters.verbose) {
     cerr<<"Buffer size: " << parameters.bufferSize/1000000.0 <<" MB\n";
-    cerr<<"Chunk size: " << parameters.chunkSize/1000000.0 <<" MB\n";
+    cerr<<"Volume size: " << parameters.volumeSize/1000000.0 <<" MB\n";
     //    cerr<<"Output command: "<<parameters.outputCommand<<endl;
   }
 
@@ -286,14 +286,14 @@ try
     exit(1);
   }
 
-  if(!parameters.chunkSize) {
-    cerr<<"Chunk size set to zero, which is unsupported. Try --chunk-size DVD for DVD-size chunks"<<endl;
+  if(!parameters.volumeSize) {
+    cerr<<"Volume size set to zero, which is unsupported. Try --volume-size DVD for DVD-size volumes"<<endl;
     exit(1);
   }
 
   g_uuid=generateUUID();
 
-  parameters.chunkSize -= 2048; // leave room for last stretch
+  parameters.volumeSize -= 2048; // leave room for last stretch
 
   RingBuffer rb(parameters.bufferSize);
   setNonBlocking(0);
@@ -304,7 +304,7 @@ try
   uint64_t amountOutput=0;
   uint16_t leftInStretch=0;
   int numStretches=0;
-  int chunkNumber=0;
+  int volumeNumber=0;
 
   MD5Summer md5;
 
@@ -313,13 +313,13 @@ try
   if(parameters.verbose) 
     cerr<<"Prebuffering before starting output script..";
 
-  bool d_firstchunk=true; // first chunk does not get the 'press enter' stuff
+  bool d_firstvolume=true; // first volume does not get the 'press enter' stuff
 
   while(1) {
     if(!outputOnline && (inputEof || (1.0 * rb.available() / parameters.bufferSize > 0.5))) {
-      if(d_firstchunk) {
+      if(d_firstvolume) {
 	cerr<<" done"<<endl;;
-	d_firstchunk=false;
+	d_firstvolume=false;
       }
       else {
 	cerr<<"splitpipe: reload media, if necessary, and press enter to continue"<<endl;
@@ -328,7 +328,7 @@ try
 
       cerr<<"splitpipe: bringing output script online - buffer " << 100.0*rb.available() / parameters.bufferSize <<"% full"<<endl;
       outputfd=spawnOutputThread();
-      amountOutput = outputPerChunkStretches(outputfd, chunkNumber++);      
+      amountOutput = outputPerVolumeStretches(outputfd, volumeNumber++);      
       outputOnline=true;
     }
 
@@ -377,11 +377,11 @@ try
 	size_t lenAvailable;
 	rb.get(&rbuffer, &lenAvailable);
 
-	uint64_t leftInChunk=parameters.chunkSize - amountOutput;
+	uint64_t leftInVolume=parameters.volumeSize - amountOutput;
 
-	if(leftInChunk >= 3 && !leftInStretch) {   // only start a new stretch if there is room for at least 1 byte
+	if(leftInVolume >= 3 && !leftInStretch) {   // only start a new stretch if there is room for at least 1 byte
 	  leftInStretch=min((size_t)0xffff, lenAvailable);
-	  leftInStretch=min((uint64_t)leftInStretch, leftInChunk - 3);
+	  leftInStretch=min((uint64_t)leftInStretch, leftInVolume - 3);
 	  if(parameters.debug) 
 	    cerr<<"splitpipe: starting a stretch of "<<leftInStretch<<" bytes"<<endl;
 
@@ -402,18 +402,18 @@ try
 
 
 
-	size_t len=min((uint64_t)lenAvailable, leftInChunk);
+	size_t len=min((uint64_t)lenAvailable, leftInVolume);
 	
 	len=min(len, (size_t)leftInStretch);
 
 	if(!len) {
-	  cerr<<"\nsplitpipe: output a full chunk, waiting for output command to exit..\n";
+	  cerr<<"\nsplitpipe: output a full volume, waiting for output command to exit..\n";
 	  struct stretchHeader stretch;
 
 	  outputChecksum(outputfd, md5);
 
 	  stretch.size=0;
-	  stretch.type=stretchHeader::ChunkEOF;
+	  stretch.type=stretchHeader::VolumeEOF;
 
 	  ret=writen(outputfd, &stretch, sizeof(stretch),"write of meta-data to output command");
 

@@ -7,7 +7,7 @@ efficient way, and to restore all the media filled as one pipe again.
 
 Theory
 ------
-Beforehand, user supplies size of chunks. Preset for DVD-5, DVD-9, CD, CD80.
+Beforehand, user supplies size of volumes. Preset for DVD-5, DVD-9, CD, CD80.
 
 On startup, buffer BUFFER bytes, then fork off an instance of the output
 script, and start feeding it the buffer.
@@ -25,7 +25,7 @@ byte output to it, offer the user to restart where we left off.
 
 Also, we output the md5sum of data sent out sofar, and the number of media
 filled so far. User can then decide to break off and reinvoke the program
-with '--skip-chunks=n --safety-check=THE-MD5-SUM'
+with '--skip-volumes=n --safety-check=THE-MD5-SUM'
 
 The output script finds in the environment the expected output size, which
 is the maximum it can expect.
@@ -38,19 +38,19 @@ splitpipe: buffer full, launching output instance
 burn blah blah
 more burn blah blah
 
-splitpipe: one DVD-5 chunk output, closing output socket, continuing buffering
-splitpipe: output chunk #0, md5sum b002afcff8fe46f177d656a8e545fb8c 
+splitpipe: one DVD-5 volume output, closing output socket, continuing buffering
+splitpipe: output volume #0, md5sum b002afcff8fe46f177d656a8e545fb8c 
 fixating.... done
 
 splitpipe: <beep>
-splitpipe: first chunk done, switch media and press enter
+splitpipe: first volume done, switch media and press enter
 <enter>
 splitpipe: buffer full, launching output instance
 burn blah blah
 more burn blah blah
 
 splitpipe: end of input, closing output socket
-splitpipe: output final chunk, #1, md5sum a6cef35c41d41184a7e6990ceeb80c8f 
+splitpipe: output final volume, #1, md5sum a6cef35c41d41184a7e6990ceeb80c8f 
 fixating... done
 
 #
@@ -60,9 +60,9 @@ Now, to restore:
 # joinpipe /dev/dvd | tar xzf -
 joinpipe: reading from /dev/dvd until EOF
 joinpipe: <beep>
-joinpipe: chunk #0 read, md5sum b002afcff8fe46f177d656a8e545fb8c, change media or press ^C if done
+joinpipe: volume #0 read, md5sum b002afcff8fe46f177d656a8e545fb8c, change media or press ^C if done
 joinpipe: reading from /dev/dvd until EOF
-joinpipe: chunk #1 read, md5suma6cef35c41d41184a7e6990ceeb80c8f , change media or press ^C if done
+joinpipe: volume #1 read, md5suma6cef35c41d41184a7e6990ceeb80c8f , change media or press ^C if done
 ^C
 joinpipe: done
 
@@ -72,7 +72,7 @@ ISSUES:
 
 1) I think there are media which can only terminate on sector or block
    boundaries, if we want to support these, there are two alternatives:
-	we need to make sure we only output chunksizes that can properly be
+	we need to make sure we only output volumesizes that can properly be
 		represented we may have some trailing garbage on the last
 		volume, but that is generally not a problem
 
@@ -82,7 +82,7 @@ ISSUES:
 
 The user might also opt to pass --stream-media-size=CHUNKSIZE/512 to
 mkisofs, which means that the data being written ends up as a huge file,
-allowing the ISO9660 fs to take care of chunking.
+allowing the ISO9660 fs to take care of volumeing.
 
 2) It would be very nice if we had some metadata on the output media like
    "this is disk 1" or "this is the last volume, and this is the end". Same
@@ -100,7 +100,7 @@ FORMAT
 
 Each run of splitpipe
 	generates a session,
-	that consists of chunks 
+	that consists of volumes 
 	that consist of stretches,
 	that consist of a header of 3, followed by 0 or more payload bytes
 

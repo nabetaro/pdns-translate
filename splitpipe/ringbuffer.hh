@@ -81,18 +81,18 @@ public:
     if(size > room())
       throw runtime_error("was asked to store more data than there is room for!");
 
-    size_t chunk=min(size, contiguousRoom());
+    size_t len=min(size, contiguousRoom());
 
-    copy(block, block + chunk, d_vector.begin() + d_wpos);
+    copy(block, block + len, d_vector.begin() + d_wpos);
 
-    size-=chunk;
-    d_wpos+=chunk;
+    size-=len;
+    d_wpos+=len;
 
     if(!size)
       return;
 
     d_wpos=0;
-    copy(block+chunk, block+chunk+size, d_vector.begin());
+    copy(block+len, block+len+size, d_vector.begin());
     d_wpos+=size;
   }
 

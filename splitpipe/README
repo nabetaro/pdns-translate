@@ -28,8 +28,8 @@ MODE OF OPERATION
 -----------------
 
 Splitpipe accepts the output of, say, tar on standard input and distributes
-it over multiple chunks. These chunks contain labels that guarantee
-integrity, verify that the entire chunk is read, and that they are read in
+it over multiple volumes. These volumes contain labels that guarantee
+integrity, verify that the entire volume is read, and that they are read in
 the proper order.
 
 This allows for the backup of full filesystems, at high speed.
@@ -38,11 +38,11 @@ FEATURES
 --------
 
  * Running MD5 checksum
- * Detects truncated chunks
+ * Detects truncated volumes
  * Impervious to trailing garbage (which you get when piping raw data
    to cdrecord or growisofs)
- * Detects improper order of chunks on restore
- * Each session has a UUID, so chunks from other backups are rejected
+ * Detects improper order of volumes on restore
+ * Each session has a UUID, so volumes from other backups are rejected
  * Large and efficient ringbuffer
  * Works with cdrecord, growisofs, bare files and floppies
 

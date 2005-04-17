@@ -1,5 +1,5 @@
 /*
-    joinpipe takes chunks output by splitpipe and joins them to one pipe
+    joinpipe takes volumes output by splitpipe and joins them to one pipe
     Copyright (C) 2005  Netherlabs Computer Consulting BV
 
     This program is free software; you can redistribute it and/or modify
@@ -49,7 +49,7 @@ struct params
 
 void usage()
 {
-  cerr<<"joinpipe joins multiple chunks (volumes) into one pipe.\n";
+  cerr<<"joinpipe joins multiple volumes (volumes) into one pipe.\n";
   cerr<<"\nsyntax: joinpipe [options] device1 [device2] | ...\n\n";
   cerr<<" --debug, -d\t\tGive debugging output\n";
   cerr<<" --help, -h\t\tGive this helpful message\n";
@@ -113,7 +113,7 @@ try
   char* buffer=new char[65536];
   struct stretchHeader stretch;
   string uuid;
-  unsigned int numChunks=0;
+  unsigned int numVolumes=0;
 
   if(parameters.inputDevice.empty())
     parameters.inputDevice.push_back("/dev/stdin");
@@ -145,32 +145,32 @@ try
 	cerr<<"UUID of this session is '"<<makeHexDump(uuid)<<"'"<<endl;
       } else {
 	if(uuid != string(buffer,buffer+stretch.size)) {
-	  cerr<<"This chunk does not belong to the correct session, ";
+	  cerr<<"This volume does not belong to the correct session, ";
 	  cerr<<"uuid should be '"<<makeHexDump(uuid)<<"', is '"<<makeHexDump(string(buffer,buffer+stretch.size))<<"'"<<endl;
 	  exit(EXIT_FAILURE); // deal with this
 	}
       }
     }
-    else if(stretch.type==stretchHeader::ChunkNumber) {    
-      uint16_t newChunkNumber;
-      memcpy(&newChunkNumber, buffer, 2);
-      newChunkNumber = ntohs(newChunkNumber);
-      if(newChunkNumber != numChunks) {
-	cerr<<"This is chunk number "<<newChunkNumber<<", were expecting "<<numChunks<<", please retry"<<endl;
+    else if(stretch.type==stretchHeader::VolumeNumber) {    
+      uint16_t newVolumeNumber;
+      memcpy(&newVolumeNumber, buffer, 2);
+      newVolumeNumber = ntohs(newVolumeNumber);
+      if(newVolumeNumber != numVolumes) {
+	cerr<<"This is volume number "<<newVolumeNumber<<", were expecting "<<numVolumes<<", please retry"<<endl;
 	exit(EXIT_FAILURE);
       }
       else if(parameters.verbose)
-	cerr<<"Found chunk "<<newChunkNumber<<", as expected"<<endl;
-      numChunks++;
+	cerr<<"Found volume "<<newVolumeNumber<<", as expected"<<endl;
+      numVolumes++;
     }
     else if(stretch.type==stretchHeader::Data) {    
       if(!writen(1, buffer, stretch.size, "write of a stretch of input"))
 	throw runtime_error("unexpected end of file on standard output");
       md5.feed(buffer, stretch.size);
     }
-    else if(stretch.type==stretchHeader::ChunkEOF) {    
+    else if(stretch.type==stretchHeader::VolumeEOF) {    
       close(infd);
-      cerr<<"joinpipe: end of chunk, change media and press enter"<<endl;
+      cerr<<"joinpipe: end of volume, change media and press enter"<<endl;
 
       waitForUser();
 

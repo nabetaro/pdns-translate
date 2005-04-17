@@ -1,6 +1,9 @@
 VERSION=0.2
 OUTPUTDIR=splitpipe-$(VERSION)
 CXXFLAGS=-Wall -g -O2 -DVERSION=\"$(VERSION)\"
+PREFIX?=/usr/local/
+BINDIR?=$(DESTDIR)/$(PREFIX)/bin/
+
 
 all: splitpipe joinpipe
 
@@ -39,5 +42,5 @@ dist:
 	rm -rf $(OUTPUTDIR)
 
 install:
-	install -s splitpipe $(DESTDIR)/usr/local/bin
-	install -s joinpipe $(DESTDIR)/usr/local/bin
+	install -s splitpipe $(BINDIR)
+	install -s joinpipe $(BINDIR)

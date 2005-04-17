@@ -34,18 +34,21 @@
 
 using namespace std;
 
-struct params
-{
-  params()
+namespace {
+  struct params
   {
-    verbose=debug=verify=false;
-  }
-  
-  bool verbose;
-  bool debug;
-  bool verify;
-  vector<string> inputDevice;
-}parameters;
+    params()
+    {
+    verbose = debug = verify = noPrompt = false;
+    }
+    
+    bool verbose;
+    bool debug;
+    bool verify;
+    bool noPrompt;
+    vector<string> inputDevice;
+  }parameters;
+}
 
 void usage()
 {
@@ -53,8 +56,8 @@ void usage()
   cerr<<"\nsyntax: joinpipe [options] device1 [device2] | ...\n\n";
   cerr<<" --debug, -d\t\tGive debugging output\n";
   cerr<<" --help, -h\t\tGive this helpful message\n";
+  cerr<<" --no-prompt, -h\tRun without user intervention\n";
   cerr<<" --verbose, -v\t\tGive verbose output\n";
-  cerr<<" --verify, -t\t\tOnly verify an archive\n";
   cerr<<" --version\t\tReport version\n\n";
   
   exit(1);
@@ -70,12 +73,12 @@ void ParseCommandline(int argc, char** argv)
       {"debug", 0, 0, 'd'},
       {"help", 0, 0, 'h'},
       {"verbose", 0, 0, 'v'},
-      {"verify", 0, 0, 't'},
+      {"no-prompt", 0, 0, 'n'},
       {"version", 0, 0, 'e'},
       {0, 0, 0, 0}
     };
     
-    c = getopt_long (argc, argv, "dhv",
+    c = getopt_long (argc, argv, "dhnv",
 		     long_options, &option_index);
     if (c == -1)
       break;
@@ -85,15 +88,21 @@ void ParseCommandline(int argc, char** argv)
       parameters.debug=1;
       break;
     case 'e':
-      cerr<<"joinpipe "VERSION" (C) 2005 Netherlabs Computer Consulting BV"<<endl;
+      cerr<<"joinpipe "VERSION" (C) 2005 Netherlabs Computer Consulting BV\nReport bugs to bert hubert <ahu@ds9a.nl>"<<endl;
       exit(EXIT_SUCCESS);
     case 'h':
       usage();
       break;
-    case 't':
-      parameters.verify=1;
+
+    case 'n':
+      parameters.noPrompt=1;
+      break;
+
     case 'v':
       parameters.verbose=true;
+      break;
+    case '?':
+      usage();
       break;
     }
   }
@@ -172,7 +181,8 @@ try
       close(infd);
       cerr<<"joinpipe: end of volume, change media and press enter"<<endl;
 
-      waitForUser();
+      if(!parameters.noPrompt)
+	waitForUser();
 
       if(inputIter + 1 != parameters.inputDevice.end())
 	inputIter++;

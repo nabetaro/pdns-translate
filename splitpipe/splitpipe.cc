@@ -31,13 +31,23 @@
 #include "ringbuffer.hh"
 #include "md5.hh"
 
-struct {
-  size_t bufferSize;
-  uint64_t volumeSize;
-  bool verbose;
-  bool debug;
-  string outputCommand;
-} parameters;
+namespace {
+  struct paramStruct {
+    paramStruct() 
+    {
+      bufferSize = 0;
+      volumeSize = 0;
+      verbose = debug = noPrompt = false;
+    }
+  
+    size_t bufferSize;
+    uint64_t volumeSize;
+    bool verbose;
+    bool debug;
+    bool noPrompt;
+    string outputCommand;
+  } parameters;
+}
 
 
 static struct predef {
@@ -104,6 +114,7 @@ void usage()
   cerr<<" --buffer-size, -b\tSize of buffer before output, in megabytes"<<endl;
   cerr<<" --volume-size, -s\tSize of output volumes, in kilobytes. See below"<<endl;
   cerr<<" --help, -h\t\tGive this helpful message"<<endl;
+  cerr<<" --no-prompt, -h\tRun without user intervention\n";
   cerr<<" --output, -o\t\tThe output script that will be spawned for each volume"<<endl;
   cerr<<" --verbose, -v\t\tGive verbose output\n";
   cerr<<" --version\t\tReport version\n\n";
@@ -124,6 +135,7 @@ void ParseCommandline(int argc, char** argv)
     static struct option long_options[] = {
       {"buffer-size", 1, 0, 'b'},
       {"volume-size", 1, 0, 's'},
+      {"no-prompt", 0, 0, 'n'},
       {"output", 1, 0, 'o'},
       {"debug", 0, 0, 'd'},
       {"verbose", 0, 0, 'v'},
@@ -132,7 +144,7 @@ void ParseCommandline(int argc, char** argv)
       {0, 0, 0, 0}
     };
     
-    c = getopt_long (argc, argv, "b:s:deho:v",
+    c = getopt_long (argc, argv, "b:ns:deho:v",
 		     long_options, &option_index);
     if (c == -1)
       break;
@@ -148,7 +160,7 @@ void ParseCommandline(int argc, char** argv)
       parameters.debug=1;
       break;
     case 'e':
-      cerr<<"splitpipe "VERSION" (C) 2005 Netherlabs Computer Consulting BV"<<endl;
+      cerr<<"splitpipe "VERSION" (C) 2005 Netherlabs Computer Consulting BV\nReport bugs to bert hubert <ahu@ds9a.nl>"<<endl;
       exit(EXIT_SUCCESS);
     case 'h':
       usage();
@@ -156,8 +168,16 @@ void ParseCommandline(int argc, char** argv)
     case 'o':
       parameters.outputCommand=optarg;
       break;
+    case 'n':
+      parameters.noPrompt=1;
+      break;
+
     case 'v':
       parameters.verbose=true;
+      break;
+
+    case '?':
+      usage();
       break;
     }
   }
@@ -204,19 +224,23 @@ int spawnOutputThread()
   return d_fds[1];
 }
 
-void outputChecksum(int outputfd, const MD5Summer& md5)
+void appendStretch(int type, const string& content, string& stretches)
 {
   struct stretchHeader stretch;
-  string md5sum=md5.get();
-  stretch.size=htons(md5sum.length());
-  stretch.type=stretchHeader::MD5Checksum;
-  
-  int ret=writen(outputfd, &stretch, sizeof(stretch),"write of meta-data to output command");
-  
-  if(!ret)
-    outputGaveEof(outputfd);
-  
-  ret=writen(outputfd, md5sum.c_str(), md5sum.length(), "write of meta-data to output command");
+  stretch.type=type;
+  stretch.size=htons(content.size());
+
+  char *p=(char*) &stretch;
+  stretches+=string(p, p + sizeof(stretch));
+  stretches+=content;
+}
+
+void outputChecksum(int outputfd, const MD5Summer& md5)
+{
+  string stretches;
+  appendStretch(stretchHeader::MD5Checksum, md5.get(), stretches);
+
+  int ret=writen(outputfd, stretches.c_str(), stretches.length(), "write of meta-data to output command");
   
   if(!ret)
     outputGaveEof(outputfd);
@@ -226,35 +250,27 @@ string g_uuid;
 
 int outputPerVolumeStretches(int fd, uint16_t volumeNumber)
 {
-  struct stretchHeader stretch;
-  stretch.type=stretchHeader::SessionUUID;
-  stretch.size=htons(g_uuid.length());
-
-  if(!writen(fd, &stretch, sizeof(stretch), "write of Session UUID"))
-    outputGaveEof(fd);
-
-  if(!writen(fd, g_uuid.c_str(), g_uuid.length(), "write of Session UUID"))
-    outputGaveEof(fd);
-
-  stretch.type=stretchHeader::VolumeNumber;
-  stretch.size=htons(2);
+  string stretches;
   
+  appendStretch(stretchHeader::SessionUUID, g_uuid, stretches);
+
   volumeNumber = htons(volumeNumber);
-  if(!writen(fd, &stretch, sizeof(stretch), "write of volume number"))
+  const string volNumString((char*)&volumeNumber, ((char*)&volumeNumber) + 2);
+  
+  appendStretch(stretchHeader::VolumeNumber,volNumString, stretches);
+
+  int ret=writen(fd, stretches.c_str(), stretches.length(), "write of per-volume meta-data to output command");
+
+  if(!ret)
     outputGaveEof(fd);
 
-  if(!writen(fd, &volumeNumber, 2, "write of volume number"))
-    outputGaveEof(fd);
-
-
-  return 2 * sizeof(stretch) + g_uuid.length() + 2;
+  return stretches.length();
 }
 
 
 int main(int argc, char** argv)
 try
 {
-  parameters.debug=parameters.verbose=false;
   parameters.bufferSize=1000000;
   parameters.volumeSize=getSize("DVD-5");
   ParseCommandline(argc, argv);
@@ -323,7 +339,8 @@ try
       }
       else {
 	cerr<<"splitpipe: reload media, if necessary, and press enter to continue"<<endl;
-	waitForUser();
+	if(!parameters.noPrompt)
+	  waitForUser();
       }
 
       cerr<<"splitpipe: bringing output script online - buffer " << 100.0*rb.available() / parameters.bufferSize <<"% full"<<endl;

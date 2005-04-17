@@ -11,7 +11,7 @@
 	
 	- take out getopt_long stuff, it is somewhat ugly
 
-	- make buildStretch, which appends stretches to a string
+DONE!	- make buildStretch, which appends stretches to a string
 
 DONE!	- teach writen about EAGAIN
 
@@ -22,3 +22,8 @@ DONE!	- teach writen about EAGAIN
 	- add date/time session stretch
 
 	- add "name" chunk stretch
+
+	- manpages
+
+	- i18n
+

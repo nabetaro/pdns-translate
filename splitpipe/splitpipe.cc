@@ -278,7 +278,7 @@ try
     cerr<<".. -o 'cdrecord dev=/dev/cdrom speed=24 -eject -dummy -tao'\n";
     cerr<<"\nSuggested command for dvd: \n";
     cerr<<".. -o 'growisofs -Z/dev/dvd=/dev/stdin -dry-run'\n";
-    exit(1);
+    usage();
   }
 
   if(!parameters.bufferSize) {

@@ -1,4 +1,6 @@
-VERSION=0.2
+VERSION=0.2-svn
+export VERSION
+
 OUTPUTDIR=splitpipe-$(VERSION)
 CXXFLAGS=-Wall -g -O2 -DVERSION=\"$(VERSION)\"
 PREFIX?=/usr/local/
@@ -18,6 +20,7 @@ splitpipe.o: splitpipe.cc misc.hh ringbuffer.hh md5.hh
 clean:
 	rm -rf *~ *.o splitpipe 
 	cd tests; make clean
+	cd doc; make clean
 
 common_OBJECTS=misc.o md5.o
 splitpipe_OBJECTS=splitpipe.o $(common_OBJECTS)
@@ -38,6 +41,7 @@ dist:
 	mkdir -p $(OUTPUTDIR)/tests
 	cp Makefile PLAN *.cc *.hh COPYING TODO README HACKING cdrecord-script $(OUTPUTDIR)
 	cp tests/{*.cc,Makefile} $(OUTPUTDIR)/tests
+	cd doc; make dist
 	tar cvzf $(OUTPUTDIR).tar.gz $(OUTPUTDIR)/
 	rm -rf $(OUTPUTDIR)
 

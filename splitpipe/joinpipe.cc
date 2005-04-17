@@ -56,7 +56,7 @@ void usage()
   cerr<<"\nsyntax: joinpipe [options] device1 [device2] | ...\n\n";
   cerr<<" --debug, -d\t\tGive debugging output\n";
   cerr<<" --help, -h\t\tGive this helpful message\n";
-  cerr<<" --no-prompt, -h\tRun without user intervention\n";
+  cerr<<" --no-prompt, -n\tRun without user intervention\n";
   cerr<<" --verbose, -v\t\tGive verbose output\n";
   cerr<<" --version\t\tReport version\n\n";
   

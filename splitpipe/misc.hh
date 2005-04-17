@@ -17,7 +17,8 @@ struct stretchHeader
   uint16_t size;
   uint8_t type;
 
-  enum Types { SessionName=0, SessionUUID, VolumeNumber, VolumeEOF, Data, MD5Checksum, SHA1Checksum, SessionEOF };
+  enum Types { SessionName=0, SessionUUID=1, VolumeNumber=2, VolumeEOF=3, 
+	       Data=4, MD5Checksum=5, SHA1Checksum=6, SessionEOF=7 };
 } __attribute__((packed));
 
 #endif

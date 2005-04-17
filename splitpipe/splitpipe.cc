@@ -114,7 +114,7 @@ void usage()
   cerr<<" --buffer-size, -b\tSize of buffer before output, in megabytes"<<endl;
   cerr<<" --volume-size, -s\tSize of output volumes, in kilobytes. See below"<<endl;
   cerr<<" --help, -h\t\tGive this helpful message"<<endl;
-  cerr<<" --no-prompt, -h\tRun without user intervention\n";
+  cerr<<" --no-prompt, -n\tRun without user intervention\n";
   cerr<<" --output, -o\t\tThe output script that will be spawned for each volume"<<endl;
   cerr<<" --verbose, -v\t\tGive verbose output\n";
   cerr<<" --version\t\tReport version\n\n";

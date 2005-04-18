@@ -4,6 +4,18 @@ Downloads
 For the most up to date and most experimental code, see
 the link:development.html[Development] page.
 
+WARNING: All current features are very lightly tested! This software is not
+guaranteed to work. Do not rely too much on it yet.
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the link:splitpipe-released/COPYING[GNU General Public
+License version 2] as published by the Free Software Foundation;
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details.
+
 Current snapshot
 ----------------
 Version 0.2-svn: link:splitpipe-0.2-svn.tar.gz[]

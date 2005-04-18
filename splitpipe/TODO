@@ -1,3 +1,5 @@
+	- perhaps merge split and joinpipe
+
 	- output of cdrecord is fugly, perhaps add --cdrecord for prettifying
 
 	- implement retreat
@@ -5,7 +7,7 @@
 
 	- implement retry in joinpipe
 
-	- write dvdrecord-script
+hmm	- write dvdrecord-script
 
 	- define environment variables
 	
@@ -23,7 +25,7 @@ DONE!	- teach writen about EAGAIN
 
 	- add "name" chunk stretch
 
-	- manpages
+DONE!	- manpages
 
 	- i18n
 

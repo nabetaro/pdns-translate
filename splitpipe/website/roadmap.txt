@@ -1,0 +1,25 @@
+Roadmap
+=======
+
+While splitpipe is a useful program already, much more is in the works!
+
+The data format (link:splitpipe-0.2-svn/doc/splitpipe5.html[splitpipe(5)])
+and buffer of splitpipe have been built such that it is possible to restart
+failed volumes, provided they fail early enough.
+
+This would allow the operated to continue a backup after, for example,
+inserting a used DVD instead of an empty one.
+
+Much the same goes for restoring, splitpipe can already detect if a wrong
+volume was inserted. It should then of course offer the operator the chance
+of entering the right volume.
+
+User interface
+--------------
+Instead of only listening to the user when changing volumes, it might be a
+good idea to offer single-key commands while burning. Pressing *i* might
+give information on the current state of the ring buffer, pressing *q* might
+send a kill signal to the burn program etc.
+
+
+

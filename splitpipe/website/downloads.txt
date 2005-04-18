@@ -1,0 +1,13 @@
+Downloads
+=========
+
+For the most up to date and most experimental code, see
+the link:development.html[Development] page.
+
+Current snapshot
+----------------
+Version 0.2-svn: link:splitpipe-0.2-svn.tar.gz[]
+
+Latest release
+--------------
+Version 0.1, released 16th of April 2005: link:splitpipe-0.1.tar.gz[]

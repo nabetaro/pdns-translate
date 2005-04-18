@@ -1,0 +1,13 @@
+Documentation
+=============
+
+Currently you'll have to do with these three manpages, which describe
+version 0.2-svn (and *not* 0.1!).
+
+ * link:splitpipe-0.2-svn/doc/splitpipe.1.html[splitpipe(1)]
+ * link:splitpipe-0.2-svn/doc/joinpipe.1.html[joinpipe(1)]
+ * link:splitpipe-0.2-svn/doc/splitpipe.5.html[splitpipe(5)]
+
+You may also want to read the link:splitpipe-0.2-svn/README[README].
+
+

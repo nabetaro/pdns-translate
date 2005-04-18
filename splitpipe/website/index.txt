@@ -1,0 +1,36 @@
+Welcome
+=======
+
+.Latest News
+****************************************************
+Version 0.2 will be released soon! Check out the
+link:downloads.html[Downloads] page for snapshots, or see
+link:development.html[Development] for up to the second updates
+****************************************************
+
+Splitpipe is a program that allows the output of a program to span multiple
+volumes. Volumes might be DVD's, CD's, files, entire hard disks or floppies.
+
+A command line says more than a thousand words:
+
+--------------------------------------------------
+# tar czf - /home | splitpipe -c dvd -o 'growisofs -Z /dev/dvd=/dev/stdin'
+
+To restore:
+
+# joinpipe /dev/dvd | tar xzf -
+--------------------------------------------------
+
+The two lines above backup */home* to one, or more DVDs, prompting the
+operator to change media once a volume is full.
+
+Features
+--------
+ * Running MD5 checksum
+ * Detects truncated chunks
+ * Impervious to trailing garbage (which you get when piping raw data
+   to cdrecord or growisofs)
+ * Detects improper order of chunks on restore
+ * Each session has a UUID, so chunks from other backups are rejected
+ * Large and efficient ringbuffer
+ * Works with cdrecord, growisofs, bare files and floppies

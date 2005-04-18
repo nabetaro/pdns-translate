@@ -1,0 +1,26 @@
+Reporting bugs
+==============
+
+To report bugs, please describe clearly:
+
+ * The version of splitpipe you are using
+ * Which operating system splitpipe is installed on
+ * If you compiled the program yourself, or used a package (if so, specify
+   which one)
+ * If burning media, which program and which version you use (cdrecord,
+   growisofs etc)
+ * The exact command line you entered
+
+More complicated:
+
+ * Explain what you *expected* splitpipe to do
+ * What it did instead
+ * Which, if any, errors it reported
+ * Be honest about odd things you may be doing. If you own the world's only
+   Firewire DVD burner, I need to know!
+
+Please supply the data above 'even' if you think it can't possibly be
+relevant to your problem.
+
+If you have compiled the above, please email bert hubert <ahu@ds9a.nl>. In
+the future there will be a bug tracker, probably 'trac'.

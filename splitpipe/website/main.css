@@ -1,0 +1,180 @@
+/*
+    Main stylesheet.
+ */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    background-image: url(sidebar.png);
+    background-position: 0 0;
+    background-repeat: repeat-y;
+    background-attachment: fixed;
+}
+div#content {
+    background-color: transparent;
+    min-height: 350px;
+    margin: 5px 25px 25px 170px;
+    padding: 10px;
+}
+div#content a {
+    font-weight: normal;
+    text-decoration: underline;
+}
+div#content a:link {
+    color: #00c;
+}
+div#content a:hover {
+    color: #f60;
+}
+
+div#menu {
+    position: absolute;
+    top: 70px;
+    left: 0px;
+    width: 157px;
+}
+div#menu a {
+    display: block;
+    padding: 5px 0px 5px 10px;
+    margin: 0px;
+    text-align: left;
+    text-decoration: underline;
+    color: rgb(63,82,148);
+    font: bold 12pt Arial, sans-serif;
+}
+div#menu a:hover, div#menu a:focus {
+    color: #f60;
+}
+
+h1,h2,h3,h4 {
+    color: rgb(63,82,148);
+    font: normal bold medium Arial, sans-serif;
+    letter-spacing: 0.25em;
+}
+h1 {
+    font-size: 16pt;
+    background: rgb(255,254,234);
+    margin: 0 -13px 15px;
+    padding: 2px 0 2px 29px;
+    border-top: 2px solid rgb(152,166,211);
+    border-bottom: 2px solid rgb(152,166,211);
+}
+h2 {
+    font-size: 12pt;
+    letter-spacing: 0.2em;
+    text-decoration: underline;
+    margin: 1em 0 0.25em 14px;
+}
+p {margin: 0 14px 1em;}
+
+ul,ol {
+  margin-top: 0;
+  margin-left: 1.25em;
+  padding: 0 1em;
+  list-style-position: outside;
+}
+em { font-weight: normal; font-style: italic;}
+li { padding-bottom: 0.25em; }
+dl { padding: 0 1em; }
+dt { font-weight: bold; }
+dd p, li p { margin: 0; padding: 0; }
+li div.literalparagraph { margin-left: 0; }
+div.literalparagraph pre, li div.literalparagraph pre { margin-left: 2%; }
+
+div#header {
+    margin: 15px 0 0 195px;
+    font: bold 25pt Arial, sans-serif;
+    color: rgb(63,82,148);
+    text-align: center;
+}
+div#footer {
+    clear: both;
+    background: rgb(255,254,234);
+    font: 8pt sans-serif;
+    margin: 0 25px 2px 167px;
+    padding: 0;
+    position: relative;     /* IE6 loses paragraph without this. */
+    bottom: 0;
+    border-top: 2px solid rgb(152,166,211);
+    border-bottom: 2px solid rgb(152,166,211);
+}
+div#footer p {
+    margin: .5em 0 0 15px;
+}
+div#footer a {
+    color: #00c;
+    background: transparent;
+    font-weight: normal;
+    text-decoration: underline;
+}
+div#footer a:hover, div#footer a:focus {
+    color: #f60;
+}
+
+div#badges {padding: 0 12px 5px 12px;}
+div#badges td {vertical-align: middle;}
+div#badges img {padding-right: 20px; border-style: none;}
+div.graphic {
+    border-style: none;
+}
+div.graphic img {
+    margin: 0;
+    padding: 0;
+/*  border: 2px solid rgb(152,166,211); */
+}
+/* graphic caption */
+p.caption {
+    margin: 0 14px 1em;
+    font-style: italic;
+}
+div.literalparagraph { margin: 0 1em 1em; }
+div.literalblock { margin: 0 1em; }
+div.listingblock   {
+    background: #e8e8e8;
+    margin: 0.5em -9px 1em 14px;
+    padding: 0.5em 1em;
+}
+div.sidebarblock {
+    background: rgb(255,254,234);
+    margin: 0.5em -9px 1em 14px;
+    padding: 0.5em 1em;
+    border: 2px solid rgb(152,166,211);
+}
+div.sidebarblock p { margin-left: 0; }
+div.sidebarblock * { padding-left: 0; }
+div.sidebarblock div { margin: 0; }
+p.sidebartitle { font-family: sans-serif; font-style: italic; }
+div.quoteblock {
+    margin: 0.5em 35% 0.5em 14px;
+    padding: 0;
+}
+div.quoteblock p { font: italic medium serif; }
+div.quoteblock p { margin-left: 0; }
+div.quoteblock * { padding-left: 0; }
+div.quoteblock div { margin: 0; }
+
+div.admonition div.icon {
+  float: left;
+  width: 56px;
+}
+div.admonition div.text {
+  margin-left: 56px;
+  padding-top: 1px;
+}
+div.admonition div.text * { padding: 0; }
+div.clear {
+  clear: both;
+}
+/* Display for browsers that don't understand stylesheets. */
+.ahem { display: none; }
+/* Print nicely. */
+@media print {
+    @page { margin: 10% } /* This _is_ valid CSS2. */
+    h1,h2,h3,h4 { page-break-after: avoid; page-break-inside: avoid }
+    blockquote,pre { page-break-inside: avoid }
+    ul,ol,dl { page-break-before: avoid }
+    /* Override existing property settings. */
+    div#header { margin: 20px 0 0;}
+    div#content { margin: 0; border: 0; }
+    div#menu, div#footer { display: none; }
+}

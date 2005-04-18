@@ -1,0 +1,45 @@
+Examples
+========
+
+This page lists some examples of how to use splitpipe. Please email bert
+hubert <ahu@ds9a.nl> if you have done cool things and would like to share
+them!
+
+Burning to CD
+-------------
+`cdrecord` works well, even though it has become a walking advertisement for
+Solaris these days. Good results have been achieved with:
+
+------------------------------------------------------------------------------------------------------------------------
+#  tar czf - / | splitpipe -s cdr-80 -o 'cdrecord dev=/dev/cdrom speed=24 -tao -v -gracetime 2 driveropts=burnfree -data -'
+...
+# joinpipe /dev/cdrom | tar xzf 
+------------------------------------------------------------------------------------------------------------------------
+
+If you don't want to use, or can't use, burnfree, try the following:
+------------------------------------------------------------------------------------------------------------------------------
+#  tar cf - / | gzip --fast | splitpipe -s cdr-80 -b 50 -o 'cdrecord dev=/dev/cdrom speed=24 -tao fs=20m -gracetime 2 -data -'
+------------------------------------------------------------------------------------------------------------------------------
+
+The above uses a faster `gzip` compression and instructs both `splitpipe`
+and `cdrecord` to use larger buffers.
+
+WARNING: The command line above does consume 70 megabytes of RAM!
+
+Burning to DVD
+--------------
+`growisofs` works very well:
+
+---------------------------------------------------------------------------------------------
+# tar cf - /home | gzip --fast | splitpipe -b 50 -c dvd -o 'growisofs -Z /dev/dvd=/dev/stdin'
+---------------------------------------------------------------------------------------------
+
+Remotely
+--------
+
+This requires a fast network, but is doable:
+
+-----------------------------------------------------------------------------------------------------
+# ssh remote "tar czf - / | bfr -b50M" | splitpipe -b 50 -c dvd -o 'growisofs -Z /dev/dvd=/dev/stdin'
+-----------------------------------------------------------------------------------------------------
+

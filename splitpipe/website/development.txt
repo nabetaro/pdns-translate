@@ -1,0 +1,17 @@
+Development
+===========
+
+To follow or even join in development of splitpipe it is much advised to
+check out or subversion repository, like this:
+
+-----------------------------------------------
+$ svn co svn://svn.powerdns.com/trunk/splitpipe
+A  splitpipe/misc.cc
+A  splitpipe/file-script
+A  splitpipe/md5.hh
+A  splitpipe/ringbuffer.hh
+..
+-----------------------------------------------
+
+Also read the file link:splitpipe-released/HACKING[HACKING] for more
+information on joining in.

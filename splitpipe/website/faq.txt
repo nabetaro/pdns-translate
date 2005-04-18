@@ -1,0 +1,26 @@
+Frequently Asked Questions
+==========================
+
+My email address is below all these questions, which you should read
+carefully before contacting me!
+
+Part of these questions justify the writing of splitpipe, which is a sad
+thing, but actually most questions so far have been from people who are
+convinced nothing should happen for the first time.
+
+Why did you write this program? Don't tar/zip7/vol/dar/sdvdbackup do the same thing???
+	No. The unique aspect of splitpipe is that it does not write images
+	to disk first, allowing you to backup a filesystem filled to the
+	brim. If you check carefully, all programs mentioned above do
+	something like splitpipe, but never go all the way.
+	Sdvdbackup comes closest but is horribly slow and hard to
+	understand, at least for me.
+
+I get underruns, and I see most CPU time is spent in gzip, how can I speed it up???
+	The --fast option is nice, and does not use much more disk space. To
+	benefit, use: *tar cf - / | gzip --fast | splitpipe ...*.
+
+
+Feel free to send your questions to bert hubert (ahu@ds9a.nl), but please
+read the questions above first!
+

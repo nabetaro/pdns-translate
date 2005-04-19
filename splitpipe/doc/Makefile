@@ -5,6 +5,11 @@ dist: all
 	mkdir ../splitpipe-$(VERSION)/doc
 	cp Makefile *.txt *.html *.[15] ../splitpipe-$(VERSION)/doc	
 
+install: all
+	install splitpipe.1 $(MANDIR)/man1/
+	install joinpipe.1 $(MANDIR)/man1/
+	install splitpipe.5 $(MANDIR)/man5/
+
 # splitpipe.1.txt -> splitpipe.1.xml -> splitpipe.1
 
 %.xml: %.txt

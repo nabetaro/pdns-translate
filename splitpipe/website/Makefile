@@ -1,4 +1,5 @@
-all: index.html downloads.html documentation.html development.html faq.html bugs.html roadmap.html examples.html
+all: index.html downloads.html documentation.html development.html faq.html \
+	bugs.html roadmap.html examples.html changelog.html
 
 %.html: %.txt
 	asciidoc.py -b css -f asciidoc.conf  $<	

@@ -1,20 +1,23 @@
-VERSION=0.2-svn
-export VERSION
-
-OUTPUTDIR=splitpipe-$(VERSION)
+VERSION=0.2
 CXXFLAGS=-Wall -g -O2 -DVERSION=\"$(VERSION)\"
+
 PREFIX?=/usr/local/
 BINDIR?=$(DESTDIR)/$(PREFIX)/bin/
+MANDIR?=$(DESTDIR)/usr/share/man/
 
+export VERSION MANDIR
 
-all: splitpipe joinpipe
+all: splitpipe joinpipe docs
 
 # output of g++ -MM *.cc
 joinpipe.o: joinpipe.cc misc.hh md5.hh
+main.o: main.cc misc.hh
 md5.o: md5.cc md5.hh
 misc.o: misc.cc misc.hh
 splitpipe.o: splitpipe.cc misc.hh ringbuffer.hh md5.hh
 
+docs: 
+	cd doc; make
 
 clean:
 	rm -rf *~ *.o splitpipe 
@@ -28,11 +31,12 @@ splitpipe: $(splitpipe_OBJECTS)
 	g++ $(splitpipe_OBJECTS) -o $@
 
 joinpipe: splitpipe
-	ln -f splitpipe joinpipe
+	ln -sf splitpipe joinpipe
 
 check: all
 	cd tests; make
 
+OUTPUTDIR=splitpipe-$(VERSION)
 dist:
 	rm -rf $(OUTPUTDIR)
 	mkdir -p $(OUTPUTDIR)/tests
@@ -42,6 +46,9 @@ dist:
 	tar cvzf $(OUTPUTDIR).tar.gz $(OUTPUTDIR)/
 	rm -rf $(OUTPUTDIR)
 
-install:
+install: all 
 	install -s splitpipe $(BINDIR)
-	ln -f $(BINDIR)/splitpipe $(BINDIR)/joinpipe
+	ln -sf $(BINDIR)/splitpipe $(BINDIR)/joinpipe
+	cd doc; make install
+
+

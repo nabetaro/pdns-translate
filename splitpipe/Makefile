@@ -40,8 +40,8 @@ OUTPUTDIR=splitpipe-$(VERSION)
 dist:
 	rm -rf $(OUTPUTDIR)
 	mkdir -p $(OUTPUTDIR)/tests
-	cp Makefile PLAN *.cc *.hh COPYING TODO README HACKING cdrecord-script $(OUTPUTDIR)
-	cp tests/{*.cc,Makefile} $(OUTPUTDIR)/tests
+	cp Makefile PLAN *.cc *.hh CHANGELOG COPYING TODO README HACKING cdrecord-script $(OUTPUTDIR)
+	cp tests/{*.cc,Makefile,fullRun} $(OUTPUTDIR)/tests
 	cd doc; make dist
 	tar cvzf $(OUTPUTDIR).tar.gz $(OUTPUTDIR)/
 	rm -rf $(OUTPUTDIR)

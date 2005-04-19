@@ -20,6 +20,12 @@ In doing so, it checks the proper order of inserted volumes, if these
 volumes all belong to the same backup session. Integrity of data
 is verified using a running checksum, currently MD5.
 
+Volumes are read from the devices or filenames specified on the command
+line. When passing multiple names, the first volume is read from the first
+name, the second volume from the second name etc. When there are more
+volumes than names, remaining volumes are read in from the last name
+specified.
+
 EXAMPLES
 --------
 

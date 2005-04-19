@@ -9,9 +9,9 @@ splitpipe - spread piped input over a number of volumes (DVD's, CD's etc)
 
 SYNOPSIS
 --------
-'splitpipe' -o output [--buffer-size, -b] [--volume-size, -s] [--help, -h]
-		      [--no-prompt, -n] [--output, -o] [--verbose, -v]
-		      [--debug, -d] [--version]
+'splitpipe' -o command [--buffer-size, -b] [--volume-size, -s] [--help, -h]
+		       [--no-prompt, -n] [--verbose, -v]
+		       [--debug, -d] [--version]
 
 
 DESCRIPTION
@@ -50,7 +50,7 @@ OPTIONS
 
 --ouput program, -o::
 	This specifies a script, either shell, or a program that is called
-	for each volume.
+	for each volume. Mandatory.
 
 --buffer-size, -b::
 	Configures the size of the buffer between input and output. In

@@ -1,5 +1,16 @@
-	- perhaps merge split and joinpipe (suggestion of "Kei" and Mel Roman)
+EASY:
+	- figure out exact byte sizes of CDR, CDR-80, DVD
 
+MEDIUM:
+	- add date/time session stretch
+
+	- add "name" chunk stretch
+
+DONE!	- perhaps merge split and joinpipe (suggestion of "Kei" and Mel Roman)
+
+	- i18n
+
+HARD:
 	- output of cdrecord is fugly, perhaps add --cdrecord for prettifying
 
 	- implement retreat
@@ -7,25 +18,22 @@
 
 	- implement retry in joinpipe
 
-hmm	- write dvdrecord-script
-
 	- define environment variables
 	
 	- take out getopt_long stuff, it is somewhat ugly
-
-DONE!	- make buildStretch, which appends stretches to a string
-
-DONE!	- teach writen about EAGAIN
 
 	- open /dev/tty and poll it in the loop
 
 	- allow single key commands during the process
 
-	- add date/time session stretch
+Done:
 
-	- add "name" chunk stretch
+DONE!	- make buildStretch, which appends stretches to a string
+
+DONE!	- teach writen about EAGAIN
 
 DONE!	- manpages
 
-	- i18n
+hmm	- write dvdrecord-script
+
 

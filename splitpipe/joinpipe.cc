@@ -50,7 +50,7 @@ namespace {
   }parameters;
 }
 
-void usage()
+static void usage()
 {
   cerr<<"joinpipe joins multiple volumes (volumes) into one pipe.\n";
   cerr<<"\nsyntax: joinpipe [options] device1 [device2] | ...\n\n";
@@ -63,7 +63,7 @@ void usage()
   exit(1);
 }
 
-void ParseCommandline(int argc, char** argv)
+static void ParseCommandline(int argc, char** argv)
 {
   int c;
   
@@ -114,7 +114,7 @@ void ParseCommandline(int argc, char** argv)
 
 }
 
-int main(int argc, char** argv)
+int JoinpipeMain(int argc, char** argv)
 try
 {
   ParseCommandline(argc, argv);
@@ -209,8 +209,10 @@ try
       cerr<<makeHexDump(string(buffer, buffer+stretch.size))<<endl;
     }
   }
+  return EXIT_SUCCESS;
 }
 catch(exception &e)
 {
   cerr<<"Fatal: "<<e.what()<<endl;
+  return EXIT_FAILURE;
 }

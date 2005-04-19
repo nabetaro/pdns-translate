@@ -107,7 +107,7 @@ void outputGaveEof(int outputfd)
   exit(EXIT_FAILURE);
 }
 
-void usage()
+static void usage()
 {
   cerr<<"splitpipe divides its input over several volumes.\n";
   cerr<<"\nsyntax: ... | joinpipe [options] \n\n";
@@ -126,7 +126,7 @@ void usage()
   
 }
 
-void ParseCommandline(int argc, char** argv)
+static void ParseCommandline(int argc, char** argv)
 {
   int c;
   
@@ -268,7 +268,7 @@ int outputPerVolumeStretches(int fd, uint16_t volumeNumber)
 }
 
 
-int main(int argc, char** argv)
+int SplitpipeMain(int argc, char** argv)
 try
 {
   parameters.bufferSize=1000000;
@@ -497,8 +497,10 @@ try
   }
   if(parameters.verbose)
     cerr<<"splitpipe: output "<<numStretches<<" stretches\n";
+  return EXIT_SUCCESS;
 }
 catch(exception &e)
 {
   cerr<<"Fatal: "<<e.what()<<endl;
+  return EXIT_FAILURE;
 }

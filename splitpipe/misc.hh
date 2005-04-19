@@ -21,4 +21,7 @@ struct stretchHeader
 	       Data=4, MD5Checksum=5, SHA1Checksum=6, SessionEOF=7 };
 } __attribute__((packed));
 
+int SplitpipeMain(int argc, char** argv);
+int JoinpipeMain(int argc, char** argv);
+
 #endif

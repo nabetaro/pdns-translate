@@ -16,22 +16,19 @@ misc.o: misc.cc misc.hh
 splitpipe.o: splitpipe.cc misc.hh ringbuffer.hh md5.hh
 
 
-
 clean:
 	rm -rf *~ *.o splitpipe 
 	cd tests; make clean
 	cd doc; make clean
 
 common_OBJECTS=misc.o md5.o
-splitpipe_OBJECTS=splitpipe.o $(common_OBJECTS)
-joinpipe_OBJECTS=joinpipe.o $(common_OBJECTS)
+splitpipe_OBJECTS=splitpipe.o joinpipe.o main.o $(common_OBJECTS)
 
 splitpipe: $(splitpipe_OBJECTS)
 	g++ $(splitpipe_OBJECTS) -o $@
 
-joinpipe: $(joinpipe_OBJECTS)
-	g++ $(joinpipe_OBJECTS) -o $@
-
+joinpipe: splitpipe
+	ln -f splitpipe joinpipe
 
 check: all
 	cd tests; make
@@ -47,4 +44,4 @@ dist:
 
 install:
 	install -s splitpipe $(BINDIR)
-	install -s joinpipe $(BINDIR)
+	ln -f $(BINDIR)/splitpipe $(BINDIR)/joinpipe

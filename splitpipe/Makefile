@@ -1,5 +1,6 @@
 VERSION=0.2
-CXXFLAGS=-Wall -g -O2 -DVERSION=\"$(VERSION)\"
+CXXFLAGS=-Wall -DVERSION=\"$(VERSION)\"
+
 
 PREFIX?=/usr/local/
 BINDIR?=$(DESTDIR)/$(PREFIX)/bin/
@@ -8,6 +9,7 @@ MANDIR?=$(DESTDIR)/usr/share/man/
 export VERSION MANDIR
 
 all: splitpipe joinpipe docs
+
 
 # output of g++ -MM *.cc
 joinpipe.o: joinpipe.cc misc.hh md5.hh
@@ -28,7 +30,7 @@ common_OBJECTS=misc.o md5.o
 splitpipe_OBJECTS=splitpipe.o joinpipe.o main.o $(common_OBJECTS)
 
 splitpipe: $(splitpipe_OBJECTS)
-	g++ $(splitpipe_OBJECTS) -o $@
+	g++ $(splitpipe_OBJECTS) -o $@ -lncurses
 
 joinpipe: splitpipe
 	ln -sf splitpipe joinpipe

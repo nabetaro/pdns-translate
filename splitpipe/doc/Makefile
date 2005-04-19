@@ -3,7 +3,7 @@ all: splitpipe.1 splitpipe.1.html joinpipe.1 joinpipe.1.html splitpipe.5.html \
 
 dist: all
 	mkdir ../splitpipe-$(VERSION)/doc
-	cp Makefile *.conf asciidoc.py *.txt *.html *.[15] ../splitpipe-$(VERSION)/doc	
+	cp Makefile *.txt *.html *.[15] ../splitpipe-$(VERSION)/doc	
 
 # splitpipe.1.txt -> splitpipe.1.xml -> splitpipe.1
 

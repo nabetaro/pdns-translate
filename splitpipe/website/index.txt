@@ -3,8 +3,8 @@ Welcome
 
 .Latest News
 ****************************************************
-Version 0.2 will be released soon! Check out the
-link:downloads.html[Downloads] page for snapshots, or see
+link:changelog.html[Version 0.2] has been released! Look at
+the link:downloads.html[Downloads] page for snapshots, or see
 link:development.html[Development] for up to the second updates
 ****************************************************
 

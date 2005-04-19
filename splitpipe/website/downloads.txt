@@ -18,8 +18,15 @@ more details.
 
 Current snapshot
 ----------------
+///////
 Version 0.2-svn: link:splitpipe-0.2-svn.tar.gz[]
+///////
+None yet.
 
 Latest release
+--------------
+Version 0.2, released 19th of April 2005: link:splitpipe-0.2.tar.gz[]
+
+Older releases
 --------------
 Version 0.1, released 16th of April 2005: link:splitpipe-0.1.tar.gz[]

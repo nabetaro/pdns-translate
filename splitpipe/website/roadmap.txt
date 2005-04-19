@@ -3,7 +3,7 @@ Roadmap
 
 While splitpipe is a useful program already, much more is in the works!
 
-The data format (link:splitpipe-0.2-svn/doc/splitpipe.5.html[splitpipe(5)])
+The data format (link:splitpipe-0.2/doc/splitpipe.5.html[splitpipe(5)])
 and buffer of splitpipe have been built such that it is possible to restart
 failed volumes, provided they fail early enough.
 

@@ -404,7 +404,9 @@ int SplitpipeClass::go(int argc, char**argv)
 	d_firstvolume=false;
       }
       else {
+	d_spd->setLogStandout(true);
 	d_spd->log("%s","reload media, if necessary, and press enter to continue");
+	d_spd->setLogStandout(false);
 
 	if(!parameters.noPrompt)
 	  waitForUserCurses();
@@ -414,7 +416,7 @@ int SplitpipeClass::go(int argc, char**argv)
       d_spd->log("bringing output script online. Buffer %.02f%% full", (100.0 * rb.available() / parameters.bufferSize));
 
       spawnOutputThread();
-      d_spd->log("output script is online");
+      d_spd->log("sending data to output script");
       amountOutputVolume = outputPerVolumeStretches(volumeNumber++);      
       outputStatus=Working;
     }
@@ -448,7 +450,8 @@ int SplitpipeClass::go(int argc, char**argv)
       lastPercentage = newPercentage;
     }
     if(time(0) != lastRefresh) {
-      d_spd->setTotalBytes(grandTotalIn, grandTotalOut, rb.available());
+      d_spd->setTotalBytes(grandTotalIn, grandTotalOut, rb.available(), 
+			   (int)(100.0 * amountOutputVolume / parameters.volumeSize));
       lastRefresh=time(0);
     }
 

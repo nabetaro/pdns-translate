@@ -49,10 +49,10 @@ SplitpipeDisplay::SplitpipeDisplay()
   d_firstlog=true;
 }
 
-void SplitpipeDisplay::setTotalBytes(uint64_t input, uint64_t output, uint32_t bufferSize)
+void SplitpipeDisplay::setTotalBytes(uint64_t input, uint64_t output, uint32_t bufferSize, int volPerc)
 {
-  mvwprintw(d_sepawin,3,0,"Input: %5dMB     Output: %5dMB     Buffer: %5dKB", 
-	    (int)(input/1000000), (int)(output/1000000), bufferSize/1024);
+  mvwprintw(d_sepawin,3,0,"Input: %5dMB     Output: %5dMB     Buffer: %5dKB     Percentage of volume done: %3d%%", 
+	    (int)(input/1000000), (int)(output/1000000), bufferSize/1024, volPerc);
   wrefresh(d_sepawin);
   wrefresh(d_logwin);
 }
@@ -88,6 +88,14 @@ void SplitpipeDisplay::programCommit()
 {
   wrefresh(d_pwin);
   wrefresh(d_logwin);
+}
+
+void SplitpipeDisplay::setLogStandout(bool bold)
+{
+  if(bold)
+    wattron(d_logwin, A_BOLD);
+  else
+    wattroff(d_logwin, A_BOLD);
 }
 
 void SplitpipeDisplay::log(const char* fmt, ...)

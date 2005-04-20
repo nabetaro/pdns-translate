@@ -27,7 +27,7 @@ clean:
 	cd doc; make clean
 
 common_OBJECTS=misc.o md5.o
-splitpipe_OBJECTS=splitpipe.o joinpipe.o main.o $(common_OBJECTS)
+splitpipe_OBJECTS=splitpipe.o joinpipe.o main.o display.o $(common_OBJECTS)
 
 splitpipe: $(splitpipe_OBJECTS)
 	g++ $(splitpipe_OBJECTS) -o $@ -lncurses

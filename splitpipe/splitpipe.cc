@@ -31,6 +31,7 @@
 #include "misc.hh"
 #include "ringbuffer.hh"
 #include "md5.hh"
+#include "display.hh"
 
 namespace {
   struct paramStruct {
@@ -74,10 +75,10 @@ uint64_t getSize(const char* desc)
 }
 
 int outputfd, stdoutfd, stderrfd;
-WINDOW* pwin, *sepawin, *swin;
+
 
 pid_t g_pid;
-bool checkDeathOutputCommand(bool doWait=false)
+bool checkDeathOutputCommand(SplitpipeDisplay& spd, bool doWait=false)
 {
   int status, ret;
   if((ret=waitpid(g_pid, &status, doWait ? 0 : WNOHANG)) < 0)
@@ -87,24 +88,23 @@ bool checkDeathOutputCommand(bool doWait=false)
     return false;
 
   if(WIFEXITED(status))
-    wprintw(swin,"splitpipe: output command exited with status %d\n",WEXITSTATUS(status));
+    spd.log("splitpipe: output command exited with status %d\n",WEXITSTATUS(status));
   else {
-    wprintw(swin,"splitpipe: output command exited abnormally");
+    spd.log("splitpipe: output command exited abnormally");
     if(WIFSIGNALED(status))
-      wprintw(swin,", by signal %d",WTERMSIG(status));
-    wprintw(swin,"\n");
+      spd.log(", by signal %d",WTERMSIG(status));
+    spd.log("\n");
   }
-  wrefresh(swin);
   return true;
 }
 
 
-void outputGaveEof()
+void outputGaveEof(SplitpipeDisplay& spd)
 {
   endwin();
   cerr<<"\nsplitpipe: output command gave EOF, waiting for it to exit"<<endl;
   close(outputfd);
-  checkDeathOutputCommand(true);
+  checkDeathOutputCommand(spd,true);
   cerr<<"\nsplitpipe: future versions of splitpipe may allow you to continue, but for now.. exit\n";
   exit(EXIT_FAILURE);
 }
@@ -250,7 +250,7 @@ void appendStretch(int type, const string& content, string& stretches)
   stretches+=content;
 }
 
-void outputChecksum(const MD5Summer& md5)
+void outputChecksum(SplitpipeDisplay& spd, const MD5Summer& md5)
 {
   string stretches;
   appendStretch(stretchHeader::MD5Checksum, md5.get(), stretches);
@@ -258,12 +258,12 @@ void outputChecksum(const MD5Summer& md5)
   int ret=writen(outputfd, stretches.c_str(), stretches.length(), "write of meta-data to output command");
   
   if(!ret)
-    outputGaveEof();
+    outputGaveEof(spd);
 }
 
 string g_uuid;
 
-int outputPerVolumeStretches( uint16_t volumeNumber)
+int outputPerVolumeStretches( SplitpipeDisplay& spd, uint16_t volumeNumber)
 {
   string stretches;
   
@@ -277,54 +277,11 @@ int outputPerVolumeStretches( uint16_t volumeNumber)
   int ret=writen(outputfd, stretches.c_str(), stretches.length(), "write of per-volume meta-data to output command");
 
   if(!ret)
-    outputGaveEof();
+    outputGaveEof(spd);
 
   return stretches.length();
 }
 
-int getHeight()
-{
-  int y,x;
-  getmaxyx(stdscr, y,x);
-  return y;
-}
-
-
-int getWidth()
-{
-  int y,x;
-  getmaxyx(stdscr, y,x);
-  return x;
-}
-
-
-
-void initNcurses()
-{
-  initscr();      /* initialize the curses library */
-
-  pwin=newwin(getHeight()-11, 0, 0, 0);
-  sepawin=newwin(1, 0, getHeight()-11, 0);
-  swin=newwin(10, 0, getHeight()-10, 0);
-
-  scrollok(swin, true);
-  scrollok(pwin, true);
-  if(!pwin || !swin) {
-    printf("Help!\n");
-    exit(1);
-  }
-  
-  //  keypad(swin, TRUE);  /* enable keyboard mapping */
-  nonl();         /* tell curses not to do NL->CR/NL on output */
-  //cbreak();       /* take input chars one at a time, no wait for \n */
-  noecho();
-
-  string line;
-  line.append(getWidth(),'-');
-  mvwprintw(sepawin, 0,0, line.c_str());
-  wrefresh(sepawin);
-  wrefresh(swin);
-}
 
 void waitForUserCurses()
 {	
@@ -384,7 +341,8 @@ try
   RingBuffer rb(parameters.bufferSize);
   setNonBlocking(0);
   stdoutfd = stderrfd = -1;
-  initNcurses();
+
+  SplitpipeDisplay spd;
 
   bool inputEof=false;
   enum {Dead, Working, Dying} outputStatus=Dead;
@@ -399,39 +357,37 @@ try
   char *buffer = new char[parameters.bufferSize];  // XXX FIXME! This is waaaay too much
 
   if(parameters.verbose) {
-    wprintw(swin,"%s","Prebuffering before starting output script..");
-    wrefresh(swin);
+    spd.log("%s","Prebuffering before starting output script..");
   }
 
   bool d_firstvolume=true; // first volume does not get the 'press enter' stuff
+  int lastPercentage=0;
 
   while(1) {
     if(outputStatus==Dead && (inputEof || (1.0 * rb.available() / parameters.bufferSize > 0.5))) {
       if(d_firstvolume) {
 	if(parameters.verbose) {
-	  wprintw(swin," done\n");
-	  wrefresh(swin);
+	  spd.log(" done\n");
 	}
 	d_firstvolume=false;
       }
       else {
-	wprintw(swin,"%s","splitpipe: reload media, if necessary, and press enter to continue\n");
-	wrefresh(swin);
+	spd.log("%s","splitpipe: reload media, if necessary, and press enter to continue\n");
+
 	if(!parameters.noPrompt)
 	  waitForUserCurses();
 	//wgetch(swin);
       }
 
-      wprintw(swin,"splitpipe: bringing output script online - buffer %.02d%% full\n", 
+      spd.log("splitpipe: bringing output script online - buffer %.02d%% full\n", 
 	      (int)100.0*rb.available() / parameters.bufferSize);
-      wrefresh(swin);
 
       spawnOutputThread();
-      amountOutput = outputPerVolumeStretches(volumeNumber++);      
+      amountOutput = outputPerVolumeStretches(spd, volumeNumber++);      
       outputStatus=Working;
     }
 
-    if(outputStatus!=Dead && stdoutfd < 0 && stderrfd < 0 && checkDeathOutputCommand()) {
+    if(outputStatus!=Dead && stdoutfd < 0 && stderrfd < 0 && checkDeathOutputCommand(spd)) {
       outputStatus = Dead;
     }
 
@@ -453,13 +409,20 @@ try
 
     if(stderrfd > 0)
       FD_SET(stderrfd, &inputs);
-
+    int newPercentage=(100.0*rb.available()/parameters.bufferSize);
+    if(lastPercentage != newPercentage) {
+      spd.setBarPercentage(newPercentage);
+      lastPercentage = newPercentage;
+    }
 
     struct timeval tv={0,10000};
     int ret=select( max(0,max(stdoutfd, stderrfd))+1,   // XXX FIXME highly dodgy
 		    &inputs, &outputs, 0, &tv);
-    if(ret < 0)
+    if(ret < 0) {
+      if(errno == EINTR)
+	continue;
       unixDie("select returned an error");
+    }
 
     if(!ret)  
       continue;
@@ -470,27 +433,24 @@ try
       ret=read(stdoutfd, buffer, 1024);
       if(ret > 0) {
 	for(int counter=0;counter<ret;++counter)
-	  waddch(pwin, buffer[counter]);
-	wrefresh(pwin);
+	  spd.programPut(buffer[counter]);
       }
       if(!ret) {
 	close(stdoutfd);
 	stdoutfd=-1;
       }
-      wrefresh(swin);
+
     }
     if(stderrfd > 0 && FD_ISSET(stderrfd, &inputs)) {
       ret=read(stderrfd, buffer, 1024);
       if(ret > 0) {
 	for(int counter=0;counter<ret;++counter)
-	  waddch(pwin, buffer[counter]);
-	wrefresh(pwin);
+	  spd.programPut(buffer[counter]);
       }
       if(!ret) {
 	close(stderrfd);
 	stderrfd=-1;
       }
-      wrefresh(swin);
     }
 
 
@@ -501,6 +461,7 @@ try
       if(!ret) {
 	if(parameters.debug) 
 	  cerr<<"EOF on input, room in buffer: "<<rb.room()<<endl;
+	spd.log("splitpipe: all data in memory, draining buffer\n");
 	inputEof=true;
       } else {
 	if(parameters.debug)
@@ -534,7 +495,7 @@ try
 	  ret=writen(outputfd, &stretch, sizeof(stretch),"write of meta-data to output command");
 
 	  if(!ret)
-	    outputGaveEof();
+	    outputGaveEof(spd);
 	  
 	  amountOutput += sizeof(stretch);
 	  numStretches++;
@@ -548,11 +509,11 @@ try
 	len=min(len, (size_t)leftInStretch);
 
 	if(!len) {
-	  wprintw(swin, "%s","Output a full volume, waiting for output command to exit..\n");
-	  wrefresh(swin);
+	  spd.log("%s","Output a full volume, waiting for output command to exit..\n");
+	
 	  struct stretchHeader stretch;
 
-	  outputChecksum(md5);
+	  outputChecksum(spd,md5);
 
 	  stretch.size=0;
 	  stretch.type=stretchHeader::VolumeEOF;
@@ -560,7 +521,7 @@ try
 	  ret=writen(outputfd, &stretch, sizeof(stretch),"write of meta-data to output command");
 
 	  if(!ret)
-	    outputGaveEof();
+	    outputGaveEof(spd);
 
 	  close(outputfd);
 
@@ -579,7 +540,7 @@ try
 	}
 
 	if(!ret) {
-	  outputGaveEof();
+	  outputGaveEof(spd);
 	}
 	if(parameters.debug) 
 	  cerr<<"Wrote out "<<ret<<" out of "<<len<<" bytes"<<endl;
@@ -593,8 +554,6 @@ try
 	if(parameters.debug) 
 	  cerr<<"There are now "<<rb.available()<<" bytes left in the rb"<<endl;
       } while(totalBytesOutput < bytesRead && rb.available());
-
-
     }
 
     if(inputEof && !rb.available())
@@ -603,9 +562,9 @@ try
 
   // XXX FIXME: deal with outputStatus == Dying 
   if(outputStatus==Working) {
-    cerr<<"\nsplitpipe: done with input, waiting for output script to exit..\n";
+    spd.log("splitpipe: done with input, waiting for output script to exit..\n");
 
-    outputChecksum(md5);
+    outputChecksum(spd,md5);
 
     struct stretchHeader stretch;
     stretch.size=0;
@@ -614,20 +573,16 @@ try
     int ret=writen(outputfd, &stretch, sizeof(stretch),"write of meta-data to output command");
     
     if(!ret)
-      outputGaveEof();
+      outputGaveEof(spd);
 
     close(outputfd);
-    checkDeathOutputCommand(true);
+    checkDeathOutputCommand(spd,true);
   }
-  if(parameters.verbose)
-    cerr<<"splitpipe: output "<<numStretches<<" stretches\n";
 
-  endwin();
   return EXIT_SUCCESS;
 }
 catch(exception &e)
 {
-  endwin();
   cerr<<"Fatal: "<<e.what()<<endl;
   return EXIT_FAILURE;
 }

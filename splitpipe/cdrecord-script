@@ -1,2 +1,2 @@
 #!/bin/sh
-exec cdrecord -dummy dev=/dev/sr0 speed=24 -tao -v -gracetime 2 driveropts=burnfree fs=20m -data - 
+exec cdrecord -dummy dev=/dev/sr0 speed=24 -tao -v -gracetime 2 driveropts=burnfree -data - 

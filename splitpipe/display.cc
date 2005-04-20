@@ -40,13 +40,21 @@ SplitpipeDisplay::SplitpipeDisplay()
   for(int x=0;x<getWidth();++x)
     waddch(d_sepawin,ACS_HLINE);
   
-  mvwprintw(d_sepawin,3,0,"Volume done ETA: --:--");
+  //  mvwprintw(d_sepawin,3,0,"Volume done ETA: --:--");
   
   wrefresh(d_sepawin);
   wrefresh(d_logwin);
   wrefresh(d_pwin);
 
   d_firstlog=true;
+}
+
+void SplitpipeDisplay::setTotalBytes(uint64_t input, uint64_t output, uint32_t bufferSize)
+{
+  mvwprintw(d_sepawin,3,0,"Input: %5dMB     Output: %5dMB     Buffer: %5dKB", 
+	    (int)(input/1000000), (int)(output/1000000), bufferSize/1024);
+  wrefresh(d_sepawin);
+  wrefresh(d_logwin);
 }
 
 void SplitpipeDisplay::setBarPercentage(int percentage)

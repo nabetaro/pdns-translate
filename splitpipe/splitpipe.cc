@@ -325,7 +325,7 @@ try
 }
 catch(exception &e)
 {
-  cerr<<"Fatal: "<<e.what()<<endl;
+  cerr<<"\n\rFatal: "<<e.what()<<endl;
   return EXIT_FAILURE;
 }
 
@@ -381,7 +381,7 @@ int SplitpipeClass::go(int argc, char**argv)
   bool inputEof=false;
   enum {Dead, Working, Dying} outputStatus=Dead;
   d_outputfd=-1;
-  uint64_t amountOutput=0;
+  uint64_t amountOutputVolume=0, grandTotalOut=0, grandTotalIn=0;
   uint16_t leftInStretch=0;
   int numStretches=0;
   int volumeNumber=0;
@@ -396,6 +396,7 @@ int SplitpipeClass::go(int argc, char**argv)
 
   bool d_firstvolume=true; // first volume does not get the 'press enter' stuff
   int lastPercentage=0;
+  time_t lastRefresh=0;
 
   while(1) {
     if(outputStatus==Dead && !g_wantsbreak && (inputEof || (1.0 * rb.available() / parameters.bufferSize > 0.5))) {
@@ -414,7 +415,7 @@ int SplitpipeClass::go(int argc, char**argv)
 
       spawnOutputThread();
       d_spd->log("output script is online");
-      amountOutput = outputPerVolumeStretches(volumeNumber++);      
+      amountOutputVolume = outputPerVolumeStretches(volumeNumber++);      
       outputStatus=Working;
     }
 
@@ -446,6 +447,11 @@ int SplitpipeClass::go(int argc, char**argv)
       d_spd->setBarPercentage(newPercentage);
       lastPercentage = newPercentage;
     }
+    if(time(0) != lastRefresh) {
+      d_spd->setTotalBytes(grandTotalIn, grandTotalOut, rb.available());
+      lastRefresh=time(0);
+    }
+
 
     struct timeval tv={0,10000};
     int ret=select( max(0,max(d_stdoutfd, d_stderrfd))+1,   // XXX FIXME highly dodgy
@@ -472,8 +478,8 @@ int SplitpipeClass::go(int argc, char**argv)
 	close(d_stdoutfd);
 	d_stdoutfd=-1;
       }
-
     }
+
     if(d_stderrfd > 0 && FD_ISSET(d_stderrfd, &inputs)) {
       ret=read(d_stderrfd, buffer, 1024);
       if(ret > 0) {
@@ -486,12 +492,11 @@ int SplitpipeClass::go(int argc, char**argv)
       }
     }
 
-
     if(!inputEof && FD_ISSET(0, &inputs)) {
       ret=read(0, buffer, min((size_t)100000, rb.room()));
       if(ret < 0)
 	unixDie("Reading from standard input");
-      if(!ret) {
+      else if(!ret) {
 	if(parameters.debug) 
 	  cerr<<"EOF on input, room in buffer: "<<rb.room()<<endl;
 	d_spd->log("all data in memory, draining buffer");
@@ -501,18 +506,19 @@ int SplitpipeClass::go(int argc, char**argv)
 	  cerr<<"Read "<<ret<<" bytes, and stored them"<<endl;
 	rb.store(buffer, ret);
 	bytesRead=ret;
+	grandTotalIn+=bytesRead;
       }
     }
 
 
     if(outputStatus==Working && rb.available() &&  FD_ISSET(d_outputfd, &outputs)) {
-      uint64_t totalBytesOutput=0;
+      uint64_t total=0;
       do {
 	const char *rbuffer;
 	size_t lenAvailable;
 	rb.get(&rbuffer, &lenAvailable);
 
-	uint64_t leftInVolume=parameters.volumeSize - amountOutput;
+	uint64_t leftInVolume=parameters.volumeSize - amountOutputVolume;
 
 	if(leftInVolume >= 3 && !leftInStretch) {   // only start a new stretch if there is room for at least 1 byte
 	  leftInStretch=min((size_t)0xffff, lenAvailable);
@@ -530,15 +536,13 @@ int SplitpipeClass::go(int argc, char**argv)
 	  if(!ret)
 	    outputGaveEof();
 	  
-	  amountOutput += sizeof(stretch);
+	  amountOutputVolume += sizeof(stretch);
+	  grandTotalOut += sizeof(stretch);
 	  numStretches++;
 	  break; // go past select again, not sure if this is needed
 	}
 
-
-
 	size_t len=min((uint64_t)lenAvailable, leftInVolume);
-	
 	len=min(len, (size_t)leftInStretch);
 
 	if(!len) {
@@ -556,11 +560,12 @@ int SplitpipeClass::go(int argc, char**argv)
 	  if(!ret)
 	    outputGaveEof();
 
+	  grandTotalOut+=ret;
 	  close(d_outputfd);
 
 	  outputStatus=Dying;
 	  d_outputfd=-1;
-	  amountOutput=0;
+	  amountOutputVolume=0;
 	  break; 
 	}
 
@@ -568,6 +573,12 @@ int SplitpipeClass::go(int argc, char**argv)
 	if(ret < 0) {
 	  if(errno==EAGAIN)
 	    break;
+	  else if(g_wantsbreak && errno==EPIPE) {
+	    close(d_outputfd);
+	    d_outputfd=-1;
+	    outputStatus=Dying;
+	    break;
+	  }
 	  else
 	    unixDie("write to standard output");
 	}
@@ -580,20 +591,23 @@ int SplitpipeClass::go(int argc, char**argv)
 	md5.feed(rbuffer, ret);
 	rb.advance(ret);
 
-	amountOutput += ret;
+	amountOutputVolume += ret;
+	grandTotalOut += ret;
 	leftInStretch -= ret;
-	totalBytesOutput += ret;
+	total += ret;
 
 	if(parameters.debug) 
 	  cerr<<"There are now "<<rb.available()<<" bytes left in the rb"<<endl;
-      } while(totalBytesOutput < bytesRead && rb.available());
+      } while(total < bytesRead && rb.available());
     }
 
     if(inputEof && !rb.available())
       break;
 
-    if(g_wantsbreak && d_stdoutfd==-1)
+    if(g_wantsbreak && d_stdoutfd==-1) {
+      d_spd->log("Received break - exiting");
       break;
+    }
   }
 
   // XXX FIXME: deal with outputStatus == Dying 

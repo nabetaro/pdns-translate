@@ -1,0 +1,17 @@
+DEPENDENCIES
+------------
+
+The GNU C++ compiler g++. We recommend g++ 3.4, but all versions should
+work. 
+
+COMPILING AND INSTALLING
+------------------------
+
+$ make
+# make install
+
+To install in /usr/bin, try:
+
+# PREFIX=/usr make install
+
+Optionally, run 'make check' to run the regression tests.

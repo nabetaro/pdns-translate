@@ -51,6 +51,12 @@ namespace {
   } parameters;
 }
 
+bool g_wantsbreak;
+
+void breakHandler(int)
+{
+  g_wantsbreak=true;
+}
 
 static struct predef {
   const char* name;
@@ -74,42 +80,59 @@ uint64_t getSize(const char* desc)
   return atoi(desc)*1024;
 }
 
-int outputfd, stdoutfd, stderrfd;
 
+class SplitpipeClass
+{
+public:
+  int go(int argc, char**argv);
 
-pid_t g_pid;
-bool checkDeathOutputCommand(SplitpipeDisplay& spd, bool doWait=false)
+private:
+  void outputChecksum( const MD5Summer& md5);
+  int outputPerVolumeStretches(  uint16_t volumeNumber);
+  void appendStretch(int type, const string& content, string& stretches);
+  void spawnOutputThread();
+  void usage();
+  bool checkDeathOutputCommand( bool doWait=false);
+  void outputGaveEof();
+  void ParseCommandline(int argc, char** argv);
+  SplitpipeDisplay* d_spd;
+  int d_outputfd, d_stdoutfd, d_stderrfd;
+  pid_t d_pid;
+  string d_uuid;
+};
+
+bool SplitpipeClass::checkDeathOutputCommand(bool doWait)
 {
   int status, ret;
-  if((ret=waitpid(g_pid, &status, doWait ? 0 : WNOHANG)) < 0)
+  if((ret=waitpid(d_pid, &status, doWait ? 0 : WNOHANG)) < 0)
     unixDie("wait on child process");
   
   if(!ret)
     return false;
 
   if(WIFEXITED(status))
-    spd.log("splitpipe: output command exited with status %d\n",WEXITSTATUS(status));
+    d_spd->log("output command exited with status %d",WEXITSTATUS(status));
   else {
-    spd.log("splitpipe: output command exited abnormally");
+    d_spd->log("output command exited abnormally");
     if(WIFSIGNALED(status))
-      spd.log(", by signal %d",WTERMSIG(status));
-    spd.log("\n");
+      d_spd->log("was killed by signal %d",WTERMSIG(status));
+
   }
   return true;
 }
 
 
-void outputGaveEof(SplitpipeDisplay& spd)
+void SplitpipeClass::outputGaveEof()
 {
   endwin();
-  cerr<<"\nsplitpipe: output command gave EOF, waiting for it to exit"<<endl;
-  close(outputfd);
-  checkDeathOutputCommand(spd,true);
-  cerr<<"\nsplitpipe: future versions of splitpipe may allow you to continue, but for now.. exit\n";
+  cerr<<"\noutput command gave EOF, waiting for it to exit"<<endl;
+  close(d_outputfd);
+  checkDeathOutputCommand(true);
+  cerr<<"\nfuture versions of splitpipe may allow you to continue, but for now.. exit\n";
   exit(EXIT_FAILURE);
 }
 
-static void usage()
+void SplitpipeClass::usage()
 {
   cerr<<"splitpipe divides its input over several volumes.\n";
   cerr<<"\nsyntax: ... | joinpipe [options] \n\n";
@@ -125,10 +148,9 @@ static void usage()
   for(struct predef* p=predefinedSizes; p->name; ++p) 
     cerr<<"\t"<<p->name<<"\t"<<p->size<<" bytes\n";
   exit(1);
-  
 }
 
-static void ParseCommandline(int argc, char** argv)
+void SplitpipeClass::ParseCommandline(int argc, char** argv)
 {
   int c;
   
@@ -192,7 +214,7 @@ static void ParseCommandline(int argc, char** argv)
 
 
 
-void spawnOutputThread()
+void SplitpipeClass::spawnOutputThread()
 {
   int inpipefds[2], stdoutfds[2], stderrfds[2];
   if(pipe(inpipefds) < 0 || pipe(stdoutfds) < 0 || pipe(stderrfds) < 0)
@@ -203,7 +225,7 @@ void spawnOutputThread()
     unixDie("Error during fork");
 
   if(pid) { // parent 
-    g_pid=pid;
+    d_pid=pid;
     close(inpipefds[0]);
     close(stdoutfds[1]);
     close(stderrfds[1]);
@@ -234,12 +256,12 @@ void spawnOutputThread()
   }
   setNonBlocking(inpipefds[1]);
 
-  outputfd=inpipefds[1];
-  stdoutfd=stdoutfds[0];
-  stderrfd=stderrfds[0];
+  d_outputfd=inpipefds[1];
+  d_stdoutfd=stdoutfds[0];
+  d_stderrfd=stderrfds[0];
 }
 
-void appendStretch(int type, const string& content, string& stretches)
+void SplitpipeClass::appendStretch(int type, const string& content, string& stretches)
 {
   struct stretchHeader stretch;
   stretch.type=type;
@@ -250,34 +272,34 @@ void appendStretch(int type, const string& content, string& stretches)
   stretches+=content;
 }
 
-void outputChecksum(SplitpipeDisplay& spd, const MD5Summer& md5)
+void SplitpipeClass::outputChecksum( const MD5Summer& md5)
 {
   string stretches;
   appendStretch(stretchHeader::MD5Checksum, md5.get(), stretches);
 
-  int ret=writen(outputfd, stretches.c_str(), stretches.length(), "write of meta-data to output command");
+  int ret=writen(d_outputfd, stretches.c_str(), stretches.length(), "write of meta-data to output command");
   
   if(!ret)
-    outputGaveEof(spd);
+    outputGaveEof();
 }
 
-string g_uuid;
 
-int outputPerVolumeStretches( SplitpipeDisplay& spd, uint16_t volumeNumber)
+
+int SplitpipeClass::outputPerVolumeStretches(  uint16_t volumeNumber)
 {
   string stretches;
   
-  appendStretch(stretchHeader::SessionUUID, g_uuid, stretches);
+  appendStretch(stretchHeader::SessionUUID, d_uuid, stretches);
 
   volumeNumber = htons(volumeNumber);
   const string volNumString((char*)&volumeNumber, ((char*)&volumeNumber) + 2);
   
   appendStretch(stretchHeader::VolumeNumber,volNumString, stretches);
 
-  int ret=writen(outputfd, stretches.c_str(), stretches.length(), "write of per-volume meta-data to output command");
+  int ret=writen(d_outputfd, stretches.c_str(), stretches.length(), "write of per-volume meta-data to output command");
 
   if(!ret)
-    outputGaveEof(spd);
+    outputGaveEof();
 
   return stretches.length();
 }
@@ -298,22 +320,28 @@ void waitForUserCurses()
 int SplitpipeMain(int argc, char** argv)
 try
 {
+  SplitpipeClass spc;
+  return spc.go(argc, argv);
+}
+catch(exception &e)
+{
+  cerr<<"Fatal: "<<e.what()<<endl;
+  return EXIT_FAILURE;
+}
+
+int SplitpipeClass::go(int argc, char**argv) 
+{
   parameters.bufferSize=1000000;
   parameters.volumeSize=getSize("DVD-5");
   ParseCommandline(argc, argv);
 
   signal(SIGPIPE, SIG_IGN);
 
-  //  signal(SIGINT, breakHandler);
+  signal(SIGINT, breakHandler);
 
   cerr.setf(ios::fixed);
   cerr.precision(2);
 
-  if(parameters.verbose) {
-    cerr<<"Buffer size: " << parameters.bufferSize/1000000.0 <<" MB\n";
-    cerr<<"Volume size: " << parameters.volumeSize/1000000.0 <<" MB\n";
-    //    cerr<<"Output command: "<<parameters.outputCommand<<endl;
-  }
 
   if(parameters.outputCommand.empty()) {
     cerr<<"No output command specified - unable to write data\n\n";
@@ -334,19 +362,25 @@ try
     exit(1);
   }
 
-  g_uuid=generateUUID();
+  d_uuid=generateUUID();
 
   parameters.volumeSize -= 2048; // leave room for last stretch
 
   RingBuffer rb(parameters.bufferSize);
   setNonBlocking(0);
-  stdoutfd = stderrfd = -1;
+  d_stdoutfd = d_stderrfd = -1;
 
-  SplitpipeDisplay spd;
+  d_spd = new SplitpipeDisplay;
+
+  if(parameters.verbose) {
+    d_spd->log("Buffer size: %.1f MB", parameters.bufferSize/1000000.0);
+    d_spd->log("Volume size: %.1f MB", parameters.volumeSize/1000000.0);
+  }
+
 
   bool inputEof=false;
   enum {Dead, Working, Dying} outputStatus=Dead;
-  outputfd=-1;
+  d_outputfd=-1;
   uint64_t amountOutput=0;
   uint16_t leftInStretch=0;
   int numStretches=0;
@@ -354,40 +388,37 @@ try
 
   MD5Summer md5;
 
-  char *buffer = new char[parameters.bufferSize];  // XXX FIXME! This is waaaay too much
+  char *buffer = new char[100000];  // XXX FIXME! This is waaaay too much
 
   if(parameters.verbose) {
-    spd.log("%s","Prebuffering before starting output script..");
+    d_spd->log("%s","Prebuffering before starting output program");
   }
 
   bool d_firstvolume=true; // first volume does not get the 'press enter' stuff
   int lastPercentage=0;
 
   while(1) {
-    if(outputStatus==Dead && (inputEof || (1.0 * rb.available() / parameters.bufferSize > 0.5))) {
+    if(outputStatus==Dead && !g_wantsbreak && (inputEof || (1.0 * rb.available() / parameters.bufferSize > 0.5))) {
       if(d_firstvolume) {
-	if(parameters.verbose) {
-	  spd.log(" done\n");
-	}
 	d_firstvolume=false;
       }
       else {
-	spd.log("%s","splitpipe: reload media, if necessary, and press enter to continue\n");
+	d_spd->log("%s","reload media, if necessary, and press enter to continue");
 
 	if(!parameters.noPrompt)
 	  waitForUserCurses();
 	//wgetch(swin);
       }
 
-      spd.log("splitpipe: bringing output script online - buffer %.02d%% full\n", 
-	      (int)100.0*rb.available() / parameters.bufferSize);
+      d_spd->log("bringing output script online. Buffer %.02f%% full", (100.0 * rb.available() / parameters.bufferSize));
 
       spawnOutputThread();
-      amountOutput = outputPerVolumeStretches(spd, volumeNumber++);      
+      d_spd->log("output script is online");
+      amountOutput = outputPerVolumeStretches(volumeNumber++);      
       outputStatus=Working;
     }
 
-    if(outputStatus!=Dead && stdoutfd < 0 && stderrfd < 0 && checkDeathOutputCommand(spd)) {
+    if(outputStatus!=Dead && d_stdoutfd < 0 && d_stderrfd < 0 && checkDeathOutputCommand()) {
       outputStatus = Dead;
     }
 
@@ -402,21 +433,22 @@ try
       FD_SET(0, &inputs);
 
     if(rb.available() && outputStatus==Working)
-      FD_SET(outputfd, &outputs);
+      FD_SET(d_outputfd, &outputs);
 
-    if(stdoutfd > 0)
-      FD_SET(stdoutfd, &inputs);
+    if(d_stdoutfd > 0)
+      FD_SET(d_stdoutfd, &inputs);
 
-    if(stderrfd > 0)
-      FD_SET(stderrfd, &inputs);
-    int newPercentage=(100.0*rb.available()/parameters.bufferSize);
+    if(d_stderrfd > 0)
+      FD_SET(d_stderrfd, &inputs);
+    int newPercentage=round(100.0*rb.available()/parameters.bufferSize);
+
     if(lastPercentage != newPercentage) {
-      spd.setBarPercentage(newPercentage);
+      d_spd->setBarPercentage(newPercentage);
       lastPercentage = newPercentage;
     }
 
     struct timeval tv={0,10000};
-    int ret=select( max(0,max(stdoutfd, stderrfd))+1,   // XXX FIXME highly dodgy
+    int ret=select( max(0,max(d_stdoutfd, d_stderrfd))+1,   // XXX FIXME highly dodgy
 		    &inputs, &outputs, 0, &tv);
     if(ret < 0) {
       if(errno == EINTR)
@@ -429,39 +461,40 @@ try
     
     size_t bytesRead=0;
 
-    if(stdoutfd > 0 && FD_ISSET(stdoutfd, &inputs)) {
-      ret=read(stdoutfd, buffer, 1024);
+    if(d_stdoutfd > 0 && FD_ISSET(d_stdoutfd, &inputs)) {
+      ret=read(d_stdoutfd, buffer, 1024);
       if(ret > 0) {
 	for(int counter=0;counter<ret;++counter)
-	  spd.programPut(buffer[counter]);
+	  d_spd->programPut(buffer[counter]);
+	d_spd->programCommit();
       }
       if(!ret) {
-	close(stdoutfd);
-	stdoutfd=-1;
+	close(d_stdoutfd);
+	d_stdoutfd=-1;
       }
 
     }
-    if(stderrfd > 0 && FD_ISSET(stderrfd, &inputs)) {
-      ret=read(stderrfd, buffer, 1024);
+    if(d_stderrfd > 0 && FD_ISSET(d_stderrfd, &inputs)) {
+      ret=read(d_stderrfd, buffer, 1024);
       if(ret > 0) {
 	for(int counter=0;counter<ret;++counter)
-	  spd.programPut(buffer[counter]);
+	  d_spd->programPut(buffer[counter]);
       }
       if(!ret) {
-	close(stderrfd);
-	stderrfd=-1;
+	close(d_stderrfd);
+	d_stderrfd=-1;
       }
     }
 
 
     if(!inputEof && FD_ISSET(0, &inputs)) {
-      ret=read(0, buffer, min((size_t)1000000, rb.room()));
+      ret=read(0, buffer, min((size_t)100000, rb.room()));
       if(ret < 0)
 	unixDie("Reading from standard input");
       if(!ret) {
 	if(parameters.debug) 
 	  cerr<<"EOF on input, room in buffer: "<<rb.room()<<endl;
-	spd.log("splitpipe: all data in memory, draining buffer\n");
+	d_spd->log("all data in memory, draining buffer");
 	inputEof=true;
       } else {
 	if(parameters.debug)
@@ -472,7 +505,7 @@ try
     }
 
 
-    if(outputStatus==Working && rb.available() &&  FD_ISSET(outputfd, &outputs)) {
+    if(outputStatus==Working && rb.available() &&  FD_ISSET(d_outputfd, &outputs)) {
       uint64_t totalBytesOutput=0;
       do {
 	const char *rbuffer;
@@ -485,17 +518,17 @@ try
 	  leftInStretch=min((size_t)0xffff, lenAvailable);
 	  leftInStretch=min((uint64_t)leftInStretch, leftInVolume - 3);
 	  if(parameters.debug) 
-	    cerr<<"splitpipe: starting a stretch of "<<leftInStretch<<" bytes"<<endl;
+	    cerr<<"starting a stretch of "<<leftInStretch<<" bytes"<<endl;
 
 	  struct stretchHeader stretch;
 
 	  stretch.size=htons(leftInStretch);
 	  stretch.type=stretchHeader::Data;
 
-	  ret=writen(outputfd, &stretch, sizeof(stretch),"write of meta-data to output command");
+	  ret=writen(d_outputfd, &stretch, sizeof(stretch),"write of meta-data to output command");
 
 	  if(!ret)
-	    outputGaveEof(spd);
+	    outputGaveEof();
 	  
 	  amountOutput += sizeof(stretch);
 	  numStretches++;
@@ -509,29 +542,29 @@ try
 	len=min(len, (size_t)leftInStretch);
 
 	if(!len) {
-	  spd.log("%s","Output a full volume, waiting for output command to exit..\n");
+	  d_spd->log("%s","Output a full volume, waiting for output command to exit..");
 	
 	  struct stretchHeader stretch;
 
-	  outputChecksum(spd,md5);
+	  outputChecksum(md5);
 
 	  stretch.size=0;
 	  stretch.type=stretchHeader::VolumeEOF;
 
-	  ret=writen(outputfd, &stretch, sizeof(stretch),"write of meta-data to output command");
+	  ret=writen(d_outputfd, &stretch, sizeof(stretch),"write of meta-data to output command");
 
 	  if(!ret)
-	    outputGaveEof(spd);
+	    outputGaveEof();
 
-	  close(outputfd);
+	  close(d_outputfd);
 
 	  outputStatus=Dying;
-	  outputfd=-1;
+	  d_outputfd=-1;
 	  amountOutput=0;
 	  break; 
 	}
 
-	ret=write(outputfd, rbuffer, len);
+	ret=write(d_outputfd, rbuffer, len);
 	if(ret < 0) {
 	  if(errno==EAGAIN)
 	    break;
@@ -540,7 +573,7 @@ try
 	}
 
 	if(!ret) {
-	  outputGaveEof(spd);
+	  outputGaveEof();
 	}
 	if(parameters.debug) 
 	  cerr<<"Wrote out "<<ret<<" out of "<<len<<" bytes"<<endl;
@@ -558,31 +591,29 @@ try
 
     if(inputEof && !rb.available())
       break;
+
+    if(g_wantsbreak && d_stdoutfd==-1)
+      break;
   }
 
   // XXX FIXME: deal with outputStatus == Dying 
   if(outputStatus==Working) {
-    spd.log("splitpipe: done with input, waiting for output script to exit..\n");
+    d_spd->log("done with input, waiting for output script to exit..");
 
-    outputChecksum(spd,md5);
+    outputChecksum(md5);
 
     struct stretchHeader stretch;
     stretch.size=0;
     stretch.type=stretchHeader::SessionEOF;
     
-    int ret=writen(outputfd, &stretch, sizeof(stretch),"write of meta-data to output command");
+    int ret=writen(d_outputfd, &stretch, sizeof(stretch),"write of meta-data to output command");
     
     if(!ret)
-      outputGaveEof(spd);
+      outputGaveEof();
 
-    close(outputfd);
-    checkDeathOutputCommand(spd,true);
+    close(d_outputfd);
+    checkDeathOutputCommand(true);
   }
 
   return EXIT_SUCCESS;
-}
-catch(exception &e)
-{
-  cerr<<"Fatal: "<<e.what()<<endl;
-  return EXIT_FAILURE;
 }

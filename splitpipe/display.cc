@@ -45,13 +45,15 @@ SplitpipeDisplay::SplitpipeDisplay()
   wrefresh(d_sepawin);
   wrefresh(d_logwin);
   wrefresh(d_pwin);
+
+  d_firstlog=true;
 }
 
 void SplitpipeDisplay::setBarPercentage(int percentage)
 {
   int width=getWidth()-14;
   int fillTo=width*percentage/100.0;
-  mvwprintw(d_sepawin,1,0,"Buffer: %2d%%", percentage);
+  mvwprintw(d_sepawin,1,0,"Buffer: %3d%%", percentage);
 
   wmove(d_sepawin,1,14);
   for(int x=0 ; x < width;++x)
@@ -71,16 +73,38 @@ SplitpipeDisplay::~SplitpipeDisplay()
 void SplitpipeDisplay::programPut(char c)
 {
   waddch(d_pwin, c);
+
+}
+
+void SplitpipeDisplay::programCommit()
+{
   wrefresh(d_pwin);
+  wrefresh(d_logwin);
 }
 
 void SplitpipeDisplay::log(const char* fmt, ...)
 {
+  char buffer[40];
+  struct tm tm;
+  time_t t;
+  time(&t);
+  tm=*localtime(&t);
+
+  strftime(buffer,sizeof(buffer),"%H:%M:%S ", &tm);
+
+  string total;
+  if(!d_firstlog) {
+    total="\n";
+  }
+  d_firstlog=false;
+  total+=buffer;
+  total+=fmt;
+
   va_list ap;
     
   /* Try to print in the allocated space. */
   va_start(ap, fmt);
-  vw_printw(d_logwin, fmt, ap);
+  vw_printw(d_logwin, total.c_str(), ap);
   va_end(ap);
   wrefresh(d_logwin);
 }

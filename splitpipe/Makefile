@@ -1,5 +1,5 @@
-VERSION=0.2
-CXXFLAGS=-Wall -DVERSION=\"$(VERSION)\"
+VERSION=0.3-svn
+CXXFLAGS=-Wall -g -O2 -DVERSION=\"$(VERSION)\"
 
 
 PREFIX?=/usr/local/

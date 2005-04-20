@@ -51,7 +51,7 @@ SplitpipeDisplay::SplitpipeDisplay()
 
 void SplitpipeDisplay::setTotalBytes(uint64_t input, uint64_t output, uint32_t bufferSize, int volPerc)
 {
-  mvwprintw(d_sepawin,3,0,"Input: %5dMB     Output: %5dMB     Buffer: %5dKB     Percentage of volume done: %3d%%", 
+  mvwprintw(d_sepawin,3,0,"Input: %5dMB     Output: %5dMB     Buffer: %5dKB     Volume done: %3d%%", 
 	    (int)(input/1000000), (int)(output/1000000), bufferSize/1024, volPerc);
   wrefresh(d_sepawin);
   wrefresh(d_logwin);

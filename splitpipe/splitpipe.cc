@@ -85,7 +85,12 @@ class SplitpipeClass
 {
 public:
   int go(int argc, char**argv);
-
+  SplitpipeClass() : d_spd(0)
+  {}
+  ~SplitpipeClass()
+  {
+    delete d_spd;
+  }
 private:
   void outputChecksum( const MD5Summer& md5);
   int outputPerVolumeStretches(  uint16_t volumeNumber);

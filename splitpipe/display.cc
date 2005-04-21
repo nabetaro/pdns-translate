@@ -1,3 +1,20 @@
+/*
+    Copyright (C) 2005  Netherlabs Computer Consulting BV
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation;
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
 #include "display.hh"
 #include <ncurses.h>
 #include <string>
@@ -11,11 +28,22 @@ SplitpipeDisplay::SplitpipeDisplay()
   if(term && !strcmp(term, "xterm")) 
     putenv("TERM=vt102");  // make sure ncurses does not clear screen on exit
 
+  /* (See above) 
+22:09 <zwane> hehehe
+22:09 <zwane> *yuck*
+22:10 <zwane> good god
+22:10 <ahu> there are rumours there is a beter solution
+22:10 <zwane> you should be flogged for that offence
+22:10 <ahu> at least I admit my weaknesses
+22:10 <zwane> ahu: if i did, i'd be flogged publically daily
+22:10 <sarnold> ahu: eww :)
+22:10 <zwane> so i keep my hacks _under_wraps_ ;)
+  */
+
   initscr();      /* initialize the curses library */
-  
+
   int logSize=10;
   int statusSize=5;
-  
   
   d_pwin=newwin(getHeight()-logSize-statusSize, 0, 0, 0);
   d_sepawin=newwin(statusSize, 0, getHeight()-statusSize-logSize, 0);
@@ -80,6 +108,13 @@ void SplitpipeDisplay::setBarPercentage(int percentage)
 SplitpipeDisplay::~SplitpipeDisplay()
 {
   endwin();
+}
+
+void SplitpipeDisplay::refresh()
+{
+  redrawwin(d_pwin);
+  redrawwin(d_sepawin);
+  redrawwin(d_logwin);
 }
   
 void SplitpipeDisplay::programPut(char c)

@@ -80,7 +80,6 @@ uint64_t getSize(const char* desc)
   return atoi(desc)*1024;
 }
 
-
 class SplitpipeClass
 {
 public:
@@ -93,17 +92,22 @@ public:
   }
 private:
   void outputChecksum( const MD5Summer& md5);
-  int outputPerVolumeStretches(  uint16_t volumeNumber);
+  int outputPerVolumeStretches(uint16_t volumeNumber);
   void appendStretch(int type, const string& content, string& stretches);
   void spawnOutputThread();
   void usage();
   bool checkDeathOutputCommand( bool doWait=false);
   void outputGaveEof();
   void ParseCommandline(int argc, char** argv);
+  void updateDisplay(RingBuffer& rb);
   SplitpipeDisplay* d_spd;
   int d_outputfd, d_stdoutfd, d_stderrfd;
   pid_t d_pid;
   string d_uuid;
+  int d_lastPercentage;
+  time_t d_lastRefresh;
+  uint64_t d_amountOutputVolume, d_grandTotalOut, d_grandTotalIn;
+
 };
 
 bool SplitpipeClass::checkDeathOutputCommand(bool doWait)
@@ -210,14 +214,7 @@ void SplitpipeClass::ParseCommandline(int argc, char** argv)
       break;
     }
   }
-  if (optind < argc) {
-    while (optind < argc) {
-
-    }
-  }
 }
-
-
 
 void SplitpipeClass::spawnOutputThread()
 {
@@ -310,6 +307,21 @@ int SplitpipeClass::outputPerVolumeStretches(  uint16_t volumeNumber)
 }
 
 
+void SplitpipeClass::updateDisplay(RingBuffer& rb)
+{
+  int newPercentage=round(100.0*rb.available()/parameters.bufferSize);
+  
+  if(d_lastPercentage != newPercentage) {
+    d_spd->setBarPercentage(newPercentage);
+    d_lastPercentage = newPercentage;
+  }
+  if(time(0) != d_lastRefresh) {
+    d_spd->setTotalBytes(d_grandTotalIn, d_grandTotalOut, rb.available(), 
+			 (int)(100.0 * d_amountOutputVolume / parameters.volumeSize));
+    d_lastRefresh=time(0);
+  }
+}
+
 void waitForUserCurses()
 {	
   int fd=open("/dev/tty", O_RDONLY);
@@ -386,7 +398,8 @@ int SplitpipeClass::go(int argc, char**argv)
   bool inputEof=false;
   enum {Dead, Working, Dying} outputStatus=Dead;
   d_outputfd=-1;
-  uint64_t amountOutputVolume=0, grandTotalOut=0, grandTotalIn=0;
+  d_amountOutputVolume=d_grandTotalOut=d_grandTotalIn=0;
+  d_lastRefresh = 0; d_lastPercentage=0;
   uint16_t leftInStretch=0;
   int numStretches=0;
   int volumeNumber=0;
@@ -400,36 +413,26 @@ int SplitpipeClass::go(int argc, char**argv)
   }
 
   bool d_firstvolume=true; // first volume does not get the 'press enter' stuff
-  int lastPercentage=0;
-  time_t lastRefresh=0;
+  bool skipUserPrompt=true;
+  bool waitingForUser=false;
+  int d_ttyfd=open("/dev/tty",O_RDONLY);
+  if(d_ttyfd < 0)
+    unixDie("opening of keyboard for input");
 
   while(1) {
-    if(outputStatus==Dead && !g_wantsbreak && (inputEof || (1.0 * rb.available() / parameters.bufferSize > 0.5))) {
-      if(d_firstvolume) {
-	d_firstvolume=false;
-      }
-      else {
-	d_spd->setLogStandout(true);
-	d_spd->log("%s","reload media, if necessary, and press enter to continue");
-	d_spd->setLogStandout(false);
-
-	if(!parameters.noPrompt)
-	  waitForUserCurses();
-	//wgetch(swin);
-      }
-
-      d_spd->log("bringing output script online. Buffer %.02f%% full", (100.0 * rb.available() / parameters.bufferSize));
-
-      spawnOutputThread();
-      d_spd->log("sending data to output script");
-      amountOutputVolume = outputPerVolumeStretches(volumeNumber++);      
-      outputStatus=Working;
+    if(!waitingForUser && outputStatus==Dead && !g_wantsbreak && (inputEof || (1.0 * rb.available() / parameters.bufferSize > 0.5))) {
+      d_spd->setLogStandout(true);
+      d_spd->log("%s","reload media, if necessary, and press enter to continue");
+      d_spd->setLogStandout(false);
+      
+      waitingForUser=true;
+      if(parameters.noPrompt)	
+	skipUserPrompt=true;
     }
 
     if(outputStatus!=Dead && d_stdoutfd < 0 && d_stderrfd < 0 && checkDeathOutputCommand()) {
       outputStatus = Dead;
     }
-
 
     fd_set inputs;
     fd_set outputs;
@@ -448,21 +451,13 @@ int SplitpipeClass::go(int argc, char**argv)
 
     if(d_stderrfd > 0)
       FD_SET(d_stderrfd, &inputs);
-    int newPercentage=round(100.0*rb.available()/parameters.bufferSize);
 
-    if(lastPercentage != newPercentage) {
-      d_spd->setBarPercentage(newPercentage);
-      lastPercentage = newPercentage;
-    }
-    if(time(0) != lastRefresh) {
-      d_spd->setTotalBytes(grandTotalIn, grandTotalOut, rb.available(), 
-			   (int)(100.0 * amountOutputVolume / parameters.volumeSize));
-      lastRefresh=time(0);
-    }
+    FD_SET(d_ttyfd, &inputs);
 
+    updateDisplay(rb);
 
     struct timeval tv={0,10000};
-    int ret=select( max(0,max(d_stdoutfd, d_stderrfd))+1,   // XXX FIXME highly dodgy
+    int ret=select( max(0,max(d_ttyfd,max(d_stdoutfd, d_stderrfd)))+1,  // XXX FIXME somewhat dodgy
 		    &inputs, &outputs, 0, &tv);
     if(ret < 0) {
       if(errno == EINTR)
@@ -487,6 +482,26 @@ int SplitpipeClass::go(int argc, char**argv)
 	d_stdoutfd=-1;
       }
     }
+
+    if((skipUserPrompt && waitingForUser) || FD_ISSET(d_ttyfd, &inputs)) {
+      char c=0;
+      if(skipUserPrompt || read(d_ttyfd, &c, 1)==1) {
+	if(waitingForUser || (c=='\r' || c=='\n')) {
+	  d_spd->log("bringing output script online. Buffer %.02f%% full", (100.0 * rb.available() / parameters.bufferSize));
+	  
+	  spawnOutputThread();
+	  d_spd->log("sending data to output script");
+	  d_amountOutputVolume = outputPerVolumeStretches(volumeNumber++);      
+	  outputStatus=Working;
+	  waitingForUser=false;
+	  skipUserPrompt=false;
+	}
+	else if(c==12) {
+	  d_spd->refresh();
+	}
+      }
+    }
+
 
     if(d_stderrfd > 0 && FD_ISSET(d_stderrfd, &inputs)) {
       ret=read(d_stderrfd, buffer, 1024);
@@ -514,7 +529,7 @@ int SplitpipeClass::go(int argc, char**argv)
 	  cerr<<"Read "<<ret<<" bytes, and stored them"<<endl;
 	rb.store(buffer, ret);
 	bytesRead=ret;
-	grandTotalIn+=bytesRead;
+	d_grandTotalIn+=bytesRead;
       }
     }
 
@@ -526,7 +541,7 @@ int SplitpipeClass::go(int argc, char**argv)
 	size_t lenAvailable;
 	rb.get(&rbuffer, &lenAvailable);
 
-	uint64_t leftInVolume=parameters.volumeSize - amountOutputVolume;
+	uint64_t leftInVolume=parameters.volumeSize - d_amountOutputVolume;
 
 	if(leftInVolume >= 3 && !leftInStretch) {   // only start a new stretch if there is room for at least 1 byte
 	  leftInStretch=min((size_t)0xffff, lenAvailable);
@@ -544,8 +559,8 @@ int SplitpipeClass::go(int argc, char**argv)
 	  if(!ret)
 	    outputGaveEof();
 	  
-	  amountOutputVolume += sizeof(stretch);
-	  grandTotalOut += sizeof(stretch);
+	  d_amountOutputVolume += sizeof(stretch);
+	  d_grandTotalOut += sizeof(stretch);
 	  numStretches++;
 	  break; // go past select again, not sure if this is needed
 	}
@@ -568,12 +583,12 @@ int SplitpipeClass::go(int argc, char**argv)
 	  if(!ret)
 	    outputGaveEof();
 
-	  grandTotalOut+=ret;
+	  d_grandTotalOut+=ret;
 	  close(d_outputfd);
 
 	  outputStatus=Dying;
 	  d_outputfd=-1;
-	  amountOutputVolume=0;
+	  d_amountOutputVolume=0;
 	  break; 
 	}
 
@@ -599,8 +614,8 @@ int SplitpipeClass::go(int argc, char**argv)
 	md5.feed(rbuffer, ret);
 	rb.advance(ret);
 
-	amountOutputVolume += ret;
-	grandTotalOut += ret;
+	d_amountOutputVolume += ret;
+	d_grandTotalOut += ret;
 	leftInStretch -= ret;
 	total += ret;
 

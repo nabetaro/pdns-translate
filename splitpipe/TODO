@@ -8,7 +8,7 @@ MEDIUM:
 
 	- i18n
 
-	- figure out how to prevent ncurses from clearing the screen on exit
+hacked	- figure out how to prevent ncurses from clearing the screen on exit
 
 	- write a minimal shell script that can function like joinpipe
 		might give people a secure feeling
@@ -32,13 +32,14 @@ HARD:
 	
 	- take out getopt_long stuff, it is somewhat ugly
 
-	- open /dev/tty and poll it in the loop
+Done:
+
+DONE!	- open /dev/tty and poll it in the loop
 		this means we can continue reading when waiting for a key
 		press!
 
-	- allow single key commands during the process
+DONE!	- allow single key commands during the process
 
-Done:
 
 DONE!	- make buildStretch, which appends stretches to a string
 

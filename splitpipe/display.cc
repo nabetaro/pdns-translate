@@ -7,6 +7,10 @@ using namespace std;
 
 SplitpipeDisplay::SplitpipeDisplay()
 {
+  char *term=getenv("TERM");
+  if(term && !strcmp(term, "xterm")) 
+    putenv("TERM=vt102");  // make sure ncurses does not clear screen on exit
+
   initscr();      /* initialize the curses library */
   
   int logSize=10;

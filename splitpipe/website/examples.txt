@@ -31,7 +31,7 @@ Burning to DVD
 `growisofs` works very well:
 
 ---------------------------------------------------------------------------------------------
-# tar cf - /home | gzip --fast | splitpipe -b 50 -c dvd -o 'growisofs -Z /dev/dvd=/dev/stdin'
+# tar cf - /home | gzip --fast | splitpipe -b 50 -s dvd -o 'growisofs -Z /dev/dvd=/dev/stdin'
 ---------------------------------------------------------------------------------------------
 
 Remotely
@@ -40,6 +40,6 @@ Remotely
 This requires a fast network, but is doable:
 
 -----------------------------------------------------------------------------------------------------
-# ssh remote "tar czf - / | bfr -b50M" | splitpipe -b 50 -c dvd -o 'growisofs -Z /dev/dvd=/dev/stdin'
+# ssh remote "tar czf - / | bfr -b50M" | splitpipe -b 50 -s dvd -o 'growisofs -Z /dev/dvd=/dev/stdin'
 -----------------------------------------------------------------------------------------------------
 

@@ -34,7 +34,7 @@ EXAMPLES
 
 To backup /home to one or more DVDs:
 
- # tar czf - /home | splitpipe -c dvd  -o 'growisofs -Z /dev/dvd=/dev/stdin'
+ # tar czf - /home | splitpipe -s dvd  -o 'growisofs -Z /dev/dvd=/dev/stdin'
 
 To restore:
 

@@ -18,10 +18,7 @@ more details.
 
 Current snapshot
 ----------------
-///////
-Version 0.2-svn: link:splitpipe-0.2-svn.tar.gz[]
-///////
-None yet.
+Version 0.3-svn: link:splitpipe-0.3-svn.tar.gz[]
 
 Latest release
 --------------

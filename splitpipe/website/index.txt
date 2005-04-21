@@ -3,9 +3,13 @@ Welcome
 
 .Latest News
 ****************************************************
-link:changelog.html[Version 0.2] has been released! Look at
-the link:downloads.html[Downloads] page for snapshots, or see
-link:development.html[Development] for up to the second updates
+link:changelog.html[Version 0.2] has been released! 
+You are also invited to look at the link:splitpipe-0.3-svn.tar.gz[0.3
+snapshot] with an all new split-screen mode, showing the output of your
+script, a snazzy progress bar and impressive statistics, *as well* as the
+captivating log of splitpipe itself! See
+link:http://ds9a.nl/splitpipe/screenshot.png[this screenshot].
+Visit link:development.html[Development] for up to the second updates
 ****************************************************
 
 Splitpipe is a program that allows the output of a program to span multiple
@@ -14,7 +18,7 @@ volumes. Volumes might be DVD's, CD's, files, entire hard disks or floppies.
 A command line says more than a thousand words:
 
 --------------------------------------------------
-# tar czf - /home | splitpipe -c dvd -o 'growisofs -Z /dev/dvd=/dev/stdin'
+# tar czf - /home | splitpipe -s dvd -o 'growisofs -Z /dev/dvd=/dev/stdin'
 To restore:
 # joinpipe /dev/dvd | tar xzf -
 --------------------------------------------------

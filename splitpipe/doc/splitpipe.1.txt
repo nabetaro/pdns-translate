@@ -9,10 +9,9 @@ splitpipe - spread piped input over a number of volumes (DVD's, CD's etc)
 
 SYNOPSIS
 --------
-'splitpipe' -o command [--buffer-size, -b] [--volume-size, -s] [--help, -h]
-		       [--no-prompt, -n] [--verbose, -v]
-		       [--debug, -d] [--version]
-
+'splitpipe' -o command [--buffer-size, -b] [--debug, -d] [--help, -h]
+		       [--label, -L] [--no-prompt, -n] [--verbose, -v]
+		       [--version] [--volume-size, -s] 
 
 DESCRIPTION
 -----------
@@ -42,19 +41,30 @@ To restore:
 
 OPTIONS
 -------
+--buffer-size, -b::
+	Configures the size of the buffer between input and output. In
+	megabytes. Defaults to 10.
+
+--debug, -d::
+	Give large amounts of debugging output, possibly damaging
+	performance
+
 --help, -h::
 	Print a helpful message
 
---version::
-	Print version information
+--label, -L::
+	Assign a label to this session. 
 
 --ouput program, -o::
 	This specifies a script, either shell, or a program that is called
 	for each volume. Mandatory.
 
---buffer-size, -b::
-	Configures the size of the buffer between input and output. In
-	megabytes. Defaults to 10.
+--verbose, -v::
+	Be verbose, but not overly so. 
+
+--version::
+	Print version information
+
 
 --volume-size, -s::
 	Sets the maximum size of volume output to this number of kilobytes.
@@ -66,12 +76,6 @@ OPTIONS
 	Do not prompt the user to change volumes. Mostly useful when writing
 	to files, but might also come in handy with automated disk changers.
 
---verbose, -v::
-	Be verbose, but not overly so. 
-
---debug, -d::
-	Give large amounts of debugging output, possibly damaging
-	performance
 
 BUGS
 ----

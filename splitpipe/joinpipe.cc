@@ -169,7 +169,7 @@ try
 	exit(EXIT_FAILURE);
       }
       else if(parameters.verbose)
-	cerr<<"splitpipe: found volume "<<newVolumeNumber<<", as expected"<<endl;
+	cerr<<"joinpipe: found volume "<<newVolumeNumber<<", as expected"<<endl;
       numVolumes++;
     }
     else if(stretch.type==stretchHeader::Data) {    

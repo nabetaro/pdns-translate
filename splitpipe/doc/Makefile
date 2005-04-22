@@ -6,6 +6,7 @@ dist: all
 	cp Makefile *.txt *.html *.[15] ../splitpipe-$(VERSION)/doc	
 
 install: all
+	@mkdir -p $(MANDIR)/man1/ $(MANDIR)/man5
 	install splitpipe.1 $(MANDIR)/man1/
 	install joinpipe.1 $(MANDIR)/man1/
 	install splitpipe.5 $(MANDIR)/man5/

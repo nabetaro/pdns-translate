@@ -49,8 +49,8 @@ FEATURES
 COMPILING
 ---------
 
-Needs g++, there are no other dependencies. On Solaris you will need GNU
-Make.
+Needs g++, there are no other dependencies. On Solaris (and perhaps *BSD) you
+will need GNU Make (gmake).
 
 $ make
 # make install

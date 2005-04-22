@@ -1,6 +1,6 @@
 VERSION=0.3-svn
-CXXFLAGS=-Wall -g -O2 -DVERSION=\"$(VERSION)\"
-
+OPTFLAGS?=-g -O2
+CXXFLAGS=-Wall $(OPTFLAGS) -DVERSION=\"$(VERSION)\"
 
 PREFIX?=/usr/local/
 BINDIR?=$(DESTDIR)/$(PREFIX)/bin/
@@ -49,8 +49,9 @@ dist:
 	rm -rf $(OUTPUTDIR)
 
 install: all 
+	@mkdir -p $(BINDIR)
 	install -s splitpipe $(BINDIR)
-	ln -sf $(BINDIR)/splitpipe $(BINDIR)/joinpipe
+	ln -sf splitpipe $(BINDIR)/joinpipe
 	cd doc; make install
 
 

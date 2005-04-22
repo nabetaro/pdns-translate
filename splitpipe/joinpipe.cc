@@ -111,6 +111,10 @@ static void ParseCommandline(int argc, char** argv)
       parameters.inputDevice.push_back(argv[optind++]);
     }
   }
+  if(parameters.inputDevice.empty()) {
+    cerr<<"Error: missing input device of filename(s)\n\n";
+    usage();
+  }
 
 }
 

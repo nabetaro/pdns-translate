@@ -11,8 +11,11 @@ then
 fi
 
 rm -f test-output.*
-cat ../COPYING | ../splitpipe -n -o 'cat > test-output.$$' -s 10
-../joinpipe -n test-output.* > test-compare
+
+cat ../COPYING | ../splitpipe -n -o 'cat > test-output.$$' \
+	-L "Our beloved license" -s 10
+
+../joinpipe -nv test-output.* > test-compare
 rm -f test-output.*
 
 if cmp test-compare ../COPYING

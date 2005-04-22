@@ -169,7 +169,7 @@ try
 	exit(EXIT_FAILURE);
       }
       else if(parameters.verbose)
-	cerr<<"Found volume "<<newVolumeNumber<<", as expected"<<endl;
+	cerr<<"splitpipe: found volume "<<newVolumeNumber<<", as expected"<<endl;
       numVolumes++;
     }
     else if(stretch.type==stretchHeader::Data) {    
@@ -203,6 +203,21 @@ try
 	cerr<<"joinpipe: checksum incorrect, actual '"<<makeHexDump(md5sum)<<"', should be '"<<makeHexDump(string(buffer,buffer+stretch.size))<<"'" <<endl;
 	exit(EXIT_FAILURE);
       }
+    }
+    else if(stretch.type==stretchHeader::SessionName) {    
+      cerr<<"joinpipe: Session label '"<<string(buffer, buffer + stretch.size)<<"'"<<endl;
+    }
+    else if(stretch.type==stretchHeader::VolumeDate && stretch.size==4) {    
+      time_t then;
+      memcpy(&then, buffer, 4);
+      then=ntohl(then);
+
+      struct tm tm;
+      tm=*localtime(&then);
+      char tbuf[80];
+      strftime(tbuf,sizeof(tbuf),"%a %b %d %H:%M:%S %Z %Y", &tm);
+
+      cerr<<"joinpipe: volume was started on "<<tbuf<<endl;
     }
     else {
       cerr<<"joinpipe: unknown stretch type "<<(int)stretch.type<<" of length "<< stretch.size <<endl;

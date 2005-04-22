@@ -18,7 +18,7 @@ struct stretchHeader
   uint8_t type;
 
   enum Types { SessionName=0, SessionUUID=1, VolumeNumber=2, VolumeEOF=3, 
-	       Data=4, MD5Checksum=5, SHA1Checksum=6, SessionEOF=7 };
+	       Data=4, MD5Checksum=5, SHA1Checksum=6, SessionEOF=7, VolumeDate=8 };
 } __attribute__((packed));
 
 int SplitpipeMain(int argc, char** argv);

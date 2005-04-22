@@ -48,6 +48,7 @@ namespace {
     bool debug;
     bool noPrompt;
     string outputCommand;
+    string label;
   } parameters;
 }
 
@@ -148,6 +149,7 @@ void SplitpipeClass::usage()
   cerr<<" --buffer-size, -b\tSize of buffer before output, in megabytes"<<endl;
   cerr<<" --volume-size, -s\tSize of output volumes, in kilobytes. See below"<<endl;
   cerr<<" --help, -h\t\tGive this helpful message"<<endl;
+  cerr<<" --label, -l\t\tGive textual label for this session"<<endl;
   cerr<<" --no-prompt, -n\tRun without user intervention\n";
   cerr<<" --output, -o\t\tThe output script that will be spawned for each volume"<<endl;
   cerr<<" --verbose, -v\t\tGive verbose output\n";
@@ -168,6 +170,7 @@ void SplitpipeClass::ParseCommandline(int argc, char** argv)
     static struct option long_options[] = {
       {"buffer-size", 1, 0, 'b'},
       {"volume-size", 1, 0, 's'},
+      {"label", 0, 0, 'L'},
       {"no-prompt", 0, 0, 'n'},
       {"output", 1, 0, 'o'},
       {"debug", 0, 0, 'd'},
@@ -177,7 +180,7 @@ void SplitpipeClass::ParseCommandline(int argc, char** argv)
       {0, 0, 0, 0}
     };
     
-    c = getopt_long (argc, argv, "b:ns:deho:v",
+    c = getopt_long (argc, argv, "b:L:ns:deho:v",
 		     long_options, &option_index);
     if (c == -1)
       break;
@@ -198,13 +201,16 @@ void SplitpipeClass::ParseCommandline(int argc, char** argv)
     case 'h':
       usage();
       break;
+    case 'L':
+      parameters.label=optarg;
+      break;
     case 'o':
       parameters.outputCommand=optarg;
       break;
     case 'n':
       parameters.noPrompt=1;
       break;
-
+      
     case 'v':
       parameters.verbose=true;
       break;
@@ -293,10 +299,20 @@ int SplitpipeClass::outputPerVolumeStretches(  uint16_t volumeNumber)
   
   appendStretch(stretchHeader::SessionUUID, d_uuid, stretches);
 
+  uint32_t now=static_cast<uint32_t>(time(0)); // this saves us from having to worry about 64 bit time_t until February 2106 or so!
+  now=htonl(now);
+  string nowString((char*)&now, ((char*)&now) + 4);
+  appendStretch(stretchHeader::VolumeDate, nowString, stretches);
+
+  if(!parameters.label.empty())
+    appendStretch(stretchHeader::SessionName, parameters.label, stretches);
+
   volumeNumber = htons(volumeNumber);
   const string volNumString((char*)&volumeNumber, ((char*)&volumeNumber) + 2);
   
-  appendStretch(stretchHeader::VolumeNumber,volNumString, stretches);
+  appendStretch(stretchHeader::VolumeNumber, volNumString, stretches);
+
+
 
   int ret=writen(d_outputfd, stretches.c_str(), stretches.length(), "write of per-volume meta-data to output command");
 

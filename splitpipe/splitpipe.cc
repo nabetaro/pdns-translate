@@ -413,24 +413,34 @@ int SplitpipeClass::go(int argc, char**argv)
   }
 
   bool d_firstvolume=true; // first volume does not get the 'press enter' stuff
-  bool skipUserPrompt=true;
   bool waitingForUser=false;
   int d_ttyfd=open("/dev/tty",O_RDONLY);
   if(d_ttyfd < 0)
     unixDie("opening of keyboard for input");
 
-  while(1) {
+  while(1) { 
     if(!waitingForUser && outputStatus==Dead && !g_wantsbreak && (inputEof || (1.0 * rb.available() / parameters.bufferSize > 0.5))) {
-      d_spd->setLogStandout(true);
-      d_spd->log("%s","reload media, if necessary, and press enter to continue");
-      d_spd->setLogStandout(false);
-      
-      waitingForUser=true;
-      if(parameters.noPrompt)	
-	skipUserPrompt=true;
+      if(!parameters.noPrompt && !d_firstvolume) {
+	d_spd->setLogStandout(true);
+	d_spd->log("%s","reload media, if necessary, and press enter to continue");
+	d_spd->setLogStandout(false);
+	
+	waitingForUser=true;
+      }
+      else {
+	spawnOutputThread();
+	d_spd->log("sending data to output script");
+	d_amountOutputVolume = outputPerVolumeStretches(volumeNumber++);      
+	outputStatus=Working;
+	waitingForUser=false;
+	d_firstvolume=false;
+      }
     }
 
     if(outputStatus!=Dead && d_stdoutfd < 0 && d_stderrfd < 0 && checkDeathOutputCommand()) {
+      if(!inputEof && (1.0 * rb.available() / parameters.bufferSize <= 0.5))
+	d_spd->log("waiting for buffer to fill before starting new output volume");
+											      
       outputStatus = Dead;
     }
 
@@ -456,11 +466,20 @@ int SplitpipeClass::go(int argc, char**argv)
 
     updateDisplay(rb);
 
+    if(waitingForUser && g_wantsbreak) {
+      d_spd->log("user interrupt received");
+      close(d_outputfd);
+      d_outputfd=-1;
+      outputStatus=Dying;
+      break;
+    }
+
+
     struct timeval tv={0,10000};
     int ret=select( max(0,max(d_ttyfd,max(d_stdoutfd, d_stderrfd)))+1,  // XXX FIXME somewhat dodgy
 		    &inputs, &outputs, 0, &tv);
     if(ret < 0) {
-      if(errno == EINTR)
+      if(errno == EINTR) 
 	continue;
       unixDie("select returned an error");
     }
@@ -483,10 +502,10 @@ int SplitpipeClass::go(int argc, char**argv)
       }
     }
 
-    if((skipUserPrompt && waitingForUser) || FD_ISSET(d_ttyfd, &inputs)) {
+    if(FD_ISSET(d_ttyfd, &inputs)) {
       char c=0;
-      if(skipUserPrompt || read(d_ttyfd, &c, 1)==1) {
-	if(waitingForUser || (c=='\r' || c=='\n')) {
+      if(read(d_ttyfd, &c, 1)==1) {
+	if(waitingForUser && (c=='\r' || c=='\n')) {
 	  d_spd->log("bringing output script online. Buffer %.02f%% full", (100.0 * rb.available() / parameters.bufferSize));
 	  
 	  spawnOutputThread();
@@ -494,7 +513,6 @@ int SplitpipeClass::go(int argc, char**argv)
 	  d_amountOutputVolume = outputPerVolumeStretches(volumeNumber++);      
 	  outputStatus=Working;
 	  waitingForUser=false;
-	  skipUserPrompt=false;
 	}
 	else if(c==12) {
 	  d_spd->refresh();
@@ -651,6 +669,6 @@ int SplitpipeClass::go(int argc, char**argv)
     close(d_outputfd);
     checkDeathOutputCommand(true);
   }
-
+  cerr<<endl;
   return EXIT_SUCCESS;
 }

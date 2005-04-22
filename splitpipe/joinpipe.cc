@@ -135,7 +135,7 @@ try
 
 
   MD5Summer md5;
-
+  string label;
 
   for(;;) {
     if(!readn(infd, &stretch, sizeof(struct stretchHeader), "read of stretch header"))
@@ -156,7 +156,15 @@ try
 	if(uuid != string(buffer,buffer+stretch.size)) {
 	  cerr<<"This volume does not belong to the correct session, ";
 	  cerr<<"uuid should be '"<<makeHexDump(uuid)<<"', is '"<<makeHexDump(string(buffer,buffer+stretch.size))<<"'"<<endl;
-	  exit(EXIT_FAILURE); // deal with this
+	  if(!label.empty())
+	    cerr<<"This backup has label '"<<label<<"'"<<endl;
+
+	  close(infd);
+	  inputIter++;
+	  waitForUser();
+	  infd=open(inputIter->c_str(), O_RDONLY);
+	  if(infd < 0)
+	    unixDie("opening of "+ *inputIter+" for input");
 	}
       }
     }
@@ -165,12 +173,18 @@ try
       memcpy(&newVolumeNumber, buffer, 2);
       newVolumeNumber = ntohs(newVolumeNumber);
       if(newVolumeNumber != numVolumes) {
-	cerr<<"This is volume number "<<newVolumeNumber<<", were expecting "<<numVolumes<<", please retry"<<endl;
-	exit(EXIT_FAILURE);
+	cerr<<"This is volume number "<<newVolumeNumber + 1<<", expected "<<numVolumes + 1<<", please retry"<<endl;
+	close(infd);
+	inputIter++;
+	waitForUser();
+	infd=open(inputIter->c_str(), O_RDONLY);
+	if(infd < 0)
+	  unixDie("opening of "+ *inputIter+" for input");
       }
-      else if(parameters.verbose)
-	cerr<<"joinpipe: found volume "<<newVolumeNumber<<", as expected"<<endl;
-      numVolumes++;
+      else {
+	cerr<<"joinpipe: found volume "<<newVolumeNumber + 1<<", as expected"<<endl;
+	numVolumes++;
+      }
     }
     else if(stretch.type==stretchHeader::Data) {    
       if(!writen(1, buffer, stretch.size, "write of a stretch of input"))
@@ -179,7 +193,7 @@ try
     }
     else if(stretch.type==stretchHeader::VolumeEOF) {    
       close(infd);
-      cerr<<"joinpipe: end of volume, change media and press enter"<<endl;
+      cerr<<"joinpipe: end of volume, change media to volume "<<numVolumes + 1<<" and press enter"<<endl;
 
       if(!parameters.noPrompt)
 	waitForUser();
@@ -205,7 +219,8 @@ try
       }
     }
     else if(stretch.type==stretchHeader::SessionName) {    
-      cerr<<"joinpipe: Session label '"<<string(buffer, buffer + stretch.size)<<"'"<<endl;
+      label=string(buffer, buffer + stretch.size);
+      cerr<<"joinpipe: Session label '"<< label <<"'"<<endl;
     }
     else if(stretch.type==stretchHeader::VolumeDate && stretch.size==4) {    
       time_t then;

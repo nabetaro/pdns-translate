@@ -2,9 +2,9 @@ EASY:
 	- figure out exact byte sizes of CDR, CDR-80, DVD
 
 MEDIUM:
-	- add date/time session stretch
+done	- add date/time session stretch
 
-	- add "name" chunk stretch
+done	- add "name" chunk stretch
 
 	- i18n
 
@@ -26,7 +26,7 @@ HARD:
 	- implement retreat
 		so we can recover from broken disks etc
 
-	- implement retry in joinpipe
+DONE!	- implement retry in joinpipe
 
 	- define environment variables
 	
@@ -39,7 +39,6 @@ DONE!	- open /dev/tty and poll it in the loop
 		press!
 
 DONE!	- allow single key commands during the process
-
 
 DONE!	- make buildStretch, which appends stretches to a string
 

@@ -115,6 +115,7 @@ void SplitpipeDisplay::refresh()
   redrawwin(d_pwin);
   redrawwin(d_sepawin);
   redrawwin(d_logwin);
+  wrefresh(curscr);
 }
   
 void SplitpipeDisplay::programPut(char c)

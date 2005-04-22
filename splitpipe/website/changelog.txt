@@ -1,0 +1,61 @@
+Changes in the current repository, which will become 0.3
+--------------------------------------------------------
+
+WARNING: 'splitpipe' is a young project, and the snapshots are even younger.
+Be very careful! 
+
+The big change this time is the move to a split-screen layout, allowing the
+operator to simultaneously see the what the output script is up to, as well
+as information on the operation of splitpipe itself.
+
+A snapshot is available link:splitpipe-0.3.tar.gz[here].
+
+Bug fixes
+~~~~~~~~~
+ * Accidentally allocated twice as much memory as was specified by *-b*. 
+ 
+Features
+~~~~~~~~
+ * Split screen mode. This has added ncurses to our dependencies
+ * The buffer is now being filled even while waiting for user input
+ * Pressing ^L now redraws the screen, as expected (BROKEN)
+ * Each volume now contains the date the backup was started
+ * Added --label, -L to give the session a name
+
+Changes in version 0.2, released 19th of April 2005
+---------------------------------------------------
+
+The big change is maturity, the program has now actually seen use in various
+places. Regarding terminology, the word 'Chunk' has been replaced by
+'Volume', as it is more intuitive.
+
+link:splitpipe-0.2.tar.gz[Download NOW!]
+
+Portability
+~~~~~~~~~~~
+ * FreeBSD deals differently with setting a file to non-blocking (reported
+   Niels Bakker)
+ * Verified compilation and regression checks on Solaris (Koos van den Hout)
+
+Bug fixes
+~~~~~~~~~
+ * There was a theoretical possibility that the program would block during a write
+   because of changes from blocking to non-blocking.
+ * No --help was output when -o was missing (noted by Pedro Larroy)
+
+Features
+~~~~~~~~
+ * *--no-prompt* was added to instruct the programs not to prompt the 
+   user to change volumes.
+ * Regression tests were expanded to monitor quality
+ * *splitpipe* and *joinpipe* are now one binary, to save disk space, and
+   help make sure they are always in sync (suggested by Kei and Mel Roman)
+
+Documentation
+~~~~~~~~~~~~~
+ * *--verify* was dropped from the *joinpipe* *--help* output, as it is not
+   implemented
+ * Manpages were added, as well as an informative website
+ 
+
+	

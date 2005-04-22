@@ -29,11 +29,14 @@ link:examples.html[Examples].
 
 Features
 --------
- * Running MD5 checksum
- * Detects truncated volumes
- * Impervious to trailing garbage (which you get when piping raw data
+ - Running MD5 checksum
+ - Detects truncated volumes
+ - Impervious to trailing garbage (which you get when piping raw data
    to cdrecord or growisofs)
- * Detects improper order of volumes on restore
- * Each session has a UUID, so volumes from other backups are rejected
- * Large and efficient ringbuffer
- * Works with cdrecord, growisofs, bare files and floppies
+ - Detects improper order of volumes on restore
+ 	* Allows user to insert proper volume when this happens
+ - Each session has a UUID, so volumes from other backups are rejected
+ 	* Allows user to insert proper volume when this happens
+ - Large and efficient ringbuffer
+ - Works with cdrecord, growisofs, bare files and floppies
+ - Simultaneous display of status, messages and output of script

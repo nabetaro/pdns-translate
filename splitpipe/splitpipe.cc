@@ -28,6 +28,7 @@
 #include <signal.h>
 #include <errno.h>
 #include <ncurses.h>
+#include <cmath>
 #include "misc.hh"
 #include "ringbuffer.hh"
 #include "md5.hh"
@@ -454,6 +455,7 @@ int SplitpipeClass::go(int argc, char**argv)
     }
 
     if(outputStatus!=Dead && d_stdoutfd < 0 && d_stderrfd < 0 && checkDeathOutputCommand()) {
+      d_spd->log("Volume #%d done", volumeNumber); // this is right - specifies the human number
       if(!inputEof && (1.0 * rb.available() / parameters.bufferSize <= 0.5))
 	d_spd->log("waiting for buffer to fill before starting new output volume");
 											      

@@ -12,16 +12,21 @@ A snapshot is available link:splitpipe-0.3.tar.gz[here].
 
 Bug fixes
 ~~~~~~~~~
- * Accidentally allocated twice as much memory as was specified by *-b*. 
- 
+ - Accidentally allocated twice as much memory as was specified by *-b*. 
+
+Changes
+~~~~~~~
+ - Volumes are now counted starting from '1', at least visibly. Internally 
+   the first volume is still '0' of course!
+
 Features
 ~~~~~~~~
- * Split screen mode. This has added ncurses to our dependencies
- * The buffer is now being filled even while waiting for user input
- * Pressing ^L now redraws the screen, as expected (BROKEN)
- * Each volume now contains the date the backup was started
- * Added --label, -L to give the session a name
- * On encountering an out of order volume, or an volume from another
+ - Split screen mode. This has added ncurses to our dependencies
+ - The buffer is now being filled even while waiting for user input
+ - Pressing ^L now redraws the screen, as expected (BROKEN)
+ - Each volume now contains the date the backup was started
+ - Added --label, -L to give the session a name
+ - On encountering an out of order volume, or an volume from another
    session, joinpipe now offers the user the chance to retry
 
 Changes in version 0.2, released 19th of April 2005

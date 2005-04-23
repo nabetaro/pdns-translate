@@ -41,9 +41,11 @@ check: all
 OUTPUTDIR=splitpipe-$(VERSION)
 dist:
 	rm -rf $(OUTPUTDIR)
-	mkdir -p $(OUTPUTDIR)/tests
+	mkdir -p $(OUTPUTDIR)/tests/{,wrong-order,wrong-volume-in-session}
 	cp Makefile PLAN *.cc *.hh CHANGELOG COPYING TODO README HACKING cdrecord-script $(OUTPUTDIR)
-	cp tests/{*.cc,Makefile,fullRun} $(OUTPUTDIR)/tests
+	cp tests/{*.cc,Makefile,*Run} $(OUTPUTDIR)/tests
+	cp tests/wrong-order/test* $(OUTPUTDIR)/tests/wrong-order
+	cp tests/wrong-volume-in-session/test* $(OUTPUTDIR)/tests/wrong-volume-in-session
 	cd doc; make dist
 	tar cvzf $(OUTPUTDIR).tar.gz $(OUTPUTDIR)/
 	rm -rf $(OUTPUTDIR)

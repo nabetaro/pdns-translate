@@ -14,11 +14,6 @@ Bug fixes
 ~~~~~~~~~
  - Accidentally allocated twice as much memory as was specified by *-b*. 
 
-Changes
-~~~~~~~
- - Volumes are now counted starting from '1', at least visibly. Internally 
-   the first volume is still '0' of course!
-
 Features
 ~~~~~~~~
  - Split screen mode. This has added ncurses to our dependencies
@@ -28,6 +23,17 @@ Features
  - Added --label, -L to give the session a name
  - On encountering an out of order volume, or an volume from another
    session, joinpipe now offers the user the chance to retry
+
+Changes
+~~~~~~~
+ - Volumes are now counted starting from '1', at least visibly. Internally 
+   the first volume is still '0' of course!
+ - Added regression test which tests how joinpipe deals with an out of order
+   volume (it should skip it)
+ - Added regression test which tests how joinpipe deals with a volume
+   that is not of this session (it should skip it)
+
+
 
 Changes in version 0.2, released 19th of April 2005
 ---------------------------------------------------

@@ -1,0 +1,24 @@
+#!/bin/sh
+
+echo This test feeds volumes in the wrong order to joinpipe, and
+echo verifies that the out of order volume is rejected, and 
+echo that the join continues properly
+
+if test \! -x /usr/bin/cmp
+then
+	echo "Can't run this test, cmp not available"
+	exit
+fi
+
+../joinpipe -nv wrong-order/test-output.* > test-compare
+
+if cmp test-compare ../COPYING
+then
+	echo "*** SUCCESS ***"
+	exit 0
+else
+	echo "*** FAILURE ***"
+	exit 1
+fi	
+
+rm test-compare

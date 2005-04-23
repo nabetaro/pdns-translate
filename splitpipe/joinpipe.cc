@@ -162,10 +162,11 @@ try
 	  cerr<<"uuid should be '"<<makeHexDump(uuid)<<"', is '"<<makeHexDump(string(buffer,buffer+stretch.size))<<"'"<<endl;
 	  if(!label.empty())
 	    cerr<<"This backup has label '"<<label<<"'"<<endl;
-
+	  cerr<<"joinpipe: please insert proper volume"<<endl;
 	  close(infd);
 	  inputIter++;
-	  waitForUser();
+	  if(!parameters.noPrompt)
+	    waitForUser();
 	  infd=open(inputIter->c_str(), O_RDONLY);
 	  if(infd < 0)
 	    unixDie("opening of "+ *inputIter+" for input");
@@ -180,7 +181,8 @@ try
 	cerr<<"This is volume number "<<newVolumeNumber + 1<<", expected "<<numVolumes + 1<<", please retry"<<endl;
 	close(infd);
 	inputIter++;
-	waitForUser();
+	if(!parameters.noPrompt)
+	  waitForUser();
 	infd=open(inputIter->c_str(), O_RDONLY);
 	if(infd < 0)
 	  unixDie("opening of "+ *inputIter+" for input");

@@ -1,0 +1,24 @@
+#!/bin/sh
+
+echo This test feeds a foreign volume volume to joinpipe, and
+echo verifies that it is rejected, and that the join continues properly
+echo 
+
+if test \! -x /usr/bin/cmp
+then
+	echo "Can't run this test, cmp not available"
+	exit
+fi
+
+../joinpipe -nv wrong-volume-in-session/test-output.* > test-compare
+
+if cmp test-compare ../COPYING
+then
+	echo "*** SUCCESS ***"
+	exit 0
+else
+	echo "*** FAILURE ***"
+	exit 1
+fi	
+
+rm test-compare

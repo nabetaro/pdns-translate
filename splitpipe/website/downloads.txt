@@ -24,6 +24,9 @@ Latest release
 --------------
 Version 0.2, released 19th of April 2005: link:splitpipe-0.2.tar.gz[]
 
+link:http://ftp.gwdg.de/pub/linux/misc/suser-guru/rpm/packages/Utilities/splitpipe/[Unofficial SuSE 8.2, 9.0, 9.1, 9.2, 9.3 RPMS provided by Pascal
+Bleser]
+
 Older releases
 --------------
 Version 0.1, released 16th of April 2005: link:splitpipe-0.1.tar.gz[]

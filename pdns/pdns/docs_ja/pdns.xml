@@ -2,7 +2,7 @@
 
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
                "docbook/dtd/xml/4.2/docbookx.dtd">
-<book>
+<book lang="ja">
   <bookinfo>
     <title>PowerDNS マニュアル</title>
     <author> <affiliation> <orgname>PowerDNS BV</orgname> <address>
@@ -24,18 +24,15 @@
     <title>PowerDNS 動的ネームサーバー</title>
 
     <para>
-      The PowerDNS daemon is a versatile nameserver which supports a large number
-of backends. These backends can either be <link linkend="bindbackend">plain
-zone files</link> or be <link linkend="pipebackend">more dynamic</link> in
-nature. Additionally, through use of clever programming techniques, PowerDNS
-offers very high domain resolution performance.
+      PowerDNS デーモンは、たくさんのバックエンドをサポートした、多目的ネームサーバーです。このバックエンドには、<link
+linkend="bindbackend">シンプルな zone ファイル</link> も使用できますし、<link
+linkend="pipebackend">もっと動的なもの</link>も使用できます。さらに、巧妙なプログラミングテクニックにより、非常に高いドメイン処理性能を発揮します。
     </para>
     <para>
-      Prime examples of backends include relational databases, but also
-(geographical) load balancing and failover algorithms. 
+      リレーショナルデータベースを含む、主要なバックエンドの例だけでなく、(地理的) ロードバランスやフェイルオーバーアルゴリズムも備えています。 
     </para>
     <para>
-      The company is called PowerDNS.COM BV, the nameserver daemon is called PDNS.
+      企業を PowerDNS.COM BV と呼び、ネームサーバーデーモンを PDNS と呼びます。
     </para>
 
     <sect1 id="function-design"><title>PDNS の機能と設計</title>
@@ -77,7 +74,7 @@ helpful in determining the scalability of an installation as well as for
 spotting problems.
       </para>
     </sect1>
-    <sect1 id="about"><title>About this document</title>
+    <sect1 id="about"><title>このドキュメントについて</title>
       <para>
 	If you are reading this document from disk, you may want to check <ulink
 url="http://doc.powerdns.com">http://doc.powerdns.com</ulink> for
@@ -110,10 +107,10 @@ linkend="from3.0to3.1"/> for important information on correct and stable
 operation, as well as notes on performance and memory use.</para>
       </warning>
       <note>
-      <para>Released on the 4th of May 2012</para>
-      <para>RC3 released on the 30th of April 2012</para>
-      <para>RC2 released on the 14th of April 2012</para>
-      <para>RC1 released on the 23th of March 2012</para>
+      <para>2012年5月4日リリース</para>
+      <para>RC3 2012年4月30日リリース</para>
+      <para>RC2 2012年4月14日リリース</para>
+      <para>RC1 2012年3月23日リリース</para>
       </note>
       <note><para>ダウンロード:
       	<itemizedlist>
@@ -171,7 +168,7 @@ Villanova, Marc Haber, Jimmy Bergman, Aki Tuomi and everyone else who helped
 us out!
       </para>
     <para>
-    	Changes between RC3 and final:
+    	RC3 から最終版への変更点:
     	<itemizedlist>
     		<listitem>
     			<para>
@@ -182,7 +179,7 @@ Monshouwer, fixed in c2600.
     	</itemizedlist>
     </para>
     <para>
-    	Changes between RC2 and RC3:
+    	RC2 から RC3 への変更点:
     <itemizedlist>
     	<listitem>
     		<para>
@@ -249,7 +246,7 @@ c2574.
     </itemizedlist>
 	</para>
     <para>
-	Changes between RC1 and RC2:
+	RC1 から RC2 への変更点:
 	<itemizedlist>
 		<listitem>
 			<para>
@@ -312,7 +309,7 @@ c2549.
 	</para>
 
       <para>
-	DNSSEC related fixes:
+	DNSSEC 関連の修正:
 	<itemizedlist>
 		<listitem>
 			<para>
@@ -381,7 +378,7 @@ c2426.
 	</itemizedlist>
       </para>
       <para>
-	Bug fixes:
+	バグ修正:
 	<itemizedlist>
 	  <listitem>
 	    <para>
@@ -552,7 +549,7 @@ because of a trailing dot mismatch. Fix in c2398.
 	</itemizedlist>
       </para>
       <para>
-	New features:
+	新機能:
 	<itemizedlist>
 
 	<listitem>
@@ -584,7 +581,7 @@ DKIM setups to working condition.  Update in c2394, closing t395.
 	</itemizedlist>
       </para>
       <para>
-	Improvements:
+	改善:
 	<itemizedlist>
 	 	<listitem>
 	    <para>
@@ -852,7 +849,7 @@ possibilities of slowdowns.  Fixed in c2402.
 	</itemizedlist>
       </para>
     <para>
-      Other changes:
+      その他の変更:
        <itemizedlist>
        	 <listitem>
        	 	<para>
@@ -939,14 +936,14 @@ there is a cname"
 	</itemizedlist>
       </para>
       </sect2>
-      <sect2 id="changelog-auth-2-9-22-6"><title>Authoritative Server version 2.9.22.6</title>
+      <sect2 id="changelog-auth-2-9-22-6"><title>Authoritative Server バージョン 2.9.22.6</title>
       <para>
       	The improvements to the master/slave engine in 2.9.22.5 contained one
 serious bug that can cause crashes on busy setups. 2.9.22.6 fixes this
 crash.
       </para>
       </sect2>
-      <sect2 id="changelog-auth-2-9-22-5"><title>Authoritative Server version 2.9.22.5</title>
+      <sect2 id="changelog-auth-2-9-22-5"><title>Authoritative Server バージョン 2.9.22.5</title>
       <para>
 	2.9.22.5 is an interim release for those not yet ready to make the jump to
 3.0, but do need a more recent version of the Authoritative Server. It also
@@ -1002,9 +999,9 @@ and stable operation, as well as notes on performance and memory use.</para>
 	<listitem><para>Not all new features are fully documented yet</para></listitem>
 	</itemizedlist></para>
       </warning></para>
-      <para><note><para>Released on the 22nd of July 2011</para><para>RC1 released on the 4th of April 2011</para>
-      <para>RC2 released on the 19th of April 2011</para>
-      <para>RC3 released on the 19th of July 2011</para>
+      <para><note><para>2011年7月22日リリース</para><para>RC1 2011年4月4日リリース</para>
+      <para>RC2 2011年4月19日リリース</para>
+      <para>RC3 2011年7月19日リリース</para>
       </note></para>
       <para>
 	Version 3.0 of the PowerDNS Authoritative Server brings a number of
@@ -1054,7 +1051,7 @@ Brielle Bruns, Evan Hunt, Ralf van der Enden, Marc Laros, Serge Belyshev,
 Christian Hofstaedtler, Charlie Smurthwaite, Nikolaos Milas, ..
       </para>
       <para>
-	Changes between RC3 and final:
+	RC3 から最終版への変更点:
 	<itemizedlist>
 	  <listitem>
 	    <para>
@@ -1079,7 +1076,7 @@ turned out to have no IPv6 at all. Fix in c2246.
 	  </itemizedlist>
        </para>
        <para>
-	Changes between RC2 and RC3:
+	RC2 から RC3 への変更点:
 	<itemizedlist>
 	  <listitem>
 	    <para>
@@ -1309,7 +1306,7 @@ backend. Should also improve non-DNSSEC performance.
 	</itemizedlist>
       </para>
       <para>
-	Changes between RC1 and RC2:
+	RC1 から RC2 への変更点:
 	<itemizedlist>
 	<listitem>
 	  <para>
@@ -1471,7 +1468,7 @@ DNSSEC.
 	</listitem>
 	
       </itemizedlist>
-      Bugs fixed:
+      修正したバグ:
       <itemizedlist>
 	<listitem>
 	  <para>
@@ -1668,7 +1665,7 @@ closing t327.
 	  </para>
 	</listitem>
       </itemizedlist>
-      Improvements:
+      改善:
       <itemizedlist>
       <listitem>
 	  <para>
@@ -1759,7 +1756,7 @@ in c1857. Additionally, masters can also have :port numbers. Code in c1858.
       </itemizedlist>
       </para>
       </sect2>
-      <sect2 id="changelog-recursor-3-3-1"><title>Recursor version 3.3.1 </title>
+      <sect2 id="changelog-recursor-3-3-1"><title>Recursor バージョン 3.3.1 </title>
 	<para>
 	  <warning>
 	    <para>
@@ -1811,11 +1808,11 @@ memory utilization. Implemented in c1750.
 	</itemizedlist>
       </sect2>
 	
-      <sect2 id="changelog-recursor-3-3"><title>Recursor version 3.3 </title>
+      <sect2 id="changelog-recursor-3-3"><title>Recursor バージョン 3.3 </title>
 	<para>
 	  <warning>
 	    <para>
-	      Released on the 22nd of September 2010.
+	      2010年9月22日リリース
 	    </para>
 	  </warning>
 	</para>
@@ -1829,7 +1826,7 @@ Lua scripts.
 	</para>
 	
 	<para>
-	  Bug fixes:
+	  バグ修正:
 	  <itemizedlist>
 	  <listitem><para>
 	    'dist-recursor' script was not compatible with pure POSIX /bin/sh,
@@ -1878,7 +1875,7 @@ some nagging by Alex Broens (thanks).
 	  </itemizedlist>
 	</para>
 	<para>
-	Improvements:
+	改善:
 	<itemizedlist>
 	  <listitem><para>
 	    The priming of the root now uses more IPv6 addresses. Change in c1550,
@@ -1973,11 +1970,11 @@ this happen. Code in c1716, spotted by Detlef Peeters.
 	</para>
       </sect2>
 	
-      <sect2 id="changelog-recursor-3-2"><title>Recursor version 3.2</title>
+      <sect2 id="changelog-recursor-3-2"><title>Recursor バージョン 3.2</title>
 	<para>
 	  <warning>
 	    <para>
-	      Released on the 7th of March 2010.
+	      2010年3月7日リリース
 	    </para>
 	  </warning>
 	</para>
@@ -2078,7 +2075,7 @@ Enden.
 event multiplexer (c1537).
 	  </para></listitem>
 	</itemizedlist>
-	Changes between RC1 and RC2:
+	RC1 から RC2 への変更点:
 	<itemizedlist>
 	  <listitem><para>
 	    Compilation on Solaris 10 has been fixed (various patchlevels had different
@@ -2204,7 +2201,7 @@ debugged by Jan Gyselinck, fixed in c1372.
 	      </para>
 	    </listitem>
 	  </itemizedlist>
-	  New features:
+	  新機能:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -2314,7 +2311,7 @@ c1431.
 
 	    
 	  </itemizedlist>
-	  Bug fixes:
+	  バグ修正:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -2425,11 +2422,11 @@ timeouts! New default timeout is 1500ms. See
 	    </itemizedlist>	
 	    </para>	
       </sect2>
-      <sect2 id="changelog-recursor-3-1-7-2"><title>Recursor version 3.1.7.2</title>
+      <sect2 id="changelog-recursor-3-1-7-2"><title>Recursor バージョン 3.1.7.2</title>
 	<para>
 	  <warning>
 	    <para>
-	      Released on the 6th of January 2010.
+	      2010年1月6日リリース
 	    </para>
 	  </warning>
 	</para>
@@ -2460,7 +2457,7 @@ Recursor.
 	</para>
       </sect2>
 
-      <sect2 id="changelog-recursor-3-1-7-1"><title>Recursor version 3.1.7.1</title>
+      <sect2 id="changelog-recursor-3-1-7-1"><title>Recursor バージョン 3.1.7.1</title>
 	<para>
 	  <warning>
 	    <para>
@@ -2558,7 +2555,7 @@ Gyselinck.
 	</para>
       </sect2>
 
-      <sect2 id="changelog-auth-2-9-22"><title>Authoritative Server version 2.9.22</title>
+      <sect2 id="changelog-auth-2-9-22"><title>Authoritative Server バージョン 2.9.22</title>
 	<para>
 	  <warning>
 	    <para>
@@ -2611,7 +2608,7 @@ Services. Implemented in c1302 and c1299.
 	  </itemizedlist>
 	</para>
 	<para>
-	  New features:
+	  新機能:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -2676,7 +2673,7 @@ c1232.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Performance:
+	  性能:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -2717,7 +2714,7 @@ possibly more on very large setups.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Bugs fixed:
+	  修正したバグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -2886,7 +2883,7 @@ disrupted this cycle. Addressed in cooperation with Tyler Hall of EditDNS.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Improvements:
+	  改善:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -3048,9 +3045,9 @@ be configured too. Suggested by Augie Schwer in t163, implemented in c1287.
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-auth-2-9-21-2"><title>Authoritative Server version 2.9.21.2</title>
+      <sect2 id="changelog-auth-2-9-21-2"><title>Authoritative Server バージョン 2.9.21.2</title>
 	<para>
-	  Released on the 18th of November 2008.
+	  2008年11月18日リリース
 	</para>
 	<para>
 	  This release consists of a single patch to PowerDNS Authoritative Server
@@ -3068,9 +3065,9 @@ recommended.
 	  More detail can be found in <xref linkend="powerdns-advisory-2008-03"/>.
 	</para>
       </sect2>
-      <sect2 id="changelog-auth-2-9-21-1"><title>Authoritative Server version 2.9.21.1</title>
+      <sect2 id="changelog-auth-2-9-21-1"><title>Authoritative Server バージョン 2.9.21.1</title>
 	<para>
-	  Released on the 6th of August 2008.
+	  2008年8月6日リリース
 	</para>
 	<para>
 	  This release consists of a single patch to PowerDNS Authoritative Server
@@ -3099,9 +3096,9 @@ it does facilitate simpler attacks.
 applied, as it has been in the public code base for some weeks already.
 	</para>
       </sect2>
-      <sect2 id="changelog-recursor-3-1-7"><title>Recursor version 3.1.7</title>
+      <sect2 id="changelog-recursor-3-1-7"><title>Recursor バージョン 3.1.7</title>
 	<para>
-	  Released the 25th of June 2008.
+	  2008年6月25日リリース
 	</para>
 	<para>
 	  This version contains powerful scripting abilities, allowing operators to
@@ -3192,9 +3189,9 @@ explicit '/32' matches. Fixed in c1205.
 	</para>
       </sect2>
 
-      <sect2 id="changelog-recursor-3-1-6"><title>Recursor version 3.1.6</title>
+      <sect2 id="changelog-recursor-3-1-6"><title>Recursor バージョン 3.1.6</title>
 	<para>
-	  Released on the 1st of May 2008.
+	  2008年5月1日リリース
 	</para>
 	<para>
 	  This version fixes two important problems, each on its own important enough
@@ -3229,9 +3226,9 @@ fixed in c1179.
 	  </listitem>
 	</itemizedlist>
       </sect2>
-      <sect2 id="changelog-recursor-3-1-5"><title>Recursor version 3.1.5</title>
+      <sect2 id="changelog-recursor-3-1-5"><title>Recursor バージョン 3.1.5</title>
 	<para>
-	  Released on the 31st of March 2008.
+	  RC1 2008年3月31日リリース
 	</para>
 	<para>
 	  Much like 3.1.4, this release does not add a lot of major features. Instead,
@@ -3286,7 +3283,7 @@ Aaron Thompson, and many more who filed bugs anonymously, or who we forgot
 to mention.
 	</para>
 	<para>
-	  Security related issues:
+	  セキュリティー関連の問題:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -3313,7 +3310,7 @@ implemented in c944.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Performance:
+	  性能:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -3329,7 +3326,7 @@ in several ways, see commits C925, C926, C928, C931, C1021, C1050.
 	  </itemizedlist>
 	</para>
 	<para>
-	Bug fixes:
+	バグ修正:
 	<itemizedlist>
 	  <listitem>
 	    <para>
@@ -3453,7 +3450,7 @@ interaction with the 'MPlexer'. Fixes in c1115, c1116.
 	</itemizedlist>
       </para>
       <para>
-	New features:
+	新機能:
 	<itemizedlist>
 	  <listitem>
 	    <para>
@@ -3496,7 +3493,7 @@ file.
 	</itemizedlist>
       </para>
       <para>
-	General improvements:
+	全体の改善:
 	<itemizedlist>
 	  <listitem>
 	    <para>
@@ -3550,7 +3547,7 @@ cleanup (c1117).
       </sect2>
       <sect2 id="changelog-2-9-21"><title>PowerDNS Authoritative Server version 2.9.21</title>
 	<para>
-	  Released the 21st of April 2007.
+	  2007年4月21日リリース
 	</para>
 	<para>
 	  This is the first release the PowerDNS Authoritative Server since the
@@ -3590,7 +3587,7 @@ Sendetzky</ulink>, <ulink url="http://www.aruba.it">Marco Chiavacci</ulink>,
 Christoph Haas, Ralf van der Enden and Ruben Kerkhof.
 	</para>
 	<para>
-	  Security issues:
+	  セキュリティー問題:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -3620,7 +3617,7 @@ backend has been very well tested recently.
 	  </warning>
 	</para>
 	<para>
-	  Bugs:
+	  バグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -3780,7 +3777,7 @@ improved. Details available in c876, by Mark.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Features:
+	  機能:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -3827,7 +3824,7 @@ in c912, enable with 'root-referral=lean'.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Improvements:
+	  改善:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -3942,9 +3939,9 @@ Marcus Rueckert, addressed in c954, c964 c965, c1003.
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-recursor-3-1-4"><title>Recursor version 3.1.4</title>
+      <sect2 id="changelog-recursor-3-1-4"><title>Recursor バージョン 3.1.4</title>
 	<para>
-	  Released the 13th of November 2006.
+	  2006年11月13日リリース
 	</para>
 	<para>
 	  This release contains almost no new features, but consists mostly of minor
@@ -3952,7 +3949,7 @@ and major bug fixes. It also addresses two major security issues, which
 makes this release a highly recommended upgrade.
 	</para>
 	<para>
-	  Security issues:
+	  セキュリティー問題:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -3975,7 +3972,7 @@ Gavarret for helping pin down this problem.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Bugs:
+	  バグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -4036,7 +4033,7 @@ addresses. Spotted by Wouter from WideXS, fixed in c916.
 	    </listitem>
 
 	  </itemizedlist>
-	  Improvements:
+	  改善:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -4074,9 +4071,9 @@ fixed. Spotted by Marcus Rueckert, fixed in c920.
 	</para>
       </sect2>
 
-      <sect2 id="changelog-recursor-3-1-3"><title>Recursor version 3.1.3</title>
+      <sect2 id="changelog-recursor-3-1-3"><title>Recursor バージョン 3.1.3</title>
 	<para>
-	  Released the 12th of September 2006.
+	  2006年9月12日リリース
 	</para>
 	<para>
 	  Compared to 3.1.2, this release again consists of a number of mostly minor
@@ -4097,7 +4094,7 @@ please feel free to notify pdns.bd@powerdns.com of your experiences, good or
 bad.
 	</para>
 	<para>
-	  Bug-fixes:
+	  バグ修正:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -4126,7 +4123,7 @@ performance. See c873 for details.
 	  </itemizedlist>
         </para>
 	<para>
-	  Improvements:
+	  改善:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -4157,7 +4154,7 @@ PowerDNS logging to a separate file. Added in c871.
 	  </itemizedlist>
         </para>
       </sect2>
-      <sect2 id="changelog-recursor-3-1-2"><title>Recursor version 3.1.2</title>
+      <sect2 id="changelog-recursor-3-1-2"><title>Recursor バージョン 3.1.2</title>
 	<para>
 	  Released Monday 26th of June 2006.
 	</para>
@@ -4174,7 +4171,7 @@ provided excellent feedback based on their large-scale tests of the
 recursor.
 	</para>
 	<para>
-	  Bug-fixes:
+	  バグ修正:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -4241,7 +4238,7 @@ unauthorized host. Discovered by Kai. Fixed in c854.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Improvements:
+	  改善:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -4273,7 +4270,7 @@ shipped by Debian. Fixed by Christof Meerwald in c860, which is post
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-recursor-3-1-1"><title>Recursor version 3.1.1</title>
+      <sect2 id="changelog-recursor-3-1-1"><title>Recursor バージョン 3.1.1</title>
 	<para>
 	  <warning>
 	    <para> 
@@ -4341,7 +4338,7 @@ this situation is expected to improve.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Bug fixes:
+	  バグ修正:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -4428,7 +4425,7 @@ in flight. Fixed in c833 and c834, post 3.1-pre1.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Improvements:
+	  改善:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -4499,7 +4496,7 @@ compliant. If you want this, enable
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-recursor-3-0-1"><title>Recursor version 3.0.1</title>
+      <sect2 id="changelog-recursor-3-0-1"><title>Recursor バージョン 3.0.1</title>
 	<para>
 	  Released 25th of April 2006, <ulink
 url="http://www.powerdns.com/en/downloads.aspx">download</ulink>.
@@ -4555,7 +4552,7 @@ to slight chance of odd behaviour on reporting errors (c757)
 	    </para>
 	  </listitem>
 	</itemizedlist>
-	Operating system specific fixes:
+	オペレーティングシステム固有の修正:
 	<itemizedlist>
 	  <listitem>
 	    <para>
@@ -4580,7 +4577,7 @@ debugged by Eric Sproul.
 	</itemizedlist>
       </para>
       </sect2>
-      <sect2 id="changelog-recursor-3-0"><title>Recursor version 3.0</title>
+      <sect2 id="changelog-recursor-3-0"><title>Recursor バージョン 3.0</title>
 	<para>
 	  Released 20th of April 2006, <ulink
 url="http://www.powerdns.com/en/downloads.aspx">download</ulink>.
@@ -4695,9 +4692,9 @@ of the recent development.  Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz of
 the boost::multi_index_container was again of great help. 
 	</para>
       </sect2>
-      <sect2 id="changelog-2-9-20"><title>Version 2.9.20</title>
+      <sect2 id="changelog-2-9-20"><title>バージョン 2.9.20</title>
 	<para>
-	  Released the 15th of March 2006
+	  2006年3月15日リリース
 	</para>
 	<para>
 	  Besides adding OpenDBX, this release is mostly about fixing problems and
@@ -4714,7 +4711,7 @@ Without their near-realtime help this release would've been delayed a
 lot. Thanks!
 	</para>
 	<para>
-	  Bugs fixed in the recursor:
+	  recursor のバグ修正:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -4759,7 +4756,7 @@ domain with 4 nameserver IP addresses of which 2 are broken.
 
 	  </itemizedlist>
 	  
-	  Improvements to the recursor:
+	  recursor の改善:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -4859,7 +4856,7 @@ c573 (thanks to Wolfram Schlich).
 	      </para>
 	    </listitem>
 	  </itemizedlist>
-	  Miscellaneous:
+	  その他:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -4900,7 +4897,7 @@ Stefan Arentz for noticing. Fixed in c574.
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-2-9-19"><title>Version 2.9.19</title>
+      <sect2 id="changelog-2-9-19"><title>バージョン 2.9.19</title>
 	<para>
 	  Released 29th of October 2005.
 	</para>
@@ -4946,7 +4943,7 @@ have helped report bugs, validate solutions or have submitted entire
 patches. Many thanks!
 	</para>
 	<para>
-	  Improvements:
+	  改善:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -5049,7 +5046,7 @@ infrastructure.
 	</para>
 
 	<para>
-	  Bugs fixed:
+	  修正したバグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -5141,7 +5138,7 @@ Linux distributions, commit 496.
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-2-9-18"><title>Version 2.9.18</title>
+      <sect2 id="changelog-2-9-18"><title>バージョン 2.9.18</title>
 	<para>
 	  Released on the 16th of July 2005.
 	</para>
@@ -5211,7 +5208,7 @@ Refused, and not a denial of a domain's existence.
 	  </itemizedlist>
 	</para>
 	<para>
-	  General bugs fixed:
+	  全体のバグ修正:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -5276,7 +5273,7 @@ M&ouml;hlmann)
 	  </itemizedlist>
 	</para>
 	<para>
-	  Improvements:
+	  改善:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -5427,7 +5424,7 @@ wasted. Defaults to two seconds, can be configured with the
 	  </itemizedlist>
 	</para>
 	<para>
-	Backend fixes:
+	バックエンドの修正:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -5442,7 +5439,7 @@ wasted. Defaults to two seconds, can be configured with the
 	  </itemizedlist>
 	</para>
 	<para>
-	  New technology:
+	  新技術:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -5473,7 +5470,7 @@ linkend="goracle"/>.
 	</para>
       </sect2>
 
-      <sect2 id="changelog-2-9-17"><title>Version 2.9.17</title>
+      <sect2 id="changelog-2-9-17"><title>バージョン 2.9.17</title>
 	<para>
 	  See <ulink url="http://wiki.powerdns.com/trac/timeline">the new
 timeline</ulink> for progress reports.
@@ -5490,7 +5487,7 @@ spreading the word!
 deploying!
 	</para>
 	<para>
-	  Security issues:
+	  セキュリティー問題:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -5501,7 +5498,7 @@ cause of this has been fixed.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Enhancements:
+	  拡張:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -5518,7 +5515,7 @@ priorities differ. Some people need this feature for spam filtering.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Bug fixes:
+	  バグ修正:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -5608,14 +5605,14 @@ recent FreeBSD 5.3 systems. Please check, I have no such system to test on.
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-2-9-16"><title>Version 2.9.16</title>
+      <sect2 id="changelog-2-9-16"><title>バージョン 2.9.16</title>
 	<para>
 	  The 'it must still be Friday somewhere' release. Massive number of fixes,
 portability improvements and the new Geobackend by Mark Bergsma &amp;
 friends. 
 	</para>
 	<para>
-	  New:
+	  新規:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -5693,7 +5690,7 @@ Mulholland supplied a testing machine)
 	  </itemizedlist>
 	</para>
 	<para>
-	  Improvements:
+	  改善:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -5737,7 +5734,7 @@ over several hosts (Norbert Sendetzky)
 	</para>
       </sect2>
 
-      <sect2 id="changelog-2-9-15"><title>Version 2.9.15</title>
+      <sect2 id="changelog-2-9-15"><title>バージョン 2.9.15</title>
 	<para>
 	  This release fixes up some of the shortcomings in 2.9.14, and adds some new
 features too.
@@ -5787,7 +5784,7 @@ used, the speeds being sorted on changed during sorting.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Improvements:
+	  改善:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -5812,7 +5809,7 @@ PostgreSQL
 	  </itemizedlist>
 	</para>
       </sect2>
-	<sect2 id="changelog-2-9-14"><title>Version 2.9.14</title>
+	<sect2 id="changelog-2-9-14"><title>バージョン 2.9.14</title>
 	<para>
 	  Big release with the fix for the all important 2^30 seconds problem and a
 lot of other news.
@@ -5857,7 +5854,7 @@ thanks to Jasper Spaans for spotting the bug within five minutes.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Improvements:
+	  改善:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -5894,7 +5891,7 @@ improvements
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-2-9-13"><title>Version 2.9.13</title>
+      <sect2 id="changelog-2-9-13"><title>バージョン 2.9.13</title>
 	<para>
 	  Big news! Windows is back! Our great friend Michel Stol found the time to
 update the PowerDNS code so it works again under windows. 
@@ -5970,7 +5967,7 @@ itself sometimes terminates the connection and, amazingly, that switching to
 a Unix domain socket instead of TCP solves the problem.
 	</para>
 	<para>
-	  Bug fixes:
+	  バグ修正:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -5982,7 +5979,7 @@ a Unix domain socket instead of TCP solves the problem.
 	</para>
 
 	<para>
-	  Improvements:
+	  改善:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -6027,13 +6024,13 @@ often caused by prolonged disconnection from the net.
 	</para>
       </sect2>
 
-    <sect2 id="changelog-2-9-12"><title>Version 2.9.12</title>
+    <sect2 id="changelog-2-9-12"><title>バージョン 2.9.12</title>
 	<para> 
 	 Release rich in features. Work on Verisign oddities, addition of SQLite
 backend, pdns_recursor maturity.
       </para>
       <para>
-         New features:
+         新機能:
       <itemizedlist>
 	    <listitem>
 	      <para>
@@ -6083,7 +6080,7 @@ host, they will be returned in differing order every once in a while.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Bugs:
+	  バグ:
 	</para>
 	<para>
 	  <itemizedlist>
@@ -6156,7 +6153,7 @@ cleanup, more.
 	</para>
       </sect2>
       
-      <sect2 id="changelog-2-9-11"><title>Version 2.9.11</title>	
+      <sect2 id="changelog-2-9-11"><title>バージョン 2.9.11</title>	
       	<para>
 	  Yet another iteration, hopefully this will be the last silly release. 
 	</para>
@@ -6177,7 +6174,7 @@ cache, which should save some memory in the long run. Norbert contributed
 some small LDAP work which should come in useful in the future.
 	</para>
       </sect2>
-      <sect2 id="changelog-2-9-10"><title>Version 2.9.10</title>	
+      <sect2 id="changelog-2-9-10"><title>バージョン 2.9.10</title>	
 	<para>
 	  Small bugfixes, LDAP update. Released 3rd of July 2003. Apologies for the
 long delay, real life keeps interfering.
@@ -6264,7 +6261,7 @@ suggested by Norbert Sendetzky.
 	  </itemizedlist>
 	</para>
       </sect2>		
-      <sect2 id="changelog-2-9-8"><title>Version 2.9.8</title>	
+      <sect2 id="changelog-2-9-8"><title>バージョン 2.9.8</title>	
 	<para>
 	  Queen's day release! 30th of April 2003.
 	</para>
@@ -6273,7 +6270,7 @@ suggested by Norbert Sendetzky.
 a major release but enough reasons to upgrade.
 	</para>
 	<para>
-	  Bugs fixed:
+	  修正したバグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -6300,7 +6297,7 @@ Bortzmeyer.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Improvements:
+	  改善:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -6352,7 +6349,7 @@ was removed!
 	</para>
       </sect2>
 
-      <sect2 id="changelog-2-9-7"><title>Version 2.9.7</title>	
+      <sect2 id="changelog-2-9-7"><title>バージョン 2.9.7</title>	
 	<para>
 	  Released on 2003-03-20.
 	</para>
@@ -6369,7 +6366,7 @@ this backend is faster, but if you run with a few large ones, it is
 slower. This will improve.
 	</para>
 	<para>
-	  Features:
+	  機能:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -6400,7 +6397,7 @@ would be having "ipv6.powerdns.com" and "powerdns.com" zones on one server.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Improvements:
+	  改善:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -6453,7 +6450,7 @@ guardian. Suggested by Maurice Nonnekes.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Bugs fixed:
+	  修正したバグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -6524,7 +6521,7 @@ proving the problem.
 	</para>
       </sect2>
 
-      <sect2 id="changelog-2-9-6"><title>Version 2.9.6</title>	
+      <sect2 id="changelog-2-9-6"><title>バージョン 2.9.6</title>	
 	<para>
 	  Two new backends - Generic ODBC (windows only) and LDAP. Furthermore, a few
 important bugs have been fixed which may have hampered sites seeing a lot of
@@ -6605,7 +6602,7 @@ as well as 'IN'. Thanks to Joris Vandalon for noticing this.
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-2-9-5"><title>Version 2.9.5</title>	
+      <sect2 id="changelog-2-9-5"><title>バージョン 2.9.5</title>	
 	<para>
 	  Released on 2002-02-03.
 	</para>
@@ -6652,7 +6649,7 @@ work in porting MTasker to Windows, which was then used by Michel to get the
 recursor functioning on Windows.
 	</para>
 	<para>
-	  Other changes:
+	  その他の変更:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -6765,7 +6762,7 @@ single zones.
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-2-9-4"><title>Version 2.9.4</title>	
+      <sect2 id="changelog-2-9-4"><title>バージョン 2.9.4</title>	
 	<para>
 	  Yet another grand release. Big news is the addition of a recursing
 nameserver which has sprung into existence over the past week. It is in use
@@ -6938,7 +6935,7 @@ Julien Lemoine/SpeedBlue.
 	</para>
 	</sect2>
 
-      <sect2 id="changelog-2-9-3"><title>Version 2.9.3a</title>	
+      <sect2 id="changelog-2-9-3"><title>バージョン 2.9.3a</title>	
 	<para>
 	  <note><para>2.9.3a is identical to 2.9.3 except that zone2sql does work</para></note></para>
 	<para>
@@ -7028,7 +7025,7 @@ truly restarted.
 	  </warning>
 	</para>
 	<para>
-	  Improvements:
+	  改善:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -7106,7 +7103,7 @@ came from.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Changes:
+	  変更点:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -7181,7 +7178,7 @@ split out, removing such issues.
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-2-9-2"><title>Version 2.9.2</title>	
+      <sect2 id="changelog-2-9-2"><title>バージョン 2.9.2</title>	
 	<para>
 	  Bugfixes galore. Solaris porting created some issues on all platforms. Great
 news is that PowerDNS is now in Debian 'sid' (unstable). The 2.9.1 packages
@@ -7202,7 +7199,7 @@ operation. The Generic backends do.
 	  </para>
 	</warning>
 	<para>
-	  Bugs fixed:
+	  修正したバグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -7242,7 +7239,7 @@ occurred (observed by Paul Wouters)
 	  </itemizedlist>
 	</para>
 	<para>
-	  Documentation:
+	  ドキュメント:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -7263,7 +7260,7 @@ linkend="on-unix"/>.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Features:
+	  機能:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -7299,7 +7296,7 @@ make a pdns packages that does not depend one every database under the sun.
       </sect2>
 		
 
-      <sect2 id="changelog-2-9-1"><title>Version 2.9.1</title>	
+      <sect2 id="changelog-2-9-1"><title>バージョン 2.9.1</title>	
 	<para>
 	  Thanks to the great enthusiasm from around the world, powerdns is now
 available for Solaris and FreeBSD users again! Furthermore, the Windows
@@ -7324,7 +7321,7 @@ build is back. We are very grateful for the help of:
 improve PowerDNS!
 	</para>
 	<para>
-	  Changes:
+	  変更点:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -7400,7 +7397,7 @@ Linux glibc's need -D_GNU_SOURCE (Wichert Akkerman).	      </para>
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-2-9"><title>Version 2.9</title>	
+      <sect2 id="changelog-2-9"><title>バージョン 2.9</title>	
 	<para>
 	Open source release. Do not deploy unless you know what you are
 doing. Stability is expected to return with 2.9.1, as are the binary builds.
@@ -7409,7 +7406,7 @@ doing. Stability is expected to return with 2.9.1, as are the binary builds.
 	  <itemizedlist>
 	    <listitem>
 	      <para>
-		License changed to the GNU General Public License version 2.
+		GNU 一般公衆利用許諾契約書バージョン2にライセンスを変更しました。
 	      </para>
 	    </listitem>
 	    <listitem>
@@ -7431,7 +7428,7 @@ doing. Stability is expected to return with 2.9.1, as are the binary builds.
 	</para>
       </sect2>
 	
-      <sect2 id="changelog-2-8"><title>Version 2.8</title>	
+      <sect2 id="changelog-2-8"><title>バージョン 2.8</title>	
 	<para>
 	  From this release onwards, we'll concentrate on stabilising for the 3.0
 release. So if you have any must-have features, let us know soonest. The 2.8
@@ -7469,14 +7466,14 @@ and Simon Kirby of NetNation for reporting this.
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-2-7"><title>Version 2.7 and 2.7.1</title>	
+      <sect2 id="changelog-2-7"><title>バージョン 2.7 および 2.7.1</title>	
 	<para>
 	  This version fixes some very long standing issues and adds a few new
 features. If you are still running 2.6, upgrade yesterday. If you were
 running 2.6.1, an upgrade is still strongly advised.
 	</para>
 	<para>
-	  Features:
+	  機能:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -7507,7 +7504,7 @@ us. Only available under Linux.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Bugs:
+	  バグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -7565,12 +7562,12 @@ NetNation for reporting this.
 	</para>
       </sect2>
 	      
-      <sect2 id="changelog-2-6-1"><title>Version 2.6.1</title>	
+      <sect2 id="changelog-2-6-1"><title>バージョン 2.6.1</title>	
 	<para>
 	  Quick fix release for a big cache problem. 
 	</para>
       </sect2>
-      <sect2 id="changelog-2-6"><title>Version 2.6</title>
+      <sect2 id="changelog-2-6"><title>バージョン 2.6</title>
 	<para>
 	  Performance release. A lot of work has been done to raise PDNS performance
 to staggering levels in order to take part in benchmarketing
@@ -7596,7 +7593,7 @@ http://downloads.powerdns.com/releases/dev</ulink>. See also <xref
 linkend="backend-writers-guide"/>.
 	</para>
 	<para>
-	  Performance:
+	  性能:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -7633,7 +7630,7 @@ lookup, halving query load.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Bugs fixed:
+	  修正したバグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -7664,7 +7661,7 @@ $TTL statement in mid-record.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Features:
+	  機能:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -7675,7 +7672,7 @@ parsing by 'Cricket'.
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-2-5-1"><title>Version 2.5.1</title>
+      <sect2 id="changelog-2-5-1"><title>バージョン 2.5.1</title>
 	<para>
 	  <ulink
 url="http://www.tuxedo.org/~esr/jargon/html/entry/brown-paper-bag-bug.html">Brown
@@ -7715,7 +7712,7 @@ is in the cache, which is useful to help optimize your caching strategy.
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-2-5"><title>Version 2.5</title>
+      <sect2 id="changelog-2-5"><title>バージョン 2.5</title>
 	<para>
 	  An important release which has seen quite a lot of trial and error
 testing. As a result, PDNS can now run with a huge cache and concurrent
@@ -7732,7 +7729,7 @@ backend which is the same code.
 addressed. Most of these issues would only show up after prolonged uptime.
 	</para>
 	<para>
-	  New features:
+	  新機能:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -7784,7 +7781,7 @@ instead of only to 'no' to turn them off.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Enhancements:
+	  拡張:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -7831,7 +7828,7 @@ better and faster code than the previously used 3.0.4.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Bugs fixed:
+	  修正したバグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -7866,7 +7863,7 @@ bogus 'Master tried to sneak in out-of-zone data' errors and failing AXFRs.
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-2-4"><title>Version 2.4</title>
+      <sect2 id="changelog-2-4"><title>バージョン 2.4</title>
 	<para>
 	  Developers: this version is compatible with the pdns-2.1 development kit,
 available on <ulink url="http://downloads.powerdns.com/releases/dev">
@@ -7879,7 +7876,7 @@ packets. An upgrade is advised. Furthermore, there are interesting new
 features.
 	</para>
 	<para>
-	  New features:
+	  新機能:
 	</para>
 	<para>
 	  <itemizedlist>
@@ -7931,7 +7928,7 @@ caused by buggy recursing backends.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Bugs fixed:
+	  修正したバグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -7948,7 +7945,7 @@ with PDNS. Very slow.
 	</para>
 	
       </sect2>
-      <sect2 id="changelog-2-3"><title>Version 2.3</title>
+      <sect2 id="changelog-2-3"><title>バージョン 2.3</title>
 	<para>
 	  Developers: this version is compatible with the pdns-2.1 development kit,
 available on <ulink url="http://downloads.powerdns.com/releases/dev">
@@ -7961,7 +7958,7 @@ semantics with MySQL and InnoDB tables (or other tables that support
 transactions). See <xref linkend="generic-mypgsql-backends"/>.
 	</para>
 	<para>
-	  Other new features:
+	  その他の新機能:
 	</para>
 	<para>
 	  <itemizedlist>
@@ -7983,7 +7980,7 @@ queries or attempted AXFRs.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Bugs fixed:
+	  修正したバグ:
 	</para>
 	<para>
 	  <itemizedlist>
@@ -8016,7 +8013,7 @@ the problem.
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-2-2"><title>Version 2.2</title>
+      <sect2 id="changelog-2-2"><title>バージョン 2.2</title>
 	<para>
 	  Developers: this version is compatible with the pdns-2.1 development kit,
 available on <ulink url="http://downloads.powerdns.com/releases/dev">
@@ -8046,7 +8043,7 @@ insert dates and hence often has single digit soa serial numbers, causing
 big problems with .DE redelegations.
 	</para>
 	<para>
-	  Bugs fixed:
+	  修正したバグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -8076,7 +8073,7 @@ properly log the cause of an exception, which hampered problem resolution.
 	  </itemizedlist>
 	</para>	
 	<para>
-	  New features:
+	  新機能:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -8101,7 +8098,7 @@ SOA serial numbers. See also <xref linkend="all-settings"/>.
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-2-1"><title>Version 2.1</title>
+      <sect2 id="changelog-2-1"><title>バージョン 2.1</title>
 	<para>
 	  This is a somewhat bigger release due to pressing demands from customers. An
 upgrade is advised for installations using Recursion.  If you are using
@@ -8135,7 +8132,7 @@ release a FreeBSD dynamic version shortly.
 	</para>
 	      
 	<para>
-	  Bugs fixed:
+	  修正したバグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -8181,7 +8178,7 @@ data, it is. To restore old behaviour, disable
 	  </itemizedlist>
 	</para>
 	<para>
-	  Features:
+	  機能:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -8211,7 +8208,7 @@ linkend="pdnscontrol"/>.
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-2-0-1"><title>Version 2.0.1</title>
+      <sect2 id="changelog-2-0-1"><title>バージョン 2.0.1</title>
 	<para>
 	  Maintenance release, fixing three small issues.
 	</para>
@@ -8243,7 +8240,7 @@ mis-encoded on the wire.
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-2-0"><title>Version 2.0</title>
+      <sect2 id="changelog-2-0"><title>バージョン 2.0</title>
 	<para>
 	  Two bugfixes, one stability/security related. No new features.
 	</para>
@@ -8270,7 +8267,7 @@ reload. Present in all earlier 2.0 versions.
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-2-0-rc2"><title>Version 2.0 Release Candidate 2</title>
+      <sect2 id="changelog-2-0-rc2"><title>バージョン 2.0 リリース候補 2</title>
 	<para>
 	  Mostly bugfixes, no really new features.
 	</para>
@@ -8278,7 +8275,7 @@ reload. Present in all earlier 2.0 versions.
 	  Developers: this version is compatible with 1.99.11 backends.
 	</para>
 	<para>
-	  Bugs fixed:
+	  修正したバグ:
 	</para>
 	<para>
 	  <itemizedlist>
@@ -8325,7 +8322,7 @@ Jermar for running many tests for us.  If your transfers failed with
 	  </itemizedlist>
 	</para>
 	<para>
-	  Features:
+	  機能:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -8362,7 +8359,7 @@ bug-for-bug compatible with bind yet.
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-2-0-rc1"><title>Version 2.0 Release Candidate 1</title>
+      <sect2 id="changelog-2-0-rc1"><title>バージョン 2.0 リリース候補 1</title>
 	<para>
 	  The MacOS X release! A very experimental OS X 10.2 build has been
 added. Furthermore, the Windows version is now in line with Unix with
@@ -8416,7 +8413,7 @@ generic UNIX installation instructions.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Bugs fixed:
+	  修正したバグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -8506,7 +8503,7 @@ missing.
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-1-99-12"><title>Version 1.99.12 Prerelease</title>
+      <sect2 id="changelog-1-99-12"><title>バージョン 1.99.12 プレリリース</title>
 	<para>
 	  The Windows release! See <xref linkend="windows"/>. Beware, windows support
 is still very fresh and untested. Feedback is very welcome.
@@ -8554,7 +8551,7 @@ about this
 	  </itemizedlist>
 	</para>
 	<para>
-	  Bugs fixed:
+	  修正したバグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -8593,7 +8590,7 @@ doing benchmarks.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Features:
+	  機能:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -8614,7 +8611,7 @@ linkend="security"/>), the local socket again moves back to
 	</para>
       </sect2>
 
-      <sect2 id="changelog-1-99-11"><title>Version 1.99.11 Prerelease</title>
+      <sect2 id="changelog-1-99-11"><title>バージョン 1.99.11 プレリリース</title>
 	<para>
 	  This release is important because it is the first release which is
 accompanied by an Open Source Backend Development Kit, allowing external
@@ -8637,7 +8634,7 @@ instead of 7200 (thanks Henk Wevers)
 	  </itemizedlist>
 	</para>
       </sect2>
-      <sect2 id="changelog-1-99-10"><title>Version 1.99.10 Prerelease</title>
+      <sect2 id="changelog-1-99-10"><title>バージョン 1.99.10 プレリリース</title>
 	<para>
 	  IMPORTANT: there has been a tiny license change involving free public
 webbased dns hosting, check out the changes before deploying!
@@ -8658,7 +8655,7 @@ presented in earlier versions, advanced features such as master or slave
 support will not work unless you create the new 'domains' table as well.
 	</para>
 	<para>
-	  Bugs fixed:
+	  修正したバグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -8696,7 +8693,7 @@ commands. Thanks to Rene van Valkenburg for spotting this.
 	</itemizedlist>
 	</para>
 	<para>
-	  Features:
+	  機能:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -8754,7 +8751,7 @@ complete and will soon start work on the backends to make sure that they are
 all master, slave and 'superslave' capable.
 	</para>
 	<para>
-	  Bugs fixed:
+	  修正したバグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -8791,7 +8788,7 @@ libraries. Thanks to Konrad Wojas for noticing this.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Features:
+	  機能:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -8844,7 +8841,7 @@ queued for database attention, consider the situation hopeless and respawn.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Internal:
+	  内部:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -8873,7 +8870,7 @@ compliant.
 and a lot of new features.
 	</para>
 	<para>
-	  Bugs fixed:
+	  修正したバグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -8926,13 +8923,13 @@ Linux.
 	    </listitem>
 	    <listitem>
 	      <para>
-		Ran ispell on documentation.
+		ドキュメントに ispell を実行しました。
 	      </para>
 	    </listitem>
 	  </itemizedlist>
 	</para>
 	<para>
-	  Feature enhancements:
+	  機能拡張:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -8965,7 +8962,7 @@ right now! See <xref linkend="slave"/>
 	    </listitem>
           </itemizedlist>
 	</para>
-	<sect3><title>Known bugs</title>
+	<sect3><title>既知のバグ</title>
 	  <para>
 	    Wildcard CNAMEs do not work as they do with bind.
 	  </para>
@@ -8999,7 +8996,7 @@ now be parsed. Furthermore, error reporting was improved.  Stability is
 looking good.
 	</para>
 	<para>
-	  Bugs fixed:
+	  修正したバグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -9029,7 +9026,7 @@ looking good.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Feature enhancements:
+	  機能拡張:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -9056,12 +9053,12 @@ format useful for the default Generic PgSQL backend
 	    </listitem>
 	    <listitem>
 	      <para>
-		zone2sql is now documented.
+		zone2sql をドキュメント化しました。
 	      </para>
 	    </listitem>
           </itemizedlist>
 	</para>
-	<sect3><title>Known bugs</title>
+	<sect3><title>既知のバグ</title>
 	  <para>
 	    Wildcard CNAMEs do not work as they do with bind.
 	  </para>
@@ -9089,7 +9086,7 @@ release:
 for us. But please remain cautious before deploying!
 	</para>
 	<para>
-	  Bugs fixed:
+	  修正したバグ:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -9120,7 +9117,7 @@ misnaming of counter
 	  </itemizedlist>
 	</para>
 	<para>
-	  Feature enhancements:
+	  機能拡張:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -9136,7 +9133,7 @@ which might contain database backends. Use
 	    </listitem>
           </itemizedlist>
 	</para>
-	<sect3><title>Known bugs</title>
+	<sect3><title>既知のバグ</title>
 	  <para>
 	    FreeBSD version does not stop when requested to do so.
 	  </para>
@@ -9169,7 +9166,7 @@ the first release PowerDNS-the-company actually considers for running on its
 production servers!
 	</para>
 	<para>
-	  Major bugs fixed:
+	  大きなバグ修正:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -9206,7 +9203,7 @@ domain
 	  </itemizedlist>
 	</para>
 	<para>
-	  Feature enhancements:
+	  機能拡張:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -9222,7 +9219,7 @@ domain
           </itemizedlist>
 	</para>
 	<para>
-	  Performance enhancements:
+	  性能改善:
 	<itemizedlist>
 	    <listitem>
 	      <para>
@@ -9237,7 +9234,7 @@ server.
 	    </listitem>
 	  </itemizedlist>
 	</para>
-	<sect3><title>Known bugs</title>
+	<sect3><title>既知のバグ</title>
 	  <para>
 	    FreeBSD version does not stop when requested to do so.
 	  </para>
@@ -9269,7 +9266,7 @@ release:
 gained features and stability.
 	</para>
 	<para>
-	  Major bugs fixed:
+	  大きなバグ修正:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -9301,7 +9298,7 @@ truncated TCP answers.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Feature enhancements:
+	  機能拡張:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -9334,7 +9331,7 @@ responses.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Performance enhancements:
+	  性能改善:
 	<itemizedlist>
 	    <listitem>
 	      <para>
@@ -9344,7 +9341,7 @@ speedup.
 	    </listitem>
 	  </itemizedlist>
 	</para>
-	<sect3><title>Known bugs</title>
+	<sect3><title>既知のバグ</title>
 	  <para>
 	    FreeBSD version does not stop when requested to do so.
 	  </para>
@@ -9385,7 +9382,7 @@ domains, as well as small numbers of large domains (TLD).
 	  Zone transfers are now also much improved.
 	</para>
 	<para>
-	  Major bugs fixed:
+	  大きなバグ修正:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -9418,7 +9415,7 @@ containing $GENERATE
 	  </itemizedlist>
 	</para>
 	<para>
-	  Feature enhancements:
+	  機能拡張:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -9444,7 +9441,7 @@ sensitive.
 	  </itemizedlist>
 	</para>
 	<para>
-	  Performance enhancements:
+	  性能改善:
 	<itemizedlist>
 	    <listitem>
 	      <para>
@@ -9454,7 +9451,7 @@ transfers now zoom along at wire speed (many megabits/s).
 	    </listitem>
 	  </itemizedlist>
 	</para>
-	<sect3><title>Known bugs</title>
+	<sect3><title>既知のバグ</title>
 	  <para>
 	    FreeBSD version does not stop when requested to do so.
 	  </para>
@@ -9483,7 +9480,7 @@ release:
 	    
       <sect2><title>Version 1.99.2 Early Access Prerelease</title>
 	<para>
-	  Major bugs fixed:
+	  大きなバグ修正:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -9514,7 +9511,7 @@ problem with reinstalling.
 	      </para>
 	    </listitem>
 	  </itemizedlist>
-	  Performance improvements:
+	  パフォーマンスの改善:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -9537,7 +9534,7 @@ rates in a simple setup (question/wait/answer/question..) improve from 200
 queries/second to over 400.
 	</para>
 	<para>
-	  Usability improvements:
+	  ユーザビリティーの改善:
 	  <itemizedlist>
 	    <listitem>
 	      <para>
@@ -9574,7 +9571,7 @@ queries/second to over 400.
 tendency to log a bit too much which slows the nameserver down a lot.
 	</para>
 	<sect3>
-	  <title>Known bugs</title>
+	  <title>既知のバグ</title>
 	  <para>
 	    Decreasing a ringbuffer on the website is a sure way to crash the
 daemon. Zone2sql, while improved, still has problems with a zone in the
@@ -9627,7 +9624,7 @@ run this yet.
 	  Stability may be an issue as well as performance. This version has a
 tendency to log a bit too much which slows the nameserver down a lot.
 	</para>
-	<sect3><title>Known bugs</title>
+	<sect3><title>既知のバグ</title>
 	  <para>
 	    Decreasing a ringbuffer on the website is a sure way to crash the
 daemon. Zone2sql is very buggy.
@@ -9657,7 +9654,7 @@ release:
 	</sect3>
       </sect2>
     </sect1>
-    <sect1 id="security-policy"><title>Security</title>
+    <sect1 id="security-policy"><title>セキュリティー</title>
       <para>
 	If you have a security problem to report, please email us at both
 <email>security@netherlabs.nl</email> and <email>ahu@ds9a.nl</email>. Please
@@ -9754,7 +9751,7 @@ denial of service problems which can disrupt operation. Please upgrade to
 buffer overflow which might be exploitable</title>
       <para>
 	<table>
-	  <title>PowerDNS Security Advisory</title>
+	  <title>PowerDNS セキュリティーアドバイザリー</title>
 	  <tgroup cols="2">
 	    <tbody>
 	      <row>
@@ -9767,10 +9764,10 @@ buffer overflow which might be exploitable</title>
 	      </row>
 	      <row>
 		<entry>
-		  Date
+		  日付
 		</entry>
 		<entry>
-		  13th of November 2006
+		  2006年11月13日
 		</entry>
 	      </row>
 	      <row>
@@ -9800,7 +9797,7 @@ affected.
 	      </row>
 	      <row>
 		<entry>
-		  Impact
+		  影響
 		</entry>
 		<entry>
 		  Potential remote system compromise. 
@@ -9867,7 +9864,7 @@ considering the advice in <xref linkend="security"/>.
 exhaust allocated stack space, and crash</title>
       <para>
 	<table>
-	  <title>PowerDNS Security Advisory</title>
+	  <title>PowerDNS セキュリティーアドバイザリー</title>
 	  <tgroup cols="2">
 	    <tbody>
 	      <row>
@@ -9880,10 +9877,10 @@ exhaust allocated stack space, and crash</title>
 	      </row>
 	      <row>
 		<entry>
-		  Date
+		  日付
 		</entry>
 		<entry>
-		  13th of November 2006
+		  2006年11月13日
 		</entry>
 	      </row>
 	      <row>
@@ -9913,7 +9910,7 @@ affected.
 	      </row>
 	      <row>
 		<entry>
-		  Impact
+		  影響
 		</entry>
 		<entry>
 		  Denial of service
@@ -9961,7 +9958,7 @@ crashing.
 predicted, leading to the potential to 'spoof' PowerDNS Recursor</title>
       <para>
 	<table>
-	  <title>PowerDNS Security Advisory</title>
+	  <title>PowerDNS セキュリティーアドバイザリー</title>
 	  <tgroup cols="2">
 	    <tbody>
 	      <row>
@@ -9974,10 +9971,10 @@ predicted, leading to the potential to 'spoof' PowerDNS Recursor</title>
 	      </row>
 	      <row>
 		<entry>
-		  Date
+		  日付
 		</entry>
 		<entry>
-		  31st of March 2008
+		  2008年3月31日
 		</entry>
 	      </row>
 	      <row>
@@ -10007,7 +10004,7 @@ affected.
 	      </row>
 	      <row>
 		<entry>
-		  Impact
+		  影響
 		</entry>
 		<entry>
 		  Data manipulation; client redirection
@@ -10093,7 +10090,7 @@ interleaved with traffic generated by an attacker.
 domains become easier to spoof</title>
       <para>
 	<table>
-	  <title>PowerDNS Security Advisory</title>
+	  <title>PowerDNS セキュリティーアドバイザリー</title>
 	  <tgroup cols="2">
 	    <tbody>
 	      <row>
@@ -10106,10 +10103,10 @@ domains become easier to spoof</title>
 	      </row>
 	      <row>
 		<entry>
-		  Date
+		  日付
 		</entry>
 		<entry>
-		  6th of August 2008
+		  2008年8月6日
 		</entry>
 	      </row>
 	      <row>
@@ -10138,7 +10135,7 @@ domains become easier to spoof</title>
 	      </row>
 	      <row>
 		<entry>
-		  Impact
+		  影響
 		</entry>
 		<entry>
 		  Data manipulation; client redirection
@@ -10195,7 +10192,7 @@ it does facilitate simpler attacks.
 forced to restart remotely</title>
       <para>
 	<table>
-	  <title>PowerDNS Security Advisory</title>
+	  <title>PowerDNS セキュリティーアドバイザリー</title>
 	  <tgroup cols="2">
 	    <tbody>
 	      <row>
@@ -10208,10 +10205,10 @@ forced to restart remotely</title>
 	      </row>
 	      <row>
 		<entry>
-		  Date
+		  日付
 		</entry>
 		<entry>
-		  18th of November 2008
+		  2008年11月18日
 		</entry>
 	      </row>
 	      <row>
@@ -10242,7 +10239,7 @@ affected. Versions not running in single threaded mode
 	      </row>
 	      <row>
 		<entry>
-		  Impact
+		  影響
 		</entry>
 		<entry>
 		  Denial of Service
@@ -10297,7 +10294,7 @@ database reconnect occurs on receiving a CH HINFO query.
 3.1.7.1 can be brought down and probably exploited</title>
       <para>
 	<table>
-	  <title>PowerDNS Security Advisory</title>
+	  <title>PowerDNS セキュリティーアドバイザリー</title>
 	  <tgroup cols="2">
 	    <tbody>
 	      <row>
@@ -10310,10 +10307,10 @@ database reconnect occurs on receiving a CH HINFO query.
 	      </row>
 	      <row>
 		<entry>
-		  Date
+		  日付
 		</entry>
 		<entry>
-		  6th of January 2010
+		  2010年1月6日
 		</entry>
 	      </row>
 	      <row>
@@ -10342,7 +10339,7 @@ database reconnect occurs on receiving a CH HINFO query.
 	      </row>
 	      <row>
 		<entry>
-		  Impact
+		  影響
 		</entry>
 		<entry>
 		  Denial of Service, possible full system compromise
@@ -10395,7 +10392,7 @@ improving PowerDNS security.
 3.1.7.1 can be spoofed into accepting bogus data</title>
       <para>
 	<table>
-	  <title>PowerDNS Security Advisory</title>
+	  <title>PowerDNS セキュリティーアドバイザリー</title>
 	  <tgroup cols="2">
 	    <tbody>
 	      <row>
@@ -10408,10 +10405,10 @@ improving PowerDNS security.
 	      </row>
 	      <row>
 		<entry>
-		  Date
+		  日付
 		</entry>
 		<entry>
-		  6th of January 2010
+		  2010年1月6日
 		</entry>
 	      </row>
 	      <row>
@@ -10440,7 +10437,7 @@ improving PowerDNS security.
 	      </row>
 	      <row>
 		<entry>
-		  Impact
+		  影響
 		</entry>
 		<entry>
 		  Using smart techniques, it is possible to fool the PowerDNS Recursor into
@@ -10492,7 +10489,7 @@ improving PowerDNS security.
 caused to generate a traffic loop</title>
       <para>
 	<table>
-	  <title>PowerDNS Security Advisory</title>
+	  <title>PowerDNS セキュリティーアドバイザリー</title>
 	  <tgroup cols="2">
 	    <tbody>
 	      <row>
@@ -10505,10 +10502,10 @@ caused to generate a traffic loop</title>
 	      </row>
 	      <row>
 		<entry>
-		  Date
+		  日付
 		</entry>
 		<entry>
-		  10th of January 2012
+		  2012年1月10日
 		</entry>
 	      </row>
 	      <row>
@@ -10546,7 +10543,7 @@ of 2.9.22.5 and 2.9.22.6)
 	      </row>
 	      <row>
 		<entry>
-		  Impact
+		  影響
 		</entry>
 		<entry>
 		  Using well crafted UDP packets, one or more PowerDNS servers could be made
@@ -10566,7 +10563,7 @@ to enter a tight packet loop, causing temporary denial of service
 		  Risk of system compromise
 		</entry>
 		<entry>
-		  No
+		  いいえ
 		</entry>
 	      </row>
 	      <row>
@@ -10657,7 +10654,7 @@ url="http://BetterCGI.com/">BetterCGI.com</ulink> for bringing this issue to
 our attention and Aki Tuomi for helping us reproduce the problem.
       </para>
     </sect1>
-    <sect1 id="thanks-to"><title>Acknowledgements</title>
+    <sect1 id="thanks-to"><title>謝辞</title>
       <para>
 	PowerDNS is grateful for the help of the following people or institutions:
 	<itemizedlist>
@@ -10673,7 +10670,7 @@ our attention and Aki Tuomi for helping us reproduce the problem.
 	  <listitem><para>Thomas Wouters</para></listitem>
 	  <listitem><para>IETF Namedroppers mailing list</para></listitem>
 	</itemizedlist>
-	Thanks!
+	ありがとうございます!
       </para>
       <para>
 	(these people don't share the blame for any errors or mistakes in powerdns -
@@ -10683,13 +10680,13 @@ those are all ours)
 </chapter>
 
 <chapter id="installing-on-unix">
-    <title>Installing on Unix</title>
+    <title>Unix へのインストール</title>
     <para>
       You will typically install PDNS &gt; 2.9 via source or via a
 package. Earlier versions used a clumsy binary installer.
     </para>
     <sect1 id="problems">
-      <title>Possible problems at this point</title>
+      <title>この時点での考えられる問題</title>
       <para>
 	At this point some things may have gone wrong. Typical errors include:
 <variablelist>
@@ -10710,7 +10707,7 @@ your operating system and try again. Please contact
     </sect1>
 
 <sect1 id="testing">
-<title>Testing your install</title>
+<title>インストールしたもののテスト</title>
       <para>
 	After installing, it is a good idea to test the basic functionality of the
 software before configuring database backends.  For this purpose, PowerDNS
@@ -10747,7 +10744,7 @@ A @127.0.0.1</command> or even <command>nslookup www.example.com
 	<itemizedlist>
 	  <listitem>
 	    <para>
-	      example.com SOA record
+	      example.com SOA レコード
 	    </para>
 	  </listitem>
 	  <listitem>
@@ -10805,7 +10802,7 @@ problems, you will want to read the following section.
       </para>
       
       <sect2>
-	<title>Typical errors</title>
+	<title>典型的なエラー</title>
 	<para>
 	  At this point some things may have gone wrong. Typical errors include:
 <variablelist>
@@ -10867,7 +10864,7 @@ and sending back ICMP errors.
 </sect1>
 
     <sect1 id="pdns-on-unix">
-    <title>Running PDNS on unix</title>
+    <title>Unix での PDNS の実行</title>
 
     <para>
       PDNS is normally controlled via a SysV-style init.d script, often located in
@@ -10953,7 +10950,7 @@ single out specific variable by using the <command>show</command> command.
 	  <term>mrtg</term>
 	  <listitem>
 	    <para>
-	      See the performance monitoring <xref linkend="monitoring"/>.
+	      パフォーマンス監視 <xref linkend="monitoring"/> を参照してください。
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -10965,7 +10962,7 @@ single out specific variable by using the <command>show</command> command.
 </chapter>
 
 <chapter id="windows">
-  <title>Installing on Microsoft Windows</title>
+  <title>Microsoft Windows へのインストール</title>
     <para>
     <warning>
     	<para>
@@ -11167,7 +11164,7 @@ connect to it. Fix these before proceeding.
       General MySQL knowledge is assumed in this chapter, please do not interpret
 these commands as DBA advice!
     </para>
-    <sect1 id="configuring-mysql"><title>Example: configuring MySQL</title>
+    <sect1 id="configuring-mysql"><title>例: MySQLの設定</title>
       <para>
 	Connect to MySQL as a user with sufficient privileges and issue the
 following commands: <programlisting><xi:include  href="../no-dnssec.schema.mysql.sql"  parse="text"  xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting> <screen>
@@ -11210,9 +11207,8 @@ And indeed, the control console now shows: <screen>
 	  INSERT INTO records (domain_id, name, content, type,ttl,prio)
 	  VALUES (1,'test.com','mail.test.com','MX',120,25);
 	</screen>
-	<warning><para>Host names and the MNAME of a SOA records are NEVER terminated with a '.' in
-PowerDNS storage! If a trailing '.' is present it will inevitably cause
-problems, problems that may be hard to debug.</para></warning>
+	<warning><para>PowerDNS ストレージ内のホスト名や SOA レコードの MNAME では、絶対に '.' で終わってはいけません! 最後に '.'
+がある場合、必ず問題の原因になり、この問題のデバッグは非常に困難です。</para></warning>
 	If we now requery our database, <command>www.test.com</command> should be
 present: <screen>
 	  $ host www.test.com 127.0.0.1
@@ -11250,7 +11246,7 @@ status: <screen>
 driven nameserver! To convert other zones already present, use the
 <command>zone2sql</command> described in Appendix A.
       </para>
-      <sect2><title>Common problems</title>
+      <sect2><title>共通の問題</title>
 	<para>
 	  Most problems involve PDNS not being able to connect to the database.
 <variablelist>
@@ -11568,7 +11564,7 @@ higher! To log only info messages, use <command>local0.=info</command>.
     </sect1>
   </chapter>
   <chapter id="security"><title>Security settings &amp; considerations</title>
-    <sect1 id="settings"><title>Settings</title>
+    <sect1 id="settings"><title>設定</title>
       <para>PDNS has several options to easily allow it to run more securely. Most
 notable are the <command>chroot</command>, <command>setuid</command> and
 <command>setgid</command> options which can be specified.</para>
@@ -11590,7 +11586,7 @@ on most systems.
 You should set these parameters immediately if they are not set!
 	</para>
 	</sect2>
-	<sect2><title>Jailing the process in a chroot</title>
+	<sect2><title>chroot へのプロセス封じ込め</title>
 	<para>
 	  The <command>chroot</command> option secures PDNS to its own directory so
 that even if it should become compromised and under control of external
@@ -11647,7 +11643,7 @@ database machine actually improves performance.
       </sect1>
     </chapter>
     
-  <chapter id="virtual"><title>Virtual hosting</title>
+  <chapter id="virtual"><title>仮想ホスティング</title>
     <para>
       It may be advantageous to run multiple separate PDNS installations on a
 single host, for example to make sure that different customers cannot affect
@@ -11672,7 +11668,7 @@ PDNS instances!
     </para>
   </chapter>
 
-  <chapter id="performance"><title>Authoritative Server Performance</title>
+  <chapter id="performance"><title>Authoritative Server の性能</title>
     <sect1><title>General advice</title>
     <para>
       In general, best performance is achieved on recent Linux 2.6 kernels and
@@ -11784,7 +11780,7 @@ hurt performance.
 show packetcache-size</command>
       </para>
     </sect2>
-    <sect2 id="querycache"><title>Query Cache</title>
+    <sect2 id="querycache"><title>クエリーキャッシュ</title>
       <para>
 	Besides entire packets, PDNS can also cache individual backend queries. Each
 DNS query leads to a number of backend queries, the most obvious additional
@@ -12286,16 +12282,16 @@ NSEC3-narrow mode.
       DS (digest type 1, 2, 3 and provisional point 4)</para>
     </listitem>
     <listitem><para>
-      RSASHA1 (algorithm 5, algorithm 7)</para>
+      RSASHA1 (アルゴリズム 5, アルゴリズム 7)</para>
     </listitem>
     <listitem><para>
-      RSASHA256 (algorithm 8)</para>
+      RSASHA256 (アルゴリズム 8)</para>
     </listitem>
     <listitem><para>
-      RSASHA512 (algorithm 10)</para>
+      RSASHA512 (アルゴリズム 10)</para>
     </listitem>
     <listitem><para>
-      ECC-GOST (algorithm 12)</para>
+      ECC-GOST (アルゴリズム 12)</para>
     </listitem>
     <listitem><para>
       ECDSA (no codepoints assigned, provisional 13 and 14)</para>
@@ -12356,7 +12352,7 @@ mode is easier however.
   </section>
   </section>
   <section id="dnssec-migration">
-  <title>Migration</title>
+  <title>移行</title>
   <para>
     This chapter discusses various migration strategies, from existing PowerDNS
 setups, from existing unsigned installations and finally from previous
@@ -12402,7 +12398,7 @@ flag.
     </para>
     </section>
     <section id="dnssec-bind-migration"><title>From existing non-DNSSEC non-PowerDNS setups</title>
-    <para>TBD</para>
+    <para>未定</para>
     </section>
     <section id="dnssec-dnssec-migration-presigned"><title>From existing DNSSEC non-PowerDNS setups, pre-signed</title>
     <para>
@@ -12494,7 +12490,7 @@ the database.
   </para>
   </section>
   
-  <section id="rrsig"><title>Signatures</title>
+  <section id="rrsig"><title>署名</title>
   <para>
     In PowerDNS live signing mode, signatures, as served through RRSIG records,
 are calculated on the fly, and heavily cached. All CPU cores are used for
@@ -12527,7 +12523,7 @@ PowerDNS backend database, which also means that for many databases,
 servers.
   </para>
   <para>
-  The following pdnssec commands are available:</para>
+  以下の pdnssec コマンドが利用できます。</para>
   <para>
     <variablelist>
 	<varlistentry>
@@ -12749,7 +12745,7 @@ almost always fit in the 'magical' 512 byte limit previously imposed on DNS.
 allows for:
     <itemizedlist>
       <listitem><para>&gt;512 byte UDP packets on port 53</para></listitem>
-      <listitem><para>Fragmented UDP packets</para></listitem>
+      <listitem><para>断片化した UDP パケット</para></listitem>
       <listitem><para>ICMP packets related to fragmentation</para></listitem>
       <listitem><para>TCP queries on port 53</para></listitem>
       <listitem><para>EDNS0 queries/responses (filtered by some firewalls)</para></listitem>
@@ -12941,7 +12937,7 @@ can be used to calculate this hash.
   </para>
   </section>
 </section>
-  <section id="dnssec-security"><title>Security</title>
+  <section id="dnssec-security"><title>セキュリティー</title>
   <para>
     During typical PowerDNSSEC operation, the private part of the signing keys
 are 'online', which can be compared to operating an HTTPS server, where the
@@ -12952,7 +12948,7 @@ certificate is available on the webserver for cryptographic purposes.
 considered undesirable. In this case, consider running in pre-signed mode.
   </para>
   </section>
-  <section id="dnssec-performance"><title>Performance</title>
+  <section id="dnssec-performance"><title>パフォーマンス</title>
   <para>
     As of version 3.0, PowerDNSSEC has not be tuned for performance. In practice
 this means that operations above 1000 queries per second should not yet be
@@ -12998,7 +12994,7 @@ people.  We would like to thank:
     <listitem><para>Brielle Bruns</para></listitem>
     <listitem><para>Evan Hunt (ISC)</para></listitem>
     <listitem><para>Ralf van der Enden</para></listitem>
-    <listitem><para>.. this list is far from complete yet .. </para></listitem>
+    <listitem><para>……このリストはまだ完成には、ほど遠いです…… </para></listitem>
     </itemizedlist>
   </para>
   </section>
@@ -13104,7 +13100,7 @@ with the master, not just those about AXFR requests.
   </para>
   </section>
   </chapter>
-  <chapter id="allow-axfr-from"><title>AXFR ACLs</title>
+  <chapter id="allow-axfr-from"><title>AXFR ACL</title>
   <para>
     Starting with the PowerDNS Authoritative Server 3.1, per-zone AXFR ACLs can
 be stored in the domainmetadata table.
@@ -13114,7 +13110,7 @@ be stored in the domainmetadata table.
 that tries to allow all potential slaves in.
   </para>
   <para>
-    Example: <programlisting>
+    例: <programlisting>
 sql> select id from domains where name='example.com';
 7
 sql> insert into domainmetadata (domain_id, kind, content) values (7,'ALLOW-AXFR-FROM','AUTO-NS');
@@ -13260,7 +13256,7 @@ restricted to netmasks specified. The default is to allow recursion from
 everywhere. Example: <command>allow-recursion=192.168.0.0/24, 10.0.0.0/8,
 1.2.3.4</command>.
     </para>
-    <sect1 id="recursion-details"><title>Details</title>
+    <sect1 id="recursion-details"><title>詳細</title>
       <para>
 	Questions carry a number of flags. One of these is called 'Recursion
 Desired'. If PDNS is configured to allow recursion, AND such a flag is seen,
@@ -13386,7 +13382,7 @@ so with --verbose.
       The PowerDNS recursor is controlled and queried using the
 <filename>rec_control</filename> tool. 
     </para>
-    <sect1 id="recursor-settings"><title>pdns_recursor settings</title>
+    <sect1 id="recursor-settings"><title>pdns_recursor の設定</title>
       <para>
 	At startup, the recursing nameserver reads the file
 <filename>recursor.conf</filename> from the configuration directory, often
@@ -13895,7 +13891,7 @@ issues.
 	</variablelist>
       </para>
     </sect1>
-    <sect1 id="recursor-command-line"><title>pdns_recursor command line</title>
+    <sect1 id="recursor-command-line"><title>pdns_recursor コマンドライン</title>
     <para>
       All configuration settings from the previous section can also be passed on
 the command line, and will override the configuration file. In addition, the
@@ -13949,7 +13945,7 @@ will not answer questions.
 	      </listitem>
 	    </varlistentry>	  
 	    <varlistentry>
-	      <term>get statistic</term>
+	      <term>統計を取得</term>
 	      <listitem>
 		<para>
 		  Retrieve a statistic. For items that can be queried, see below.
@@ -14051,7 +14047,7 @@ in <xref linkend="recursor-stats"/>.
 in <xref linkend="recursor-details"/>.
 	</para>
     </sect1>
-    <sect1 id="recursor-performance"><title>PowerDNS Recursor performance</title>
+    <sect1 id="recursor-performance"><title>PowerDNS Recursor の性能</title>
       <para>
 	To get the best out of the PowerDNS recursor, which is important if you are
 doing thousands of queries per second, please consider the following. 
@@ -14158,7 +14154,7 @@ feature to make sure DNS traffic bypasses the connection tracking.
 	Following the instructions above, you should be able to attain very high
 query rates.
       </para>
-      <sect2 id="recursor-caches"><title>Recursor Caches</title>
+      <sect2 id="recursor-caches"><title>Recursor キャッシュ</title>
 	<para>
 	  The PowerDNS Recursor contains a number of caches, or information stores:
 <variablelist>
@@ -14172,7 +14168,7 @@ authoritative servers.
 	      </listitem>
 	    </varlistentry>
 	    <varlistentry>
-	      <term>Negative cache</term>
+	      <term>ネガティブキャッシュ</term>
 	      <listitem>
 	      <para>
 		The "Negcache" contains all domains known not to exist, or record types not
@@ -14208,7 +14204,7 @@ first version with a Packet Cache.
 	</para>
       </sect2>
     </sect1>
-    <sect1 id="recursor-details"><title>Details</title>
+    <sect1 id="recursor-details"><title>詳細</title>
       <sect2 id="anti-spoofing"><title>Anti-spoofing</title>
 	<para>
 	  The PowerDNS recursor 3.0 uses a fresh UDP source port for each outgoing
@@ -14259,7 +14255,7 @@ won't be repeated in the next 60 seconds.
       </sect2>
 
     </sect1>
-    <sect1 id="recursor-stats"><title>Statistics</title>
+    <sect1 id="recursor-stats"><title>統計</title>
       <para>
 	The <command>rec_control get</command> command can be used to query the
 following statistics, either single keys or multiple statistics at once:
@@ -14342,7 +14338,7 @@ addresses of nameservers.
 gone out previously, saving load servers worldwide.
       </para>
     </sect1>
-    <sect1 id="recursor-scripting"><title>Scripting</title>
+    <sect1 id="recursor-scripting"><title>スクリプティング</title>
       <para>
 	As of version 3.1.7 of the PowerDNS Recursor, it is possible to modify
 resolving behaviour using simple scripts written in the <ulink
@@ -14366,7 +14362,7 @@ logic starts to work, plus after the resolving process failed to find a
 correct answer for a domain.
       </para>
       <sect2>
-	<title>Configuring Lua scripts</title>
+	<title>Lua スクリプトの設定</title>
 	<para>
 	  In order to load scripts, the PowerDNS Recursor must have Lua support built
 in. The packages distributed from the PowerDNS website have this language
@@ -14455,7 +14451,7 @@ domain.  Returning -1 and an empty table signifies that the function chose
 not to intervene.
 	</para>
 	<para>
-	  A minimal sample script:
+	  最小限のサンプルスクリプト
 	</para>
 	<para>
 	  <screen>
@@ -14609,7 +14605,7 @@ will explain the conceptual relation between these components, and the route
 of a packet through the program.</para>
 	  
       <sect2>
-	<title>The PowerDNS Recursor</title>
+	<title>PowerDNS Recursor</title>
 	<para>The Recursor started out as a tiny project, mostly a technology
 demonstration. These days it consists of the core plus 9000 lines of
 features. This combined with a need for very high performance has made the
@@ -14819,7 +14815,7 @@ well.</para>
 	
       </sect2>
       <sect2>
-	<title>Actual DNS Algorithm</title>
+	<title>実際の DNS アルゴリズム</title>
 	<para>The DNS RFCs do define the DNS algorithm, but you can't actually implement
 it exactly that way, it was written in 1987.</para>
 	
@@ -15463,7 +15459,7 @@ linkend="virtual"/>.
 	      </para></listitem></varlistentry>
 	  <varlistentry><term>control-console=...</term>
 	    <listitem><para>
-		Debugging switch - don't use.
+		デバッグ用スイッチ。使わないでください。
 	      </para></listitem></varlistentry>
 	  <varlistentry><term>daemon=...</term>
 	    <listitem><para>
@@ -15825,7 +15821,7 @@ internally</para></listitem>
     </para>
     </sect2>
     <sect2>
-      <title>Ring buffers</title>
+      <title>リングバッファー</title>
 	<para>
 	  Besides counters, PDNS also maintains the ringbuffers. A ringbuffer records
 events, each new event gets a place in the buffer until it is full. When
@@ -15915,12 +15911,11 @@ is the authority. Use this ringbuffer to spot such queries.
 
   <chapter id="types"><title>Supported record types and their storage</title>
     <para>
-      This chapter lists all record types PDNS supports, and how they are stored
-in backends. The list is mostly alphabetical but some types are grouped.
+      この章では、PDNS
+がサポートする全レコードタイプを一覧し、バックエンドがどのように格納しているかを示します。ほとんどのレコードはアルファベット順に並んでいますが、一部グループ化しています。
     </para>
-    <para><warning><para>Host names and the MNAME of a SOA records are NEVER terminated with a '.' in
-PowerDNS storage! If a trailing '.' is present it will inevitably cause
-problems, problems that may be hard to debug.</para></warning></para>
+    <para><warning><para>PowerDNS ストレージ内のホスト名や SOA レコードの MNAME では、絶対に '.' で終わってはいけません! 最後に '.'
+がある場合、必ず問題の原因になり、この問題のデバッグは非常に困難です。</para></warning></para>
     <para>
       The PowerDNS Recursor can serve and store all record types, regardless of
 whether these are explicitly supported.  <variablelist>
@@ -15928,8 +15923,7 @@ whether these are explicitly supported.  <variablelist>
 	<term>A</term>
 	  <listitem>
 	    <para>
-	      The A record contains an IP address. It is stored as a decimal dotted quad
-string, for example: '213.244.168.210'.
+	      A レコードは IP アドレスを格納しています。'213.244.168.210' のように、ドットで4つに区切った10進数で表します。
 	    </para>
 	  </listitem>      
 	</varlistentry>
@@ -15937,25 +15931,23 @@ string, for example: '213.244.168.210'.
 	  <term>AAAA</term>
 	  <listitem>
 	    <para>
-	      The AAAA record contains an IPv6 address. An example:
-'3ffe:8114:2000:bf0::1'. 
+	      AAAA は IPv6 アドレスを格納しています。'3ffe:8114:2000:bf0::1' のようになります。 
 	    </para>
 	  </listitem>      
 	</varlistentry>
 	<varlistentry>
-	  <term>AFSDB (since 2.9.21)</term>
+	  <term>AFSDB (2.9.21 以降)</term>
 	  <listitem>
 	    <para>
-	    Specialised record type for the 'Andrew Filesystem'. Stored as: '#subtype
-hostname', where subtype is a number.
+	    'Andrew Filesystem' に特化したレコードタイプです。'#サブタイプ ホスト名' として格納します。サブタイプは数値になります。
 	    </para>
 	  </listitem>      
 	</varlistentry>
 	<varlistentry>
-	<term>CERT (since 2.9.21)</term>
+	<term>CERT (2.9.21 以降)</term>
 	  <listitem>
 	    <para>
-	    Specialised record type for storing certificates, defined in RFC 2538.
+	    証明書の格納に特化したレコードタイプです。RFC 2538 で定義されています。
 	    </para>
 	  </listitem>      
 	</varlistentry>
@@ -15963,14 +15955,14 @@ hostname', where subtype is a number.
 	  <term>CNAME</term>
 	  <listitem>
 	    <para>
-	      The CNAME record specifies the canonical name of a record. It is stored
-plainly. Like all other records, it is not terminated by a dot. A sample
-might be 'webserver-01.yourcompany.com'.
+	      CNAME
+レコードは、レコードの正規名を指定します。これはそのまま格納されます。その他のレコードと同じように、ドットで終わってはいけません。'webserver-01.yourcompany.com'
+のようになるはずです。
 	    </para>
 	  </listitem>      
 	</varlistentry>
 	<varlistentry>
-	  <term>DNSKEY (since 2.9.21)</term>
+	  <term>DNSKEY (2.9.21 以降)</term>
 	  <listitem>
 	    <para>
 	      The DNSKEY DNSSEC record type is fully supported, as described in RFC
@@ -15980,7 +15972,7 @@ no further DNSSEC processing is performed.
 	  </listitem>      
 	</varlistentry>
 	<varlistentry>
-	  <term>DS (since 2.9.21)</term>
+	  <term>DS (2.9.21 以降)</term>
 	  <listitem>
 	    <para>
 	      The DS DNSSEC record type is fully supported, as described in RFC 3757. Note
@@ -15999,7 +15991,7 @@ a single space separating these two, example: 'i386 Linux'.
 	  </listitem>      
 	</varlistentry>
 	<varlistentry>
-	  <term>KEY (since 2.9.21)</term>
+	  <term>KEY (2.9.21 以降)</term>
 	  <listitem>
 	    <para>
 	      The KEY record is fully supported. For its syntax, see RFC 2535.
@@ -16049,7 +16041,7 @@ empty. See also RFC 2916 for how to use NAPTR for ENUM (E.164) purposes.
 	  </listitem>      
 	</varlistentry>
 	<varlistentry>
-	  <term>NSEC (since 2.9.21)</term>
+	  <term>NSEC (2.9.21 以降)</term>
 	  <listitem>
 	    <para>
 	      The NSEC DNSSEC record type is fully supported, as described in RFC
@@ -16081,7 +16073,7 @@ available by querying the TXT record of peter.people.powerdns.com.
 	  </listitem>      
 	</varlistentry>
 	<varlistentry>
-	  <term>RRSIG (since 2.9.21)</term>
+	  <term>RRSIG (2.9.21 以降)</term>
 	  <listitem>
 	    <para>
 	      The RRSIG DNSSEC record type is fully supported, as described in RFC
@@ -16106,11 +16098,11 @@ contains a serial number which should rise on each change of the domain.
 	      </screen> Besides the
 primary and the hostmaster, all fields are numerical. PDNS has a set of
 default values: <table>
-		<title>SOA fields</title>
+		<title>SOA フィールド</title>
 		<tgroup cols="2">
 		  <tbody>
 		    <row>
-		      <entry>primary</entry><entry><command>default-soa-name</command> configuration option</entry>
+		      <entry>primary</entry><entry><command>default-soa-name</command> 設定オプション</entry>
 		    </row>
 		    <row>
 		      <entry>hostmaster</entry><entry>hostmaster@domain-name</entry>
@@ -16119,16 +16111,16 @@ default values: <table>
 		      <entry>serial</entry><entry>0</entry>
 		    </row>
 		    <row>
-		      <entry>refresh</entry><entry>10800 (3 hours)</entry>
+		      <entry>refresh</entry><entry>10800 (3 時間)</entry>
 		    </row>
 		    <row>
-		      <entry>retry</entry><entry>3600 (1 hour)</entry>
+		      <entry>retry</entry><entry>3600 (1 時間)</entry>
 		    </row>
 		    <row>
-		      <entry>expire</entry><entry>604800 (1 week)</entry>
+		      <entry>expire</entry><entry>604800 (1 週間)</entry>
 		    </row>
 		    <row>
-		      <entry>default_ttl</entry><entry>3600 (1 hour)</entry>
+		      <entry>default_ttl</entry><entry>3600 (1 時間)</entry>
 		    </row>
 		  </tbody>
 		</tgroup>
@@ -16146,15 +16138,15 @@ your backend of choice supports Autoserial.
 	  </listitem>      
 	</varlistentry>
 	<varlistentry>
-	  <term>SPF (since 2.9.21)</term>
+	  <term>SPF (2.9.21 以降)</term>
 	  <listitem>
 	    <para>
-	      SPF records can be used to store Sender Policy Framework details (RFC 4408). 
+	      SPF レコードは、Sender Policy Framework の詳細を格納するのに使用できます (RFC 4408)。 
 	    </para>
 	  </listitem>      
 	</varlistentry>
 	<varlistentry>
-	  <term>SSHFP (since 2.9.21)</term>
+	  <term>SSHFP (2.9.21 以降)</term>
 	  <listitem>
 	    <para>
 	      The SSHFP record type, used for storing Secure Shell (SSH) fingerprints, is
@@ -16187,7 +16179,7 @@ plainly.
       </variablelist>
     </para>
   </chapter>
-  <chapter id="faq"><title>HOWTO &amp; Frequently Asked Questions</title>
+  <chapter id="faq"><title>HOWTO &amp; FAQ</title>
     <para>
       This chapter contains a number of FAQs and HOWTOs.
     </para>
@@ -16213,7 +16205,7 @@ lists.
       </para>
       <variablelist>
 	<varlistentry>
-	  <term>Q: Help!</term>
+	  <term>Q: 助けて!</term>
 	  <listitem>
 	    <para>
 	      A: Please try harder :-) Specifically, before people will be able to help
@@ -16468,7 +16460,7 @@ the same as this example.</para></note>
 	</variablelist>
       </para>
     </sect1>
-    <sect1 id="pdns-devel-faq"><title>Backend developer HOWTO</title>
+    <sect1 id="pdns-devel-faq"><title>バックエンド開発者 HOWTO</title>
       <para>
 	Writing backends without access to the full PDNS source means that you need
 to write code that can be loaded by PDNS at runtime.  This in turn means
@@ -16516,7 +16508,7 @@ the API to the backend coder.
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term>Q: Can I release the backend I wrote?</term>
+	  <term>Q: 自分で書いたバックエンドをリリースできますか?</term>
 	  <listitem>
 	    <para>
 	      A: Please do! If you tell us about it we will list you on our page.
@@ -16524,7 +16516,7 @@ the API to the backend coder.
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term>Q: Can I sell backends I wrote?</term>
+	  <term>Q: 自分で書いたバックエンドを販売できますか?</term>
 	  <listitem>
 	    <para>
 	      A: You can. Again, if you tell us about them we will list your backend on
@@ -16763,7 +16755,7 @@ be relayed. This setting is mandatory, and has no default.
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term>setuid and setgid</term>
+	  <term>setuid と setgid</term>
 	  <listitem>
 	    <para>
 		Change to these numerical user-id and/or group-id, dropping root privileges,
@@ -16819,27 +16811,27 @@ towards your customers or privacy laws.
       </variablelist>
     </para>
   </chapter>
-  <appendix id="backends-detail"><title>Backends in detail</title>
+  <appendix id="backends-detail"><title>バックエンドの詳細</title>
     <para>
-      This appendix lists several of the available backends in more detail
+      この付録では、利用可能なバックエンドの詳細を列挙していきます。
     </para>
     
     
-    <sect1 id="pipebackend"><title>PipeBackend</title>
+    <sect1 id="pipebackend"><title>パイプバックエンド</title>
       <para>
 	<table>
-	  <title>PipeBackend capabilities</title>
+	  <title>パイプバックエンド の機能</title>
 	  <tgroup cols="2">
 	    <tbody>
-	      <row><entry>Native</entry><entry>Yes</entry></row>
-	      <row><entry>Master</entry><entry>No</entry></row>
-	      <row><entry>Slave</entry><entry>No</entry></row>
-	      <row><entry>Superslave</entry><entry>No</entry></row>
-	      <row><entry>Autoserial</entry><entry>No</entry></row>
-	      <row><entry>Case</entry><entry>Depends</entry></row>
-	      <row><entry>DNSSEC</entry><entry>Partial, no delegation, no key storage</entry></row>
-	      <row><entry>Module name</entry><entry>pipe</entry></row>
-	      <row><entry>Launch name</entry><entry>pipe</entry></row>
+	      <row><entry>ネイティブ</entry><entry>はい</entry></row>
+	      <row><entry>マスター</entry><entry>いいえ</entry></row>
+	      <row><entry>スレーブ</entry><entry>いいえ</entry></row>
+	      <row><entry>スーパースレーブ</entry><entry>いいえ</entry></row>
+	      <row><entry>自動シリアル値</entry><entry>いいえ</entry></row>
+	      <row><entry>大/小文字の別</entry><entry>実装依存</entry></row>
+	      <row><entry>DNSSEC</entry><entry>一部。移譲なし。鍵ストレージなし</entry></row>
+	      <row><entry>モジュール名</entry><entry>pipe</entry></row>
+	      <row><entry>実行名</entry><entry>pipe</entry></row>
 	    </tbody>
 	  </tgroup>
 	</table>
@@ -16887,7 +16879,7 @@ the command line.  In the configuration file, the previous example would be
 stored as: pipe-regex=^www.powerdns.com;(A|ANY)$
 	      </para>
 	      <para>
-		Available since 2.8.
+		2.8 から利用可能です。
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -16910,7 +16902,7 @@ support (this also requires enabling 'edns-subnet-processing').
 	</variablelist>
       </para>
       
-      <sect2 id="pipebackend-protocol"><title>PipeBackend protocol</title>
+      <sect2 id="pipebackend-protocol"><title>PipeBackend プロトコル</title>
 	<para>
 	  Questions come in over a file descriptor, by default standard input. Answers
 are sent out over another file descriptor, standard output by
@@ -16918,7 +16910,7 @@ default. Questions and answers are terminated by single newline ('\n')
 characters.
 	</para>
 	<sect3>
-      <title>Handshake</title>
+      <title>ハンドシェイク</title>
       <para>
         PowerDNS sends out 'HELO\t1', indicating that it wants to speak the protocol
 as defined in this document, version 1. For abi-version 2 or 3, PowerDNS
@@ -16928,7 +16920,7 @@ not support the indicated version, it should respond with FAIL, but not
 exit. Suggested behaviour is to try and read a further line, and wait to be
 terminated.
       </para></sect3>
-    <sect3><title>Questions</title>
+    <sect3><title>問い合わせ</title>
       <para>
         Questions come in three forms and are prefixed by a tag indicating the type:
 <variablelist>
@@ -16936,7 +16928,7 @@ terminated.
 	    <term>Q</term>
 	    <listitem>
 	      <para>
-                Regular queries
+                標準クエリー
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -17009,7 +17001,7 @@ gathered from the answer to a SOA query.
 
 </para> 
  </sect3>
-    <sect3><title>Answers</title>
+    <sect3><title>応答</title>
       <para>
 
         Each answer starts with a tag, possibly followed by a TAB and more data.
@@ -17099,7 +17091,7 @@ authoritative; this is for DNSSEC.
 </para>
 	</sect3>
 	<sect3>
-	<title>Sample perl backend</title>
+	<title>perl バックエンドのサンプル</title>
 	<para>
 	<screen>
 #!/usr/bin/perl -w
@@ -17158,7 +17150,7 @@ while(&lt;&gt;)
 	</para>
 	</sect3>
       </sect2>
-      <sect2><title id="implement-the-any-query">Notes</title>
+      <sect2><title id="implement-the-any-query">備考</title>
 	<para>
 	  Besides regular query types, the DNS also knows the 'ANY' query type. When a
 server receives a question for this ANY type, it should reply with all
@@ -17189,21 +17181,21 @@ almost exclusively ANY queries. This is not a bug.
 	</para>
       </sect2>
     </sect1>
-    <sect1 id="randombackend"><title>Random Backend</title>
+    <sect1 id="randombackend"><title>ランダムバックエンド</title>
       <para>
 	<table>
-	  <title>Random Backend capabilities</title>
+	  <title>ランダムバックエンドの機能</title>
 	  <tgroup cols="2">
 	    <tbody>
-	      <row><entry>Native</entry><entry>Yes</entry></row>
-	      <row><entry>Master</entry><entry>No</entry></row>
-	      <row><entry>Slave</entry><entry>No</entry></row>
-	      <row><entry>Superslave</entry><entry>No</entry></row>
-	      <row><entry>Autoserial</entry><entry>No</entry></row>
-	      <row><entry>Case</entry><entry>Depends</entry></row>
-	      <row><entry>DNSSEC</entry><entry>Yes, no key storage</entry></row>
-	      <row><entry>Module name</entry><entry>built in</entry></row>
-	      <row><entry>Launch name</entry><entry>random</entry></row>
+	      <row><entry>ネイティブ</entry><entry>はい</entry></row>
+	      <row><entry>マスター</entry><entry>いいえ</entry></row>
+	      <row><entry>スレーブ</entry><entry>いいえ</entry></row>
+	      <row><entry>スーパースレーブ</entry><entry>いいえ</entry></row>
+	      <row><entry>自動シリアル値</entry><entry>いいえ</entry></row>
+	      <row><entry>大/小文字の別</entry><entry>実装依存</entry></row>
+	      <row><entry>DNSSEC</entry><entry>はい。鍵ストレージなし</entry></row>
+	      <row><entry>モジュール名</entry><entry>内蔵</entry></row>
+	      <row><entry>実行名</entry><entry>random</entry></row>
 	    </tbody>
 	  </tgroup>
 	</table>
@@ -17239,22 +17231,22 @@ instruction, such as <command>launch=random,gmysql</command>.
       </para>
     </sect1>
 
-    <sect1 id="generic-mypgsql-backends"><title>Generic MySQL and PgSQL backends</title>
+    <sect1 id="generic-mypgsql-backends"><title>一般的 MySQL・PgSQL バックエンド</title>
       <para>
 	<table>
-	  <title>Generic PgSQL and MySQL backend capabilities</title>
+	  <title>一般的 MySQL・PgSQL バックエンドの機能</title>
 	  <tgroup cols="2">
 	    <tbody>
-	      <row><entry>Native</entry><entry>Yes</entry></row>
-	      <row><entry>Master</entry><entry>Yes</entry></row>
-	      <row><entry>Slave</entry><entry>Yes</entry></row>
-	      <row><entry>Superslave</entry><entry>Yes</entry></row>
-	      <row><entry>Autoserial</entry><entry>Yes (v3.1 and up)</entry></row>
-	      <row><entry>Case</entry><entry>All lower</entry></row>
-	      <row><entry>DNSSEC</entry><entry>Yes (set gmysql-dnssec or gpgsql-dnssec)</entry></row>
-	      <row><entry>Module name &lt; 2.9.3</entry><entry>pgmysql</entry></row>
-	      <row><entry>Module name &gt; 2.9.2</entry><entry>gmysql and gpgsql</entry></row>
-	      <row><entry>Launch name</entry><entry>gmysql and gpgsql2 and gpgsql</entry></row>
+	      <row><entry>ネイティブ</entry><entry>はい</entry></row>
+	      <row><entry>マスター</entry><entry>はい</entry></row>
+	      <row><entry>スレーブ</entry><entry>はい</entry></row>
+	      <row><entry>スーパースレーブ</entry><entry>はい</entry></row>
+	      <row><entry>自動シリアル値</entry><entry>はい (v3.1 以上)</entry></row>
+	      <row><entry>大/小文字の別</entry><entry>すべて小文字</entry></row>
+	      <row><entry>DNSSEC</entry><entry>はい (gmysql-dnssec ないし gpgsql-dnssec を設定)</entry></row>
+	      <row><entry>モジュール名 &lt; 2.9.3</entry><entry>pgmysql</entry></row>
+	      <row><entry>モジュール名 &gt; 2.9.2</entry><entry>gmysql と gpgsql</entry></row>
+	      <row><entry>実行名</entry><entry>gmysql と gpgsql2 と gpgsql</entry></row>
 	    </tbody>
 	  </tgroup>
 	</table>
@@ -17265,9 +17257,8 @@ allowing you to graft PDNS on any PostgreSQL or MySQL database of your
 choosing.  Because all database schemas will be different, a generic backend
 is needed to cover all needs. 
       </para>	
-      <para><warning><para>Host names and the MNAME of a SOA records are NEVER terminated with a '.' in
-PowerDNS storage! If a trailing '.' is present it will inevitably cause
-problems, problems that may be hard to debug.</para></warning></para>	
+      <para><warning><para>PowerDNS ストレージ内のホスト名や SOA レコードの MNAME では、絶対に '.' で終わってはいけません! 最後に '.'
+がある場合、必ず問題の原因になり、この問題のデバッグは非常に困難です。</para></warning></para>	
       <para>
 	The template queries are expanded using the C function 'snprintf' which
 implies that substitutions are performed on the basis of %-place holders.
@@ -17279,7 +17270,7 @@ fill out the search key, often called 'name' in lower case!
 they accept the same settings and use almost exactly the same database
 schema.
       </para>
-      <sect2><title>MySQL specifics</title>
+      <sect2><title>MySQL 固有</title>
 	<para>
 	  <warning>
 	    <para>
@@ -17327,7 +17318,7 @@ CONSTRAINT `records_ibfk_1` FOREIGN KEY (`domain_id`) REFERENCES `domains`
 table.
 	</para>
       </sect2>
-      <sect2><title>PostgreSQL specifics</title>
+      <sect2><title>PostgreSQL 固有</title>
       <para>
 	The default setup conforms to the following schema, which you should add to
 a PostgreSQL database.  <programlisting><xi:include  href="../no-dnssec.schema.pgsql.sql"  parse="text"  xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
@@ -17354,7 +17345,7 @@ be issued: <programlisting><xi:include  href="../dnssec.schema.pgsql.sql"  parse
 connect to that database with 'psql powerdns', and feed it the schema above.
 	</para>
       </sect2>
-      <sect2 id="goracle"><title>Oracle specifics</title>
+      <sect2 id="goracle"><title>Oracle 固有</title>
       <para>
 	  Generic Oracle support is only available since version 2.9.18.  The default
 setup conforms to the following schema, which you should add to an Oracle
@@ -17420,7 +17411,7 @@ no <command>goracle-dbname</command>, <command>goracle-host</command> or
 	  </para>
       </sect2>
 
-      <sect2><title>Basic functionality</title>
+      <sect2><title>基本機能</title>
 	<para>
 	  4 queries are needed for regular lookups, 4 for 'fancy records' which are
 disabled by default and 1 is needed for zone transfers.
@@ -17431,8 +17422,7 @@ order: <variablelist>
 	      <term>content</term>
 	      <listitem>
 		<para>
-		  This is the 'right hand side' of a DNS record. For an A record, this is the
-IP address for example.
+		  DNS レコードの「右側」です。たとえば、A レコードでは IP アドレスになります。
 		</para>
 	      </listitem>
 	    </varlistentry>
@@ -17440,8 +17430,7 @@ IP address for example.
 	      <term>ttl</term>
 	      <listitem>
 		<para>
-		  TTL of this record, in seconds. Must be a real value, no checking is
-performed.
+		  このレコードの TTL を秒数で表します。チェックは行われないため、リアルな値でなければなりません。
 		</para>
 	      </listitem>
 	    </varlistentry>
@@ -17449,7 +17438,7 @@ performed.
 	      <term>prio</term>
 	      <listitem>
 		<para>
-		  For MX records, this should be the priority of the mail exchanger specified.
+		  MX レコード用で、配送メールサーバーの優先度を表します。
 		</para>
 	      </listitem>
 	    </varlistentry>
@@ -17457,10 +17446,9 @@ performed.
 	      <term>qtype</term>
 	      <listitem>
 		<para>
-		  The ASCII representation of the qtype of this record. Examples are 'A',
-'MX', 'SOA', 'AAAA'. Make sure that this field returns an exact answer -
-PDNS won't recognise 'A ' as 'A'. This can be achieved by using a VARCHAR
-instead of a CHAR.
+		  このレコードの qtype の ASCII 表記です。'A', 'MX', 'SOA', 'AAAA'
+などです。このフィールドは、正確な値を返すようにしてください。PDNS は 'A ' を 'A' と認識することはしません。CHAR ではなく
+VARCHAR を使うことで、このようにできます。
 		</para>
 	      </listitem>
 	      
@@ -17469,8 +17457,8 @@ instead of a CHAR.
 	      <term>domain_id</term>
 	      <listitem>
 		<para>
-		  Each domain must have a unique domain_id. No two domains may share a
-domain_id, all records in a domain should have the same. A number.
+		  各ドメインは、一意の domain_id を持っています。ふたつのドメインがひとつの domain_id
+を共有することはありません。ドメイン内のすべてのレコードは、同じ値になります。数値です。
 		</para>
 	    </listitem>
 	    </varlistentry>
@@ -17478,8 +17466,7 @@ domain_id, all records in a domain should have the same. A number.
 	      <term>name</term>
 	      <listitem>
 		<para>
-		  Actual name of a record. Must not end in a '.' and be fully qualified - it
-is not relative to the name of the domain!
+		  レコードの実際の名前です。'.' で終わっていてはならず、完全修飾名でなければなりません。つまり、ドメインからの相対名ではありません!
 		</para>
 	      </listitem>
 	    </varlistentry>
@@ -17553,7 +17540,7 @@ domain_id=%d</command>
 	  </variablelist>
 	</para>
       </sect2>
-      <sect2 id="dnssec-queries"><title>DNSSEC queries</title>
+      <sect2 id="dnssec-queries"><title>DNSSEC クエリー</title>
       <para>
       	If DNSSEC is enabled (through the -dnssec flag on a gsql backend), many
 queries are replaced by slightly extended variants that also query the auth
@@ -17608,7 +17595,7 @@ domain_id='%d'</command></para></listitem></varlistentry>
 wish to calculate ordername and auth without using pdns-rectify.
       </para>
   </sect2>
-      <sect2 id="master-slave-queries"><title>Master/slave queries</title>
+      <sect2 id="master-slave-queries"><title>マスター/スレーブクエリー</title>
 	<para>
 	  Most installations will have zero need to change the following settings, but
 should the need arise, here they are: <variablelist>
@@ -17902,20 +17889,20 @@ table matches the domain_id field in the records table!
       </sect2>
     </sect1>
     
-    <sect1 id="oracle"><title>Oracle backend</title>
+    <sect1 id="oracle"><title>Oracle バックエンド</title>
       <para>
         <table>
-          <title>Oracle backend capabilities</title>
+          <title>Oracle バックエンドの機能</title>
           <tgroup cols="2">
             <tbody>
-              <row><entry>Native</entry><entry>Yes</entry></row>
-              <row><entry>Master</entry><entry>Yes</entry></row>
-              <row><entry>Slave</entry><entry>Yes</entry></row>
-              <row><entry>Superslave</entry><entry>Yes</entry></row>
-              <row><entry>Autoserial</entry><entry>Yes</entry></row>
-              <row><entry>DNSSEC</entry><entry>Yes</entry></row>
-              <row><entry>Module name</entry><entry>oracle</entry></row>
-              <row><entry>Launch name</entry><entry>oracle</entry></row>
+              <row><entry>ネイティブ</entry><entry>はい</entry></row>
+              <row><entry>マスター</entry><entry>はい</entry></row>
+              <row><entry>スレーブ</entry><entry>はい</entry></row>
+              <row><entry>スーパースレーブ</entry><entry>はい</entry></row>
+              <row><entry>自動シリアル値</entry><entry>はい</entry></row>
+              <row><entry>DNSSEC</entry><entry>はい</entry></row>
+              <row><entry>モジュール名</entry><entry>oracle</entry></row>
+              <row><entry>実行名</entry><entry>oracle</entry></row>
             </tbody>
           </tgroup>
         </table>
@@ -18033,7 +18020,7 @@ with <userinput>NLSSORT(value, 'NLS_SORT = BINARY')</userinput>.
           </para>
         </note>
 
-        <sect3><title>Zones Table</title>
+        <sect3><title>ゾーンテーブル</title>
           <para>
             This table lists the zones for which PowerDNS is supposed to be an
 authoritative nameserver, plus a small amount of information related to
@@ -18869,19 +18856,19 @@ VALUES (:zoneid, :ip)
     </sect1>
 
     <sect1 id="gsqlite">
-      <title>Generic SQLite backend (2 and 3)</title>
+      <title>一般的 SQLite バックエンド (2・3)</title>
       <para>
       	<table>
-	        <title>Generic SQLite backend capabilities</title>
+	        <title>一般的 SQLite バックエンドの機能</title>
 	        <tgroup cols="2">
 	          <tbody>
-	            <row><entry>Native</entry><entry>Yes</entry></row>
-	            <row><entry>Master</entry><entry>Yes</entry></row>
-	            <row><entry>Slave</entry><entry>Yes</entry></row>
-	            <row><entry>Superslave</entry><entry>Yes</entry></row>
-		    <row><entry>DNSSEC</entry><entry>gsqlite3 only (set gsqlite3-dnssec)</entry></row>
-	            <row><entry>Module name</entry><entry>gsqlite and gsqlite3</entry></row>
-	            <row><entry>Launch name</entry><entry>gsqlite and gsqlite3</entry></row>
+	            <row><entry>ネイティブ</entry><entry>はい</entry></row>
+	            <row><entry>マスター</entry><entry>はい</entry></row>
+	            <row><entry>スレーブ</entry><entry>はい</entry></row>
+	            <row><entry>スーパースレーブ</entry><entry>はい</entry></row>
+		    <row><entry>DNSSEC</entry><entry>gsqlite3 のみ (gsqlite3-dnssec を設定)</entry></row>
+	            <row><entry>モジュール名</entry><entry>gsqlite と gsqlite3</entry></row>
+	            <row><entry>実行名</entry><entry>gsqlite と gsqlite3</entry></row>
 	          </tbody>
 	        </tgroup>
 	      </table>
@@ -18976,20 +18963,20 @@ the database was made.
       </sect2>      
     </sect1>
     
-    <sect1 id="db2"><title>DB2 backend</title>
+    <sect1 id="db2"><title>DB2 バックエンド</title>
       <para>
 	<table>
-	  <title>DB2 backend capabilities</title>
+	  <title>DB2 バックエンドの機能</title>
 	  <tgroup cols="2">
 	    <tbody>
-	      <row><entry>Native</entry><entry>Yes</entry></row>
-	      <row><entry>Master</entry><entry>No</entry></row>
-	      <row><entry>Slave</entry><entry>No</entry></row>
-	      <row><entry>Superslave</entry><entry>No</entry></row>
-	      <row><entry>Autoserial</entry><entry>Yes</entry></row>
-	      <row><entry>DNSSEC</entry><entry>No</entry></row>
-	      <row><entry>Module name</entry><entry>db2</entry></row>
-	      <row><entry>Launch name</entry><entry>db2</entry></row>
+	      <row><entry>ネイティブ</entry><entry>はい</entry></row>
+	      <row><entry>マスター</entry><entry>いいえ</entry></row>
+	      <row><entry>スレーブ</entry><entry>いいえ</entry></row>
+	      <row><entry>スーパースレーブ</entry><entry>いいえ</entry></row>
+	      <row><entry>自動シリアル値</entry><entry>はい</entry></row>
+	      <row><entry>DNSSEC</entry><entry>いいえ</entry></row>
+	      <row><entry>モジュール名</entry><entry>db2</entry></row>
+	      <row><entry>実行名</entry><entry>db2</entry></row>
 
 	    </tbody>
 	  </tgroup>
@@ -19077,14 +19064,14 @@ might lead to a chicken/egg situation.
 	  <title>Bind zone file backend capabilities</title>
 	  <tgroup cols="2">
 	    <tbody>
-	      <row><entry>Native</entry><entry>Yes</entry></row>
-	      <row><entry>Master</entry><entry>Yes</entry></row>
-	      <row><entry>Slave</entry><entry>Yes</entry></row>
-	      <row><entry>Superslave</entry><entry>Experimental</entry></row>
-	      <row><entry>Autoserial</entry><entry>No</entry></row>
+	      <row><entry>ネイティブ</entry><entry>はい</entry></row>
+	      <row><entry>マスター</entry><entry>はい</entry></row>
+	      <row><entry>スレーブ</entry><entry>はい</entry></row>
+	      <row><entry>スーパースレーブ</entry><entry>実験的</entry></row>
+	      <row><entry>自動シリアル値</entry><entry>いいえ</entry></row>
 	      <row><entry>DNSSEC</entry><entry>Yes, but no key storage</entry></row>
-	      <row><entry>Module name</entry><entry>none (built in)</entry></row>
-	      <row><entry>Launch</entry><entry>bind</entry></row>
+	      <row><entry>モジュール名</entry><entry>なし (内蔵)</entry></row>
+	      <row><entry>起動</entry><entry>bind</entry></row>
 	    </tbody>
 	  </tgroup>
 	</table>
@@ -19139,7 +19126,7 @@ longer supported from 2.9.21 onwards.
 	</variablelist>
       </para>
       <sect2>
-	<title>Operation</title>
+	<title>動作</title>
 	<para>
 	  On launch, the BindBackend first parses the named.conf to determine which
 zones need to be loaded. These will then be parsed and made available for
@@ -19161,7 +19148,7 @@ the reload within the DNS timeout.
 will be performed until the <command>pdns_control reload</command> is given.
         </para>
       </sect2>
-      <sect2 id="bind-control-commands"><title>Pdns_control commands</title>
+      <sect2 id="bind-control-commands"><title>pdns_control コマンド</title>
 	<para>
 	  <variablelist>
 	    <varlistentry>
@@ -19194,7 +19181,7 @@ parsed', 'parsed successfully at &lt;time;&gt;' or 'error parsing at line
 	  </variablelist>
 	</para>
       </sect2>
-      <sect2><title>Performance</title>
+      <sect2><title>パフォーマンス</title>
 	<para>
 	  The BindBackend does not benefit from the packet cache as it is fast enough
 on its own. Furthermore, on most systems, there will be no benefit in using
@@ -19204,7 +19191,7 @@ by specifying <command>distributor-threads=1</command> in
 	</para>
       </sect2>
       <sect2><title>Master/slave configuration</title>
-	<sect3><title>Master</title>
+	<sect3><title>マスター</title>
 	  <para>
 	    Works as expected. At startup, no notification storm is performed as this is
 generally not useful. Perhaps in the future the Bind Backend will attempt to
@@ -19216,7 +19203,7 @@ changed its serial since the last time notifications were sent out.
 however.
 	  </para>
 	</sect3>
-	<sect3><title>Slave</title>
+	<sect3><title>スレーブ</title>
 	  <para>
 	    Also works as expected. The Bind backend expects to be able to write to a
 directory where a slave domain lives. The incoming zone is stored as
@@ -19229,7 +19216,7 @@ parsing fail.
 	  </para>
 	</sect3>
       </sect2>
-      <sect2><title>Commands</title>
+      <sect2><title>コマンド</title>
 	<para>
 	  <command>pdns_control</command> offers commands to communicate instructions
 to PowerDNS. These are detailed here.  <variablelist>
@@ -19263,17 +19250,17 @@ for them.
     </sect1>
 
   <sect1 id="odbc">
-    <title>ODBC backend</title>
+    <title>ODBC バックエンド</title>
       <para>
       <note><para>This backend was removed in version 3.1.</para></note> <table>
-	  <title>ODBC backend capabilities</title>
+	  <title>ODBC バックエンドの機能</title>
 	  <tgroup cols="2">
 	    <tbody>
-	      <row><entry>Native</entry><entry>Yes</entry></row>
-	      <row><entry>Master</entry><entry>Yes (experimental)</entry></row>
-	      <row><entry>Slave</entry><entry>Yes (experimental)</entry></row>
-	      <row><entry>Superslave</entry><entry>No</entry></row>
-	      <row><entry>Autoserial</entry><entry>Yes</entry></row>
+	      <row><entry>ネイティブ</entry><entry>はい</entry></row>
+	      <row><entry>マスター</entry><entry>はい (実験的)</entry></row>
+	      <row><entry>スレーブ</entry><entry>はい (実験的)</entry></row>
+	      <row><entry>スーパースレーブ</entry><entry>いいえ</entry></row>
+	      <row><entry>自動シリアル値</entry><entry>はい</entry></row>
 	    </tbody>
 	  </tgroup>
 	</table>
@@ -19351,12 +19338,12 @@ and Microsoft SQLServer. As the SQL statements used are very basic, it is
 expected to work with many ODBC drivers.
       </para>
     </sect1>
-    <sect1 id="xdbbackend"><title>XDB Backend</title>
+    <sect1 id="xdbbackend"><title>XDB バックエンド</title>
       <para>
 	No longer part of PowerDNS.
       </para>
     </sect1>
-    <sect1 id="ldap"><title>LDAP backend</title>
+    <sect1 id="ldap"><title>LDAP バックエンド</title>
     <para>
 	<warning>
 	  <para>
@@ -19385,27 +19372,26 @@ page</ulink>. The information in this chapter may be outdated!
 url="http://wiki.linuxnetworks.de/index.php/PowerDNS_ldapbackend">LDAP
 backends documentation</ulink> there. The information below may be outdated!
       </para>
-      <para><warning><para>Host names and the MNAME of a SOA records are NEVER terminated with a '.' in
-PowerDNS storage! If a trailing '.' is present it will inevitably cause
-problems, problems that may be hard to debug.</para></warning></para>
+      <para><warning><para>PowerDNS ストレージ内のホスト名や SOA レコードの MNAME では、絶対に '.' で終わってはいけません! 最後に '.'
+がある場合、必ず問題の原因になり、この問題のデバッグは非常に困難です。</para></warning></para>
       <para>
 	<table>
-	  <title>LDAP backend capabilities</title>
+	  <title>LDAP バックエンドの機能</title>
 	  <tgroup cols="2">
 	    <tbody>
-	      <row><entry>Native</entry><entry>Yes</entry></row>
-	      <row><entry>Master</entry><entry>No</entry></row>
-	      <row><entry>Slave</entry><entry>No</entry></row>
-	      <row><entry>Superslave</entry><entry>No</entry></row>
-	      <row><entry>Autoserial</entry><entry>No</entry></row>
-	      <row><entry>DNSSEC</entry><entry>No</entry></row>
+	      <row><entry>ネイティブ</entry><entry>はい</entry></row>
+	      <row><entry>マスター</entry><entry>いいえ</entry></row>
+	      <row><entry>スレーブ</entry><entry>いいえ</entry></row>
+	      <row><entry>スーパースレーブ</entry><entry>いいえ</entry></row>
+	      <row><entry>自動シリアル値</entry><entry>いいえ</entry></row>
+	      <row><entry>DNSSEC</entry><entry>いいえ</entry></row>
 	    </tbody>
 	  </tgroup>
 	</table>
       </para>
 
     </sect1>
-    <sect1 id="opendbx"><title>OpenDBX backend</title>
+    <sect1 id="opendbx"><title>OpenDBX バックエンド</title>
       <para>
 	<warning>
 	  <para>
@@ -19420,21 +19406,21 @@ own page</ulink>. The information in this chapter may be outdated!
       </para>
       <para>
 	<table>
-	  <title>OpenDBX backend capabilities</title>
+	  <title>OpenDBX バックエンドの機能</title>
 	  <tgroup cols="2">
 	    <tbody>
-	      <row><entry>Native</entry><entry>Yes</entry></row>
-	      <row><entry>Master</entry><entry>Yes</entry></row>
-	      <row><entry>Slave</entry><entry>Yes</entry></row>
-	      <row><entry>Superslave</entry><entry>Yes</entry></row>
-	      <row><entry>Autoserial</entry><entry>Yes (since 2.9.22)</entry></row>
-	      <row><entry>DNSSEC</entry><entry>No</entry></row>
+	      <row><entry>ネイティブ</entry><entry>はい</entry></row>
+	      <row><entry>マスター</entry><entry>はい</entry></row>
+	      <row><entry>スレーブ</entry><entry>はい</entry></row>
+	      <row><entry>スーパースレーブ</entry><entry>はい</entry></row>
+	      <row><entry>自動シリアル値</entry><entry>はい (2.9.22 以降)</entry></row>
+	      <row><entry>DNSSEC</entry><entry>いいえ</entry></row>
 	    </tbody>
 	  </tgroup>
 	</table>
       </para>
     </sect1>
-    <sect1 id="geo"><title>Geo backend</title>
+    <sect1 id="geo"><title>Geo バックエンド</title>
       <para>
 	<warning>
 	  <para>
@@ -19448,15 +19434,15 @@ own page</ulink>. The information in this chapter may be outdated!
       </para>
       <para>
 	<table>
-	  <title>Geo backend capabilities</title>
+	  <title>Geo バックエンドの機能</title>
 	  <tgroup cols="2">
 	    <tbody>
-	      <row><entry>Native</entry><entry>Partial</entry></row>
-	      <row><entry>Master</entry><entry>No</entry></row>
-	      <row><entry>Slave</entry><entry>No</entry></row>
-	      <row><entry>Superslave</entry><entry>No</entry></row>
-	      <row><entry>Autoserial</entry><entry>No</entry></row>
-	      <row><entry>DNSSEC</entry><entry>Yes (no key storage)</entry></row>
+	      <row><entry>ネイティブ</entry><entry>一部</entry></row>
+	      <row><entry>マスター</entry><entry>いいえ</entry></row>
+	      <row><entry>スレーブ</entry><entry>いいえ</entry></row>
+	      <row><entry>スーパースレーブ</entry><entry>いいえ</entry></row>
+	      <row><entry>自動シリアル値</entry><entry>いいえ</entry></row>
+	      <row><entry>DNSSEC</entry><entry>はい (鍵ストレージなし)</entry></row>
 	    </tbody>
 	  </tgroup>
 	</table>
@@ -19484,7 +19470,7 @@ or in <filename>modules/geobackend/README</filename>, part of the PowerDNS
 Authoritative Server distribution.
       </para>
     </sect1>
-    <sect1 id="mongo"><title>MongoDB Backend</title>
+    <sect1 id="mongo"><title>MongoDB バックエンド</title>
       <para>
 	<warning>
 	  <para>
@@ -19499,15 +19485,15 @@ distribution.
       </para>
       <para>
 	<table>
-	  <title>MongoDB backend capabilities</title>
+	  <title>MongoDB バックエンドの機能</title>
 	  <tgroup cols="2">
 	    <tbody>
-	      <row><entry>Native</entry><entry>Yes</entry></row>
-	      <row><entry>Master</entry><entry>Yes</entry></row>
-	      <row><entry>Slave</entry><entry>No</entry></row>
-	      <row><entry>Superslave</entry><entry>No</entry></row>
-	      <row><entry>Autoserial</entry><entry>No</entry></row>
-	      <row><entry>DNSSEC</entry><entry>Yes</entry></row>
+	      <row><entry>ネイティブ</entry><entry>はい</entry></row>
+	      <row><entry>マスター</entry><entry>はい</entry></row>
+	      <row><entry>スレーブ</entry><entry>いいえ</entry></row>
+	      <row><entry>スーパースレーブ</entry><entry>いいえ</entry></row>
+	      <row><entry>自動シリアル値</entry><entry>いいえ</entry></row>
+	      <row><entry>DNSSEC</entry><entry>はい</entry></row>
 	    </tbody>
 	  </tgroup>
 	</table>
@@ -19527,7 +19513,7 @@ or in <filename>modules/mongodbbackend/README</filename>, part of the
 PowerDNS Authoritative Server distribution.
       </para>
     </sect1>
- <sect1 id="luabackend"><title>Lua Backend</title>
+ <sect1 id="luabackend"><title>Lua バックエンド</title>
       <para>
 	<warning>
 	  <para>
@@ -19541,15 +19527,15 @@ PowerDNS Authoritative Server distribution.
       </para>
       <para>
 	<table>
-	  <title>Lua backend capabilities</title>
+	  <title>Lua バックエンドの機能</title>
 	  <tgroup cols="2">
 	    <tbody>
-	      <row><entry>Native</entry><entry>Yes</entry></row>
-	      <row><entry>Master</entry><entry>Yes</entry></row>
-	      <row><entry>Slave</entry><entry>No</entry></row>
-	      <row><entry>Superslave</entry><entry>No</entry></row>
-	      <row><entry>Autoserial</entry><entry>No</entry></row>
-	      <row><entry>DNSSEC</entry><entry>Yes</entry></row>
+	      <row><entry>ネイティブ</entry><entry>はい</entry></row>
+	      <row><entry>マスター</entry><entry>はい</entry></row>
+	      <row><entry>スレーブ</entry><entry>いいえ</entry></row>
+	      <row><entry>スーパースレーブ</entry><entry>いいえ</entry></row>
+	      <row><entry>自動シリアル値</entry><entry>いいえ</entry></row>
+	      <row><entry>DNSSEC</entry><entry>はい</entry></row>
 	    </tbody>
 	  </tgroup>
 	</table>
@@ -19569,7 +19555,7 @@ or in <filename>modules/luabackend/README</filename>, part of the PowerDNS
 Authoritative Server distribution.
       </para>
     </sect1>
-    <sect1 id="tinydnsbackend"><title>TinyDNS Backend</title>
+    <sect1 id="tinydnsbackend"><title>TinyDNS バックエンド</title>
       <para>
         <warning>
 	        <para>
@@ -19579,16 +19565,16 @@ Authoritative Server distribution.
 	      </warning>
       </para>
     	<table>
-	      <title>TinyDNS backend capabilities</title>
+	      <title>TinyDNS バックエンドの機能</title>
      	  <tgroup cols="2">
           <tbody>
-            <row><entry>Native</entry><entry>Yes</entry></row>
-            <row><entry>Master</entry><entry>Yes</entry></row>
-     	      <row><entry>Slave</entry><entry>No</entry></row>
-     	      <row><entry>Superslave</entry><entry>No</entry></row>
-     	      <row><entry>Autoserial</entry><entry>No</entry></row>
-     	      <row><entry>DNSSEC</entry><entry>No</entry></row>
-            <row><entry>Multiple instances</entry><entry>Yes</entry></row>
+            <row><entry>ネイティブ</entry><entry>はい</entry></row>
+            <row><entry>マスター</entry><entry>はい</entry></row>
+     	      <row><entry>スレーブ</entry><entry>いいえ</entry></row>
+     	      <row><entry>スーパースレーブ</entry><entry>いいえ</entry></row>
+     	      <row><entry>自動シリアル値</entry><entry>いいえ</entry></row>
+     	      <row><entry>DNSSEC</entry><entry>いいえ</entry></row>
+            <row><entry>複数インスタンス</entry><entry>はい</entry></row>
           </tbody>
      	  </tgroup>
      	</table>
@@ -19600,7 +19586,7 @@ url="http://cr.yp.to/djbdns/tinydns-data.html">tinydns-data</ulink>. The
 backend is designed to be able to use the data.cdb files without any
 changes.
       </para>
-     <sect2 id="tinydnsbackend-parameters"><title>Configuration Parameters</title>
+     <sect2 id="tinydnsbackend-parameters"><title>設定パラメータ</title>
         <para>
           These are the configuration file parameters that are available for the
 TinyDNS backend. It is recommended to set the tinydns-dbfile.  <variablelist>
@@ -19658,7 +19644,7 @@ IPv4!
         </para>
       </sect2>
 
-      <sect2 id="tinydnsbackend-master-mode"><title>Master mode</title>
+      <sect2 id="tinydnsbackend-master-mode"><title>マスターモード</title>
         <para>
 The TinyDNSBackend supports master mode. This allows it to notify slave
 nameservers of updates to a zone.  You simply need to rewrite the data.cdb
@@ -20025,7 +20011,7 @@ of a SOA record first. This is unlikely to lead to problems though.
       </para>
   </sect1>
   </appendix>
-  <appendix id="backend-writers-guide"><title>Backend writers' guide</title>
+  <appendix id="backend-writers-guide"><title>バックエンド開発者ガイド</title>
     <para>
       PDNS backends are implemented via a simple yet powerful C++ interface. If
 your needs are not met by the PipeBackend, you may want to write your
@@ -20232,7 +20218,7 @@ default it lives on random.example.com, but you can change that by setting
     <sect2><title>Interface definition</title>
       <para>
 	Classes: <table>
-	  <title>DNSResourceRecord class</title>
+	  <title>DNSResourceRecord クラス</title>
 	  <tgroup cols="2">
 	    <tbody>
 	      <row>
@@ -20916,7 +20902,7 @@ your path. Furthermore, with some versions of MySQL, you may have to add
       <para>
 	By Michel Stol (<email>michel@powerdns.com</email>).
       </para>
-      <sect2><title>Assumptions</title>
+      <sect2><title>前提</title>
         <para>
 	  I will assume these things from you:      
 	</para>
@@ -20991,7 +20977,7 @@ would be a big problem.
       </sect2>
       
       <sect2>
-	<title>Prerequisites</title>
+	<title>条件</title>
 	
 	<para>
 	  Although we tried to keep PowerDNS for Windows' dependencies down to a
@@ -21342,7 +21328,7 @@ will then try to fix it.
     </sect2>
     
     <sect2>
-      <title>Miscellaneous</title>
+      <title>その他</title>
 
       <para>
 	Some miscellaneous information.
@@ -21407,7 +21393,7 @@ Winamp, the program we use every day to make a lot of noise in the office.
       </sect3>
       
       <sect3>
-	<title>Contact information</title>
+	<title>連絡先の情報</title>
 	
 	<para>
 	  If you have a comment, or a bug report concerning either this document or
@@ -21437,7 +21423,7 @@ bank account or flame me to death, then you can mail me at
       </sect3>
       
       <sect3>
-	<title>Legal information</title>
+	<title>法的情報</title>
 	
 	<para>
 	  Microsoft, Visual C++, Windows, Windows NT, Windows 2000, Windows XP and
@@ -21455,7 +21441,7 @@ their respective owners.
       </sect2>
     </sect1>
   </appendix>
-  <appendix id="license"><title>PowerDNS license (GNU General Public License version 2)</title>
+  <appendix id="license"><title>PowerDNS ライセンス (GNU General Public License version 2)</title>
     <para>
       GNU GENERAL PUBLIC LICENSE TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION
 AND MODIFICATION
@@ -21673,11 +21659,10 @@ POSSIBILITY OF SUCH DAMAGES.
 		     END OF TERMS AND CONDITIONS
       </para>
   </appendix>
-  <appendix id="further-copyrights"><title>Further copyright statements</title>
+  <appendix id="further-copyrights"><title>その他の著作権宣言</title>
     <sect1><title>AES implementation by Brian Gladman</title>
     <para>
-      Since version 3.1.5, PowerDNS contains AES code by Brian Gladman, to which
-the following applies:
+      バージョン 3.1.5 から、PowerDNS には Brian Gladman による AES コードが含まれています。以下の条件を適用します。
     </para>
     <para>
  Copyright &copy; 1998-2007, Brian Gladman, Worcester, UK. All rights
